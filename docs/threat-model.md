@@ -126,8 +126,11 @@ determinístico, e transforma disciplina em gate.
 > Entrada obsoleta na allowlist também reprova (o arquivo ganhou escopo ou sumiu),
 > senão a isenção viraria herança silenciosa da próxima rota criada por cópia.
 >
-> Medição do dia: **107 de 191** handlers usam o admin client (a auditoria contou
-> 89 de 169 em julho — o repo cresceu), e **7** ficaram na allowlist. Os 7 foram
+> Medição do dia: **118 de 202** handlers usam o admin client, e **7** ficaram na
+> allowlist. A série mostra por que o número não serve de régua: 89 de 169 na
+> auditoria de julho, 107 de 191 quando o gate nasceu, 118 de 202 depois de
+> sincronizar com a `main` — três valores em um mês. Régua é a varredura, que lê
+> o disco a cada execução do `verify`. Os 7 foram
 > lidos um a um: são varreduras de plataforma (crons system-wide, catálogo de
 > modelos, atualização do host, tabela de super-admins), cada uma atrás de
 > `requirePlatformAdmin`, `is_platform_admin` ou do Bearer fail-closed dos crons.

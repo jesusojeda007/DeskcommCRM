@@ -10,9 +10,14 @@ import { describe, expect, it } from "vitest";
  * (CLAUDE.md, anti-pattern nº 10) manda o handler filtrar `organization_id`
  * manualmente, resolvido de fonte confiável — cookie, JWT, segredo de webhook,
  * token de path — e nunca do body. Até aqui essa regra era cumprida por revisão
- * humana: 107 dos 191 route handlers importam o admin client e **nada** reprovava
+ * humana: 118 dos 202 route handlers importam o admin client e **nada** reprovava
  * um handler novo que nascesse sem escopo (docs/threat-model.md §T3, item 1 dos
  * riscos abertos de docs/current-state.md).
+ *
+ * O número apodrece rápido — era 89 de 169 em julho, 107 de 191 quando este
+ * arquivo nasceu, 118 de 202 depois de sincronizar com a `main`, tudo dentro de
+ * um mês. Ele é contexto histórico, não régua: quem mede é a varredura abaixo,
+ * que lê o disco a cada execução. Não confie no comentário para concluir nada.
  *
  * Handler sem escopo é vazamento cross-tenant: o cliente de uma organização vê a
  * conversa da outra. Num produto self-host, quem descobre é o cliente do cliente.

@@ -222,10 +222,13 @@ consequência natural de trabalho em branches paralelas, mas ilustra a regra:
 1. ~~**89 dos 169 handlers usam `createAdminClient`** sem gate automático~~ — **o gate existe
    desde 2026-08-13**: `tests/unit/service-role-escopo-de-tenant.test.ts` (dentro do `verify`,
    que é obrigatório) reprova handler novo que use o admin client sem mencionar o escopo da
-   organização, e reprova entrada obsoleta na allowlist. Remedido no mesmo dia: **107 de 191**
+   organização, e reprova entrada obsoleta na allowlist. Remedido no mesmo dia: **118 de 202**
    handlers usam o admin client, **7** na allowlist, todos lidos e legitimamente de plataforma
    (crons system-wide, catálogo de modelos, atualização do host, super-admins) — nenhum
-   vazamento encontrado. **Risco residual:** o gate vê MENÇÃO, não comportamento. Handler que
+   vazamento encontrado. Os 11 handlers que a `main` acrescentou desde então usam **todos** o
+   admin client (191→202 e 107→118 são o mesmo +11) e **todos** já nasceram com escopo: o gate
+   rodou contra eles e não achou nada, sem precisar de linha nova na allowlist.
+   **Risco residual:** o gate vê MENÇÃO, não comportamento. Handler que
    cita `organization_id` mas o tira do body continua passando; quem prova isolamento de
    verdade é `tests/invariants/`, no job `invariants`.
 2. **Fallback in-memory do rate limit** (`rate-limit.ts:23`): sem Upstash configurado — o
