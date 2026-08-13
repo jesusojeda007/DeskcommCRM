@@ -6,14 +6,34 @@
  *   - body = base64url(JSON({invite_id, email, organization_id, role, exp}))
  *   - sig  = base64url(HMAC_SHA256(secret, body))
  *
- * Secret resolution: INVITE_TOKEN_SECRET → INTERNAL_SECRET → "dev-fallback".
- * Production deployments MUST set one of the first two. Verification uses
- * `timingSafeEqual` to avoid timing oracles.
+ * Secret resolution: INVITE_TOKEN_SECRET → INTERNAL_SECRET → **erro**.
+ * Verification uses `timingSafeEqual` to avoid timing oracles.
+ *
+ * NÃO existe default. Havia um — o literal `"dev-fallback"` — e num projeto
+ * open-source isso é um secret publicado: qualquer pessoa com o repo assinava
+ * um payload com `organization_id` e `role` à escolha e virava admin de
+ * qualquer organização de qualquer instalação mal configurada
+ * (docs/threat-model.md §T4, user-journey-map M4). Degradar para valor público
+ * é pior que não funcionar: o convite continua "funcionando" e ninguém
+ * descobre. Aqui se falha alto — em produção `lib/env.ts` já derruba o boot sem
+ * `INTERNAL_SECRET`, então este throw é a rede de baixo, não o caminho normal.
+ *
+ * Vazio e só-espaços contam como ausente: `INTERNAL_SECRET=` (linha vazia no
+ * `.env`, estado comum de instalação a meio caminho) não é nullish, e passava
+ * pelo `??` virando chave HMAC de string vazia — tão forjável quanto o literal.
  */
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-const SECRET = (): string =>
-  process.env.INVITE_TOKEN_SECRET ?? process.env.INTERNAL_SECRET ?? "dev-fallback";
+const SECRET = (): string => {
+  const secret = process.env.INVITE_TOKEN_SECRET?.trim() || process.env.INTERNAL_SECRET?.trim();
+  if (!secret) {
+    throw new Error(
+      "INVITE_TOKEN_SECRET (ou INTERNAL_SECRET) não configurado — " +
+        "não é possível assinar nem conferir convites. Defina um dos dois no .env.",
+    );
+  }
+  return secret;
+};
 
 export interface InvitePayload {
   invite_id: string;

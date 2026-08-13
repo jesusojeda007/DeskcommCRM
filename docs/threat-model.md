@@ -134,7 +134,13 @@ crédito onde é devido.
 **Mitigação recomendada:** eliminar o literal. Falhar alto (`throw`) quando nenhum secret
 existe, em vez de degradar para um valor público.
 
-### T5 — Secrets ausentes do `.env.example` 🟠 CONFIRMADO
+</details>
+
+### T5 — Secrets ausentes do `.env.example` 🟢 CORRIGIDO
+
+> **Fechado.** Remedido em 2026-08-13: das 42 vars do schema de `lib/env.ts`,
+> só `NODE_ENV` não está no template — e essa quem define é o runtime, não o
+> operador. Os três secrets citados abaixo estão lá. Relato original:
 
 `IMPERSONATE_COOKIE_SECRET`, `INTERNAL_CRON_SECRET`, `LGPD_SIGNING_KEY` estão em
 `lib/env.ts` e **não** no template. O operador não sabe que precisa gerá-los.

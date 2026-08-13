@@ -47,6 +47,13 @@ const schema = z.object({
   INTERNAL_SECRET: required("INTERNAL_SECRET"),
   /** Optional dedicated secret for cron endpoints (S-06.07 onwards). */
   INTERNAL_CRON_SECRET: z.string().optional().default(""),
+  /**
+   * Secret dedicado opcional para o HMAC do convite de time. Vazio = usa
+   * INTERNAL_SECRET (que é `required()` em produção). Declarado aqui porque
+   * `lib/auth/invite-token.ts` o lê e ele não existia em lugar nenhum do
+   * template nem deste schema — o operador não tinha como saber que existia.
+   */
+  INVITE_TOKEN_SECRET: z.string().optional().default(""),
 
   // Encryption keys (pgcrypto)
   CPF_ENCRYPTION_KEY: required("CPF_ENCRYPTION_KEY"),
