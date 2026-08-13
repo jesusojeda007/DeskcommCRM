@@ -49,6 +49,38 @@ jobs:
       - name: Kit self-host (bash)
         run: pnpm test:shell
 
+  # Varredura de segredo na árvore do PR (docs/threat-model.md §T7).
+  #
+  # Job separado e curto (~30s): não depende de node_modules, então dá o
+  # feedback antes do verify terminar — e chave vazada é o achado em que
+  # segundos importam, porque a correção não é reverter o commit, é ROTACIONAR.
+  #
+  # Escopo: `gitleaks dir` varre a ÁRVORE, não o histórico. É deliberado. Um
+  # segredo introduzido por um PR está na árvore desse PR, então o gate o pega;
+  # varrer o histórico inteiro a cada PR só re-julgaria o passado para sempre —
+  # o repo tem um achado histórico conhecido (`.env.waha`, commit d2595e3d,
+  # já removido do tracking por d45425fa; o que ficou é um hash SHA512, não a
+  # chave) e ele reprovaria todo PR sem que ninguém pudesse fazer nada a
+  # respeito. Histórico se varre sob demanda: `gitleaks git . -c .gitleaks.toml`.
+  #
+  # Versão PINADA: gate que se auto-atualiza muda de veredito sozinho entre dois
+  # pushes idênticos, e aí ninguém sabe se o vermelho é o código ou a ferramenta.
+  segredos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Instala gitleaks
+        run: |
+          curl -sSfL -o gitleaks.tar.gz \
+            https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks version
+
+      - name: Varredura de segredo
+        run: ./gitleaks dir . --no-banner --redact --exit-code 1 -c .gitleaks.toml
+
   # Gate de isolamento multi-tenant + invariantes de governança.
   # Job separado de propósito: roda em paralelo ao verify (não atrasa o feedback
   # rápido) e vira um check nomeado, que é o que a doutrina de RLS exige provar.

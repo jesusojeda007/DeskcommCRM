@@ -51,7 +51,18 @@ São conclusões de leitura de código.
 
 ## 2. Riscos por ordem de exploração
 
-### T1 — Brute force e enumeração sem custo 🔴 CONFIRMADO (ausência), INFERIDO (impacto)
+### T1 — Brute force e enumeração sem custo 🟠 PARCIALMENTE CORRIGIDO (remedido 2026-08-13)
+
+> **A superfície de auth foi coberta** (issue #64, posterior a esta auditoria):
+> `lib/auth/rate-limit.ts` aplica limite por IP **e** por identificador hasheado
+> em `/login` (`signInWithPassword`), `/signup`, recuperação de senha e
+> `/team/accept-invite/:token`. A lista abaixo continua valendo para o resto:
+> os 9 crons, `/api/internal/*`, `/api/mcp` e os webhooks WAHA/Nuvemshop seguem
+> sem limite de tentativa — protegidos por secret forte e comparação em tempo
+> constante, mas sem custo para quem tenta em volume.
+>
+> Severidade rebaixada de 🔴 para 🟠: o que estava exposto a força bruta de
+> senha de operador — o caminho mais barato e mais provável — deixou de estar.
 
 `checkRateLimit` existe (`lib/ai/dispatcher/rate-limit.ts`) e é chamado em **2** pontos
 do código: `/api/v1/webhooks/in/:token` e o dispatcher de IA. Nada mais.
@@ -203,7 +214,28 @@ implementam guard de URL de saída, e existe E2E dedicado
 `outbound-url.test.ts` é unitário e roda, o que cobre a lógica de decisão; o que não roda é a
 prova de que o egress real está barrado ponta a ponta. Uma regressão na integração passa.
 
-### T7 — Sem varredura de secret no histórico git 🟡 CONFIRMADO
+### T7 — Sem varredura de secret no histórico git 🟠 METADE CORRIGIDA (2026-08-13)
+
+> **A metade de texto foi coberta:** o job `segredos` do `ci.yml` roda gitleaks
+> v8.30.1 (versão pinada) sobre a árvore de todo PR, configurado por
+> `.gitleaks.toml`. Verificado por sabotagem: chave plantada num `.ts` reprova.
+>
+> **A metade de imagem continua aberta, e é a pior.** gitleaks não lê PNG. As
+> 116 evidências visuais — várias tiradas em conta e conversa REAIS de WhatsApp —
+> seguem dependendo de olho humano no PR. Este gate verde **não** diz que não
+> vazou PII.
+>
+> **Varredura do histórico feita uma vez (2026-08-13), não no CI:** 1667 commits,
+> 16 achados, todos triados. 15 são fixture de teste, id de linha de banco em log
+> de evidência, o JWT `service_role` de demonstração do Supabase local (público,
+> idêntico em toda instalação do CLI) e uma medição de API anotada no MANIFEST.
+> O 16º é real e **já tinha sido tratado**: `.env.waha` entrou no commit
+> `d2595e3d` (2026-04-28) e saiu em `d45425fa` ("remove .env.waha do tracking +
+> ignora todo .env*"). O que ficou no histórico é `WAHA_API_KEY_HASH` — o hash
+> SHA512, que é o que o WAHA guarda, não a chave em claro. Decisão de reescrever
+> histórico (ou rotacionar por precaução) é do dono do repo; nada foi reescrito.
+> O CI **não** varre histórico de propósito: re-julgar o passado a cada PR deixaria
+> o gate vermelho para sempre por um achado que ninguém pode consertar num PR.
 
 Sem gitleaks/trufflehog no CI, sem pre-commit hook (`.husky` e `.pre-commit-config.yaml`
 ausentes). `.gitignore` cobre `.env*` corretamente, e essa é a única camada.

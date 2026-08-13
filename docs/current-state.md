@@ -185,7 +185,14 @@ Corrigidas nesta auditoria: dizia Next.js 15 (é 16.2), "rate limit sliding wind
 em **1** rota). Documentação que promete garantia inexistente é pior que documentação
 ausente — um agente confia e não implementa.
 
-### 4.7 Sem proteção automática contra vazamento de secret 🟡
+### 4.7 Sem proteção automática contra vazamento de secret 🟠 — metade resolvida em 2026-08-13
+
+> **Atualização:** o job `segredos` do `ci.yml` roda gitleaks (v8.30.1 pinada,
+> config em `.gitleaks.toml`) sobre a árvore de todo PR. Varredura única do
+> histórico (1667 commits) achou 16 ocorrências, 15 benignas e 1 já tratada —
+> detalhe e triagem em [`threat-model.md`](threat-model.md) §T7. **O que continua
+> aberto é a metade que gitleaks não alcança:** PII dentro das 116 PNGs de
+> evidência. Ferramenta nenhuma lê imagem; isso é revisão humana no PR.
 
 Não há gitleaks/trufflehog no CI, nem pre-commit hook (`.husky`/`.pre-commit-config.yaml`
 ausentes). `.gitignore` cobre `.env*` corretamente — a proteção é só essa camada.

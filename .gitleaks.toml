@@ -1,0 +1,48 @@
+# Configuração do gitleaks — varredura de segredo antes do commit chegar na main.
+#
+# Por que existe: até aqui a única camada contra vazamento de segredo era o
+# `.gitignore` cobrindo `.env*` (docs/threat-model.md §T7, docs/current-state.md
+# §4.7). `.gitignore` só protege o arquivo que alguém lembrou de chamar de
+# `.env`; não vê a chave colada dentro de um `.ts`, de um YAML de compose ou de
+# um markdown de runbook. Num repo público isso é irreversível: rotacionar a
+# chave é obrigatório, apagar o commit não a apaga do fork de ninguém.
+#
+# O QUE A VARREDURA NÃO PEGA — e é a metade que mais importa neste repo: PII
+# dentro das 116 PNGs de evidência visual, várias tiradas em conta e conversa
+# REAIS de WhatsApp (§T7). gitleaks não lê imagem. Telefone e nome de cliente
+# num screenshot continuam dependendo de revisão humana no PR. Ler o verde deste
+# gate como "não vazou nada" é exatamente o falso verde que a doutrina proíbe.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = """
+Fixtures de teste e logs de evidência. São valores inventados (senha de conta de
+teste, id de linha de banco semeada) que casam com a heurística de "chave
+genérica" do gitleaks só pela forma.
+
+O CUSTO desta linha, dito em voz alta: segredo de verdade colado dentro de um
+arquivo de teste passa batido. Aceito porque a alternativa medida era 10 achados
+falsos em toda execução — e gate que grita sem motivo é gate que o time aprende
+a ignorar, que protege menos que gate nenhum.
+"""
+paths = [
+  '''.*\.test\.tsx?$''',
+  '''^tests/.*''',
+  '''^evidence/.*''',
+  # Medições de API anotadas na doutrina de migrations (id de conversa de 24 hex
+  # devolvido por um intermediário, não credencial).
+  '''^supabase/migrations/MANIFEST\.md$''',
+]
+
+[[allowlists]]
+description = """
+JWT `service_role` de demonstração do Supabase local. É público: vem embutido em
+toda instalação do Supabase CLI, é o mesmo em todas as máquinas do mundo, e só
+vale contra o `127.0.0.1:54321` de quem o roda. Allowlist por conteúdo (e não por
+caminho) para continuar valendo em qualquer arquivo que precise dele.
+"""
+regexes = [
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZS1kZW1v[A-Za-z0-9_\-\.]*''',
+]
