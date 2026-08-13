@@ -107,7 +107,50 @@ um handler novo nasça sem filtro e sem invariante correspondente.
 quando um arquivo importa `lib/supabase/admin` sem referenciar `organization_id`. Barato,
 determinístico, e transforma disciplina em gate.
 
-### T4 — Secret de convite com fallback conhecido 🟠 CONFIRMADO no código, mitigado na prática
+> **Implementado em 2026-08-13** — `tests/unit/service-role-escopo-de-tenant.test.ts`,
+> dentro do `pnpm test:unit`, portanto no check `verify`, que é obrigatório.
+> Varre `app/api/**/route.ts`: handler que usa `createAdminClient` sem mencionar
+> `organization_id`/`organizationId`/`orgId` reprova, a menos que esteja na
+> allowlist `SEM_TENANT` **com justificativa nomeando o guard que o protege**.
+> Entrada obsoleta na allowlist também reprova (o arquivo ganhou escopo ou sumiu),
+> senão a isenção viraria herança silenciosa da próxima rota criada por cópia.
+>
+> Medição do dia: **107 de 191** handlers usam o admin client (a auditoria contou
+> 89 de 169 em julho — o repo cresceu), e **7** ficaram na allowlist. Os 7 foram
+> lidos um a um: são varreduras de plataforma (crons system-wide, catálogo de
+> modelos, atualização do host, tabela de super-admins), cada uma atrás de
+> `requirePlatformAdmin`, `is_platform_admin` ou do Bearer fail-closed dos crons.
+> **Nenhum vazamento foi encontrado** — o gate nasceu verde, o que é o resultado
+> esperado quando a disciplina vinha sendo cumprida à mão.
+>
+> **O que ele não mede:** menção não é filtro. Um handler pode citar
+> `organization_id` e ainda assim tirá-lo do body (anti-pattern nº 10) ou nunca
+> aplicá-lo à query. Isso é comportamento, e quem prova comportamento é
+> `tests/invariants/`. A catraca é contra esquecimento, não certificado de
+> isolamento — foi verificada por sabotagem: rota nova sem escopo derruba a
+> suíte, e allowlist obsoleta também.
+
+### T4 — Secret de convite com fallback conhecido 🟢 CORRIGIDO (2026-08-13)
+
+> **Fechado.** `lib/auth/invite-token.ts` não tem mais default: o literal
+> `"dev-fallback"` saiu, e `SECRET()` **lança** quando nem `INVITE_TOKEN_SECRET`
+> nem `INTERNAL_SECRET` existem. Vazio e só-espaços contam como ausente — o
+> texto abaixo dizia que `""` cairia no literal, e isso estava **errado**: `??`
+> é nullish, não falsy, então `INTERNAL_SECRET=` produzia chave HMAC de string
+> vazia, tão forjável quanto o literal e sem aparecer em busca por
+> `"dev-fallback"`. Os dois caminhos morreram juntos.
+>
+> Provado por 4 casos em `lib/auth/invite-token.test.ts`, incluindo o do
+> atacante: token assinado com o literal público é **recusado**. Os casos foram
+> vistos vermelhos antes do conserto.
+>
+> Residual (c) também fechado: `INVITE_TOKEN_SECRET` agora está declarada em
+> `lib/env.ts` e no `.env.example`. O `install.sh` já gerava `INTERNAL_SECRET`
+> sozinho (`gen_hex`, linha 1067), então nenhuma instalação real regride.
+>
+> O relato original fica abaixo, para quem precisar entender o que existia.
+
+<details><summary>Descrição original (pré-conserto)</summary>
 
 `lib/auth/invite-token.ts:16`:
 

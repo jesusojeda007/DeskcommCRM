@@ -145,12 +145,17 @@ o summary do job. Se você mexeu em UI fora desse subconjunto, a prova é sua.
   login, signup, aceite de convite, crons e MCP estão sem. Não há lockout por conta no login.
 - Fallback do rate limit é **em memória** — sem Upstash configurado o limite é por processo.
 - `Idempotency-Key` implementado em **1** rota, apesar de o contrato prometer nos POSTs de criação.
-- **6 vars de `lib/env.ts` faltam no `.env.example`**, incluindo 3 secrets. Se você adicionar
-  env var, adicione nos dois lugares (item 9 do DoD).
-- `lib/auth/invite-token.ts` cai em `"dev-fallback"` como secret HMAC se nenhum secret existir
-  (inalcançável em produção, porque `INTERNAL_SECRET` é obrigatório e derruba o boot).
-- **89 dos 169 handlers de `app/api/**` usam service role** — sem gate automático para o filtro de
-  `organization_id`. Escrevendo handler novo, o filtro é responsabilidade sua.
+- **`.env.example` está reconciliado com `lib/env.ts`** (remedido 2026-08-13: das 42 vars do
+  schema, só `NODE_ENV` não está no template, e essa quem define é o runtime). Era 6 ausentes,
+  3 delas secrets. Se você adicionar env var, adicione nos dois lugares (item 9 do DoD).
+- ~~`lib/auth/invite-token.ts` cai em `"dev-fallback"`~~ — **corrigido**: o secret não tem mais
+  default. Sem `INVITE_TOKEN_SECRET` nem `INTERNAL_SECRET` (vazio e só-espaços contam como
+  ausente), assinar ou conferir convite **lança**. As duas vars estão no `.env.example`.
+- **107 dos 191 handlers de `app/api/**` usam service role.** O filtro de `organization_id`
+  continua sendo responsabilidade de quem escreve, mas agora há catraca:
+  `tests/unit/service-role-escopo-de-tenant.test.ts` reprova handler novo que use
+  `createAdminClient` sem mencionar o escopo — e reprova também entrada obsoleta na allowlist.
+  A catraca vê MENÇÃO, não comportamento: quem prova isolamento é `tests/invariants/`.
 - Detalhes e prioridade: [`docs/harness-audit.md`](docs/harness-audit.md),
   [`docs/current-state.md`](docs/current-state.md) e [`docs/threat-model.md`](docs/threat-model.md).
 

@@ -212,12 +212,15 @@ consequência natural de trabalho em branches paralelas, mas ilustra a regra:
 
 ## 5. Riscos técnicos abertos
 
-1. **89 dos 169 handlers usam `createAdminClient`** (service role, bypassa RLS). A regra
-   "filtre `organization_id` manualmente, nunca do body" não tem *enforcement automático* na
-   escrita — é revisão humana. Os 56 arquivos de invariante cobrem isolamento a sério e
-   **rodam em CI**, o que mitiga muito; o que falta é o gate que impede um handler novo de
-   nascer errado (lint rule ou teste de diff). Erro aqui é vazamento cross-tenant, o pior
-   modo de falha do produto.
+1. ~~**89 dos 169 handlers usam `createAdminClient`** sem gate automático~~ — **o gate existe
+   desde 2026-08-13**: `tests/unit/service-role-escopo-de-tenant.test.ts` (dentro do `verify`,
+   que é obrigatório) reprova handler novo que use o admin client sem mencionar o escopo da
+   organização, e reprova entrada obsoleta na allowlist. Remedido no mesmo dia: **107 de 191**
+   handlers usam o admin client, **7** na allowlist, todos lidos e legitimamente de plataforma
+   (crons system-wide, catálogo de modelos, atualização do host, super-admins) — nenhum
+   vazamento encontrado. **Risco residual:** o gate vê MENÇÃO, não comportamento. Handler que
+   cita `organization_id` mas o tira do body continua passando; quem prova isolamento de
+   verdade é `tests/invariants/`, no job `invariants`.
 2. **Fallback in-memory do rate limit** (`rate-limit.ts:23`): sem Upstash configurado — o
    estado normal de um primeiro deploy — o limite passa a ser por processo. Silencioso além
    de um `logger.warn`.
