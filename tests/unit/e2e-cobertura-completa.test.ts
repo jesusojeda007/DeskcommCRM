@@ -66,7 +66,13 @@ function listaDoWorkflow(yml: string, chave: string): string[] {
     .filter((s) => s.endsWith(".spec.ts"));
 }
 
-const yml = readFileSync(WORKFLOW, "utf8");
+// `\r\n` → `\n` antes de qualquer parse: com `core.autocrlf=true` (o default de
+// quem clona no Windows) o workflow chega ao disco em CRLF, e o regex acima —
+// escrito com `\n` — não casa. O sintoma é o pior possível: o parser devolve
+// lista VAZIA, então o teste da cobertura acusaria as 39 specs de uma vez no
+// dev e passaria no CI (Linux, LF). Verde e vermelho, os dois errados, pelo
+// mesmo motivo. Normalizar aqui não muda nada em Linux e cura o Windows.
+const yml = readFileSync(WORKFLOW, "utf8").replace(/\r\n/g, "\n");
 const parte1 = listaDoWorkflow(yml, "SPECS_PARTE_1");
 const parte2 = listaDoWorkflow(yml, "SPECS_PARTE_2");
 const foraDoCi = listaDoWorkflow(yml, "FORA_DO_CI");

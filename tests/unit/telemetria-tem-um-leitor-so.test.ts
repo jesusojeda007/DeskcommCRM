@@ -26,7 +26,7 @@
  * despercebida.
  */
 import { readFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, sep } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
@@ -50,7 +50,12 @@ const CONSULTA = /\.from\(\s*["'`]ai_invocations["'`]\s*\)/;
 describe("telemetria de IA tem uma tabela só", () => {
   const arquivos = arquivosDeCodigo(["app", "lib", "workers", "components", "hooks", "scripts"]).map(
     (absoluto) => ({
-      caminho: relative(RAIZ_DO_REPO, absoluto),
+      // Sempre com `/`: as chaves de PERMITIDOS são escritas assim, e no Windows
+      // `relative` devolve `lib\ai\...`. Sem normalizar, NENHUMA entrada da
+      // allowlist casava — os arquivos permitidos viravam infratores e a
+      // allowlist inteira virava "entrada morta", tudo ao mesmo tempo. Verde no
+      // CI (Linux), vermelho insolúvel no dev.
+      caminho: relative(RAIZ_DO_REPO, absoluto).split(sep).join("/"),
       conteudo: readFileSync(absoluto, "utf8"),
     }),
   );

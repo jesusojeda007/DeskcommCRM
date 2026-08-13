@@ -43,16 +43,24 @@ const MODULOS_PUROS = ["@/lib/leads/timeline-query"] as const;
 /** Importa o módulo num processo filho SEM as variáveis do app. */
 function importaComAmbienteLimpo(modulo: string): { ok: boolean; erro: string } {
   const script = `import(${JSON.stringify(modulo)}).then(()=>{console.log("OK")},(e)=>{console.log("ERRO:"+String(e && e.message).split("\\n")[0]);});`;
-  // Só PATH e HOME: PATH para achar o `npx`, HOME para o cache dele. Nenhuma
-  // variável do app — é justamente a ausência delas que o teste mede.
-  // `NODE_ENV` fica de fora de propósito; o cast existe porque o tipo do Node o
-  // exige e aqui a omissão é o ponto.
+  // Só PATH e HOME: nenhuma variável do app — é justamente a ausência delas que
+  // o teste mede. `NODE_ENV` fica de fora de propósito; o cast existe porque o
+  // tipo do Node o exige e aqui a omissão é o ponto.
   const limpo = {
     PATH: process.env.PATH ?? "",
     HOME: process.env.HOME ?? "",
   } as unknown as NodeJS.ProcessEnv;
   try {
-    const saida = execFileSync("npx", ["tsx", "--eval", script], {
+    // `process.execPath --import tsx` e NÃO `npx tsx`: no Windows o `npx` é um
+    // `.cmd`, que o `execFileSync` não executa sem shell — o filho morria com
+    // `spawnSync npx ENOENT` e o teste ficava vermelho por portabilidade, não
+    // por defeito. Pior: o CONTROLE POSITIVO ficava verde pelo motivo errado
+    // (ele espera falha, e ENOENT é uma falha), então o aparato "provava" que
+    // sabia detectar o defeito enquanto nunca chegava a importar nada. É o
+    // falso verde que este próprio arquivo existe para impedir, um nível acima.
+    // Chamar o binário do node por caminho absoluto não depende de PATH nem de
+    // shell, e vale igual nos três sistemas.
+    const saida = execFileSync(process.execPath, ["--import", "tsx", "--eval", script], {
       cwd: RAIZ,
       env: limpo,
       encoding: "utf8",

@@ -29,7 +29,7 @@
  * silenciosa — se você precisar acrescentar uma, escreva o porquê junto.
  */
 import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, sep } from "node:path";
 
 // O padrão vive em módulo próprio para poder ser testado sem executar o lint —
 // ver a justificativa das duas fronteiras (issue #118) lá.
@@ -182,9 +182,23 @@ const KNOWN_DEBT: { reason: string; files: string[] }[] = [
 
 const DEBT = new Set(KNOWN_DEBT.flatMap((g) => g.files));
 
+/**
+ * Caminho SEMPRE com `/`, mesmo no Windows.
+ *
+ * `join` devolve `lib\channels\x.ts` lá, e tanto os regex de `ALLOWED` quanto as
+ * chaves de `KNOWN_DEBT` são escritos com `/`. O resultado era um lint que, numa
+ * máquina Windows, dava vermelho de duas formas ao mesmo tempo: os 56 arquivos
+ * de dívida não casavam com a lista (viravam "novos") e a lista inteira não
+ * casava com eles (virava "obsoleta"). Verde em CI (Linux), inútil no dev — e
+ * gate que só grita mentira é gate que o dev aprende a pular.
+ */
+function normaliza(caminho: string): string {
+  return sep === "/" ? caminho : caminho.split(sep).join("/");
+}
+
 function walk(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
-    const p = join(dir, e.name);
+    const p = normaliza(join(dir, e.name));
     if (e.isDirectory()) return e.name === "node_modules" ? [] : walk(p);
     return /\.tsx?$/.test(e.name) ? [p] : [];
   });
