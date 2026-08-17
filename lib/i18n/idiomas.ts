@@ -45,3 +45,16 @@ export function normalizarIdioma(bruto: string | null | undefined): Idioma {
     ? (bruto as Idioma)
     : IDIOMA_PADRAO;
 }
+
+/**
+ * Antes do login não existe `user_metadata.locale` pra ler — a única pista
+ * disponível nas telas públicas (login, cadastro, MFA, recuperação de senha)
+ * é o `Accept-Language` que o browser manda sozinho, sem o visitante escolher
+ * nada. Pega só a primeira preferência e ignora a região (`es-AR` conta como
+ * `es`) — região demais e a lista de idiomas aceitos vira código morto.
+ */
+export function normalizarIdiomaDoAceite(acceptLanguage: string | null | undefined): Idioma {
+  const base = acceptLanguage?.split(",")[0]?.trim().split("-")[0]?.toLowerCase();
+  if (base === "es") return "es";
+  return IDIOMA_PADRAO;
+}

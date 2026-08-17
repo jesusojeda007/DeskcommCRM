@@ -9,8 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signUp } from "@/app/actions/auth/signUp";
+import { useT } from "@/hooks/i18n/useT";
 
 export function SignupForm() {
+  const t = useT();
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
   const [sentTo, setSentTo] = useState<string | null>(null);
@@ -33,11 +35,11 @@ export function SignupForm() {
         return;
       }
       if (res.error === "rate_limited") {
-        setServerError("Muitas tentativas. Aguarde alguns minutos.");
+        setServerError(t("Muitas tentativas. Aguarde alguns minutos."));
       } else if (res.error === "validation_error") {
-        setServerError("Dados inválidos. Confira os campos.");
+        setServerError(t("Dados inválidos. Confira os campos."));
       } else {
-        setServerError("Não foi possível criar a conta. Tente novamente.");
+        setServerError(t("Não foi possível criar a conta. Tente novamente."));
       }
     });
   };
@@ -48,10 +50,10 @@ export function SignupForm() {
         className="space-y-2 rounded-md border bg-muted/40 px-4 py-6 text-center"
         role="status"
       >
-        <p className="text-sm font-medium">Confirme seu e-mail</p>
+        <p className="text-sm font-medium">{t("Confirme seu e-mail")}</p>
         <p className="text-sm text-muted-foreground">
-          Enviamos um link de confirmação para <strong>{sentTo}</strong>. Abra o
-          e-mail e clique no link para ativar sua conta.
+          {t("Enviamos um link de confirmação para")} <strong>{sentTo}</strong>
+          {t(". Abra o e-mail e clique no link para ativar sua conta.")}
         </p>
       </div>
     );
@@ -60,7 +62,7 @@ export function SignupForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
       <div className="space-y-1.5">
-        <Label htmlFor="org_name">Nome da empresa</Label>
+        <Label htmlFor="org_name">{t("Nome da empresa")}</Label>
         <Input
           id="org_name"
           type="text"
@@ -74,7 +76,7 @@ export function SignupForm() {
         )}
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("Email")}</Label>
         <Input
           id="email"
           type="email"
@@ -87,7 +89,7 @@ export function SignupForm() {
         )}
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="password">Senha</Label>
+        <Label htmlFor="password">{t("Senha")}</Label>
         <Input
           id="password"
           type="password"
@@ -100,7 +102,7 @@ export function SignupForm() {
         )}
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="password_confirm">Confirmar senha</Label>
+        <Label htmlFor="password_confirm">{t("Confirmar senha")}</Label>
         <Input
           id="password_confirm"
           type="password"
@@ -121,7 +123,7 @@ export function SignupForm() {
         </div>
       )}
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Criando conta..." : "Criar conta"}
+        {isPending ? t("Criando conta...") : t("Criar conta")}
       </Button>
     </form>
   );

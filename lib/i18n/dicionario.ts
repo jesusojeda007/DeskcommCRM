@@ -1052,6 +1052,126 @@ export const DICIONARIO: Traducoes = {
   // ─── Achados na QA visual da Fase 1 (Shell) ───
   "Expandir sidebar": { es: "Expandir barra lateral" },
   "Recolher sidebar": { es: "Contraer barra lateral" },
+
+  // ─── Auth: login, MFA, signup, recuperação/redefinição de senha ───
+  "Muitas tentativas. Aguarde alguns minutos.": { es: "Demasiados intentos. Esperá unos minutos." },
+  "Email inválido. Confira o campo.": { es: "Email inválido. Revisá el campo." },
+  "Não foi possível enviar o e-mail. Tente novamente.": { es: "No fue posible enviar el email. Intentá de nuevo." },
+  "Verifique seu e-mail": { es: "Revisá tu email" },
+  "Se existir uma conta com esse e-mail, enviamos um link para redefinir a senha.": {
+    es: "Si existe una cuenta con ese email, enviamos un link para restablecer la contraseña.",
+  },
+  "Enviando...": { es: "Enviando..." },
+  "Enviar link de redefinição": { es: "Enviar link de restablecimiento" },
+  "Email ou senha incorretos.": { es: "Email o contraseña incorrectos." },
+  "Dados inválidos. Confira os campos.": { es: "Datos inválidos. Revisá los campos." },
+  "Erro inesperado. Tente novamente.": { es: "Error inesperado. Intentá de nuevo." },
+  Senha: { es: "Contraseña" },
+  "Entrando...": { es: "Entrando..." },
+  Entrar: { es: "Entrar" },
+  "Configurando autenticação em duas etapas...": { es: "Configurando la verificación en dos pasos..." },
+  "Não foi possível iniciar a configuração.": { es: "No fue posible iniciar la configuración." },
+  "Código inválido. Tente novamente.": { es: "Código inválido. Intentá de nuevo." },
+  "Falha ao confirmar. Tente novamente.": { es: "Falló la confirmación. Intentá de nuevo." },
+  "Configure a verificação em duas etapas": { es: "Configurá la verificación en dos pasos" },
+  "Sua conta exige 2FA. Use um aplicativo autenticador (Google Authenticator, 1Password, Authy, Bitwarden) para gerar códigos de 6 dígitos.": {
+    es: "Tu cuenta exige 2FA. Usá una app autenticadora (Google Authenticator, 1Password, Authy, Bitwarden) para generar códigos de 6 dígitos.",
+  },
+  "Iniciar configuração": { es: "Iniciar configuración" },
+  "Escaneie o QR code": { es: "Escaneá el código QR" },
+  "Abra seu app autenticador, adicione uma nova conta e digite o código de 6 dígitos abaixo.": {
+    es: "Abrí tu app autenticadora, agregá una cuenta nueva y escribí el código de 6 dígitos abajo.",
+  },
+  "Gerando QR code...": { es: "Generando código QR..." },
+  "QR code para configurar autenticador": { es: "Código QR para configurar el autenticador" },
+  "Não consegue escanear? Digite o código manual": { es: "¿No podés escanear? Escribí el código manual" },
+  "Digite o código de 6 dígitos": { es: "Escribí el código de 6 dígitos" },
+  "Verificando...": { es: "Verificando..." },
+  "Códigos de recuperação": { es: "Códigos de recuperación" },
+  "Muitas tentativas. Aguarde {s}s e tente novamente.": { es: "Demasiados intentos. Esperá {s}s y volvé a intentar." },
+  "Muitas tentativas. Tente novamente em {s}s.": { es: "Demasiados intentos. Volvé a intentar en {s}s." },
+  Verificar: { es: "Verificar" },
+  "Perdi acesso ao autenticador": { es: "Perdí el acceso al autenticador" },
+  "Códigos copiados para a área de transferência.": { es: "Códigos copiados al portapapeles." },
+  "Não foi possível copiar. Selecione e copie manualmente.": {
+    es: "No fue posible copiar. Seleccioná y copiá manualmente.",
+  },
+  "Arquivo baixado.": { es: "Archivo descargado." },
+  "Salve esses 10 códigos em um local seguro. Cada um pode ser usado": {
+    es: "Guardá estos 10 códigos en un lugar seguro. Cada uno se puede usar",
+  },
+  "para entrar caso você perca acesso ao autenticador. Eles": {
+    es: "para entrar si perdés el acceso al autenticador.",
+  },
+  "não serão mostrados novamente": { es: "No se muestran de nuevo" },
+  "Copiar todos": { es: "Copiar todos" },
+  "Baixar .txt": { es: "Descargar .txt" },
+  "Salvei meus códigos em local seguro.": { es: "Guardé mis códigos en un lugar seguro." },
+  Concluir: { es: "Finalizar" },
+  "Código inválido ou já utilizado.": { es: "Código inválido o ya utilizado." },
+  "Serviço de recuperação indisponível. Contate o administrador.": {
+    es: "Servicio de recuperación no disponible. Contactá al administrador.",
+  },
+  "Código de recuperação": { es: "Código de recuperación" },
+  "Use um dos 10 códigos que você salvou ao configurar a verificação em duas etapas.": {
+    es: "Usá uno de los 10 códigos que guardaste al configurar la verificación en dos pasos.",
+  },
+  "Validando...": { es: "Validando..." },
+  "Recuperar acesso": { es: "Recuperar acceso" },
+  "Nova senha": { es: "Contraseña nueva" },
+  "Confirmar nova senha": { es: "Confirmar contraseña nueva" },
+  "Sua conta tem verificação em duas etapas. Digite o código de 6 dígitos do seu app autenticador para concluir.": {
+    es: "Tu cuenta tiene verificación en dos pasos. Escribí el código de 6 dígitos de tu app autenticadora para terminar.",
+  },
+  "Código de verificação inválido. Tente de novo.": { es: "Código de verificación inválido. Probá de nuevo." },
+  "Sessão de redefinição expirada. Peça um novo link em Recuperar senha.": {
+    es: "Sesión de restablecimiento expirada. Pedí un link nuevo en Recuperar contraseña.",
+  },
+  "A nova senha precisa ser diferente da atual.": { es: "La nueva contraseña tiene que ser diferente de la actual." },
+  "Não foi possível redefinir a senha. Tente novamente.": {
+    es: "No fue posible restablecer la contraseña. Intentá de nuevo.",
+  },
+  "Código de verificação (2 etapas)": { es: "Código de verificación (2 pasos)" },
+  "Definir nova senha": { es: "Definir contraseña nueva" },
+  "Não foi possível criar a conta. Tente novamente.": { es: "No fue posible crear la cuenta. Intentá de nuevo." },
+  "Confirme seu e-mail": { es: "Confirmá tu email" },
+  "Enviamos um link de confirmação para": { es: "Te enviamos un link de confirmación a" },
+  ". Abra o e-mail e clique no link para ativar sua conta.": {
+    es: ". Abrí el email y hacé clic en el link para activar tu cuenta.",
+  },
+  "Nome da empresa": { es: "Nombre de la empresa" },
+  "Confirmar senha": { es: "Confirmar contraseña" },
+  "Criando conta...": { es: "Creando cuenta..." },
+  "Criar conta": { es: "Crear cuenta" },
+  "Código de 6 dígitos": { es: "Código de 6 dígitos" },
+  "Dígito {n}": { es: "Dígito {n}" },
+  "Senha redefinida com sucesso. Entre com a nova senha.": {
+    es: "Contraseña restablecida con éxito. Entrá con la nueva contraseña.",
+  },
+  "Link inválido ou expirado. Peça um novo em Recuperar senha ou refaça o cadastro.": {
+    es: "Link inválido o expirado. Pedí uno nuevo en Recuperar contraseña o rehacé el registro.",
+  },
+  "Sua conta foi confirmada, mas houve um erro ao preparar seu ambiente. Tente entrar novamente em instantes.": {
+    es: "Tu cuenta fue confirmada, pero hubo un error al preparar tu entorno. Intentá entrar de nuevo en unos instantes.",
+  },
+  "Esqueci minha senha": { es: "Olvidé mi contraseña" },
+  "Não tem conta?": { es: "¿No tenés cuenta?" },
+  "Recuperar senha": { es: "Recuperar contraseña" },
+  "Informe seu e-mail e enviaremos um link de redefinição": {
+    es: "Ingresá tu email y te enviamos un link de restablecimiento",
+  },
+  "Lembrou a senha?": { es: "¿Te acordaste de la contraseña?" },
+  "Verificação em duas etapas": { es: "Verificación en dos pasos" },
+  "Digite o código de 6 dígitos do seu autenticador.": { es: "Escribí el código de 6 dígitos de tu autenticador." },
+  "Use um código de recuperação para reconfigurar sua autenticação em duas etapas.": {
+    es: "Usá un código de recuperación para reconfigurar tu autenticación en dos pasos.",
+  },
+  "Voltar ao login": { es: "Volver al login" },
+  "Escolha uma nova senha para sua conta": { es: "Elegí una contraseña nueva para tu cuenta" },
+  "Comece a usar o": { es: "Empezá a usar" },
+  "em minutos": { es: "en minutos" },
+  "Já tem conta?": { es: "¿Ya tenés cuenta?" },
+
 };
 
 /**

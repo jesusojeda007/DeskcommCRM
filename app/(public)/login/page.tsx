@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { LoginForm } from "@/components/auth/LoginForm";
 import { branding } from "@/lib/branding";
+import { T } from "@/components/shell/T";
 
 export const metadata = { title: "Entrar" };
 
@@ -14,7 +15,7 @@ export default async function LoginPage({
   return (
     <div className="space-y-6">
       <div className="space-y-1.5 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Entrar</h1>
+        <h1 className="text-2xl font-semibold tracking-tight"><T>Entrar</T></h1>
         <p className="text-sm text-muted-foreground">{branding().name}</p>
       </div>
       {reset === "success" && (
@@ -22,7 +23,7 @@ export default async function LoginPage({
           className="rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm"
           role="status"
         >
-          Senha redefinida com sucesso. Entre com a nova senha.
+          <T>Senha redefinida com sucesso. Entre com a nova senha.</T>
         </div>
       )}
       {error === "link_invalido" && (
@@ -30,8 +31,10 @@ export default async function LoginPage({
           className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
           role="alert"
         >
-          Link inválido ou expirado. Peça um novo em Recuperar senha ou refaça o
-          cadastro.
+          <T>
+            Link inválido ou expirado. Peça um novo em Recuperar senha ou refaça o
+            cadastro.
+          </T>
         </div>
       )}
       {error === "provisionamento" && (
@@ -39,8 +42,10 @@ export default async function LoginPage({
           className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
           role="alert"
         >
-          Sua conta foi confirmada, mas houve um erro ao preparar seu ambiente.
-          Tente entrar novamente em instantes.
+          <T>
+            Sua conta foi confirmada, mas houve um erro ao preparar seu ambiente.
+            Tente entrar novamente em instantes.
+          </T>
         </div>
       )}
       <LoginForm next={next} />
@@ -50,16 +55,16 @@ export default async function LoginPage({
             href="/login/forgot"
             className="text-muted-foreground underline underline-offset-4 hover:text-foreground"
           >
-            Esqueci minha senha
+            <T>Esqueci minha senha</T>
           </Link>
         </p>
         <p className="text-muted-foreground">
-          Não tem conta?{" "}
+          <T>Não tem conta?</T>{" "}
           <Link
             href="/signup"
             className="font-medium text-foreground underline underline-offset-4"
           >
-            Criar conta
+            <T>Criar conta</T>
           </Link>
         </p>
       </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { MfaEnrollModal } from "@/components/auth/MfaEnrollModal";
+import { useT } from "@/hooks/i18n/useT";
 
 /**
  * Full-viewport blocker shown to users (admin / platform_admin) who haven't
@@ -23,6 +24,7 @@ export function MfaEnrollGate({
   enrolled: boolean;
   children: React.ReactNode;
 }) {
+  const t = useT();
   const [blocking] = useState(!enrolled);
 
   if (!blocking) return <>{children}</>;
@@ -31,7 +33,7 @@ export function MfaEnrollGate({
     <div className="fixed inset-0 z-40 bg-background">
       <div className="absolute inset-0 flex items-center justify-center p-4">
         <p className="text-sm text-muted-foreground">
-          Configurando autenticação em duas etapas...
+          {t("Configurando autenticação em duas etapas...")}
         </p>
       </div>
       <MfaEnrollModal />

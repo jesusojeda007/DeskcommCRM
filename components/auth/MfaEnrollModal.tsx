@@ -7,6 +7,7 @@ import { TOTPInput } from "@/components/auth/TOTPInput";
 import { RecoveryCodesPanel } from "@/components/auth/RecoveryCodesPanel";
 import { enrollMfa } from "@/app/actions/auth/enrollMfa";
 import { confirmMfaEnroll } from "@/app/actions/auth/confirmMfaEnroll";
+import { useT } from "@/hooks/i18n/useT";
 
 type Step = "intro" | "scan" | "codes";
 
@@ -26,6 +27,7 @@ interface EnrollState {
  * On completion, reloads the page so the parent layout re-evaluates the gate.
  */
 export function MfaEnrollModal() {
+  const t = useT();
   const [step, setStep] = useState<Step>("intro");
   const [enrollState, setEnrollState] = useState<EnrollState | null>(null);
   const [code, setCode] = useState("");
@@ -39,7 +41,7 @@ export function MfaEnrollModal() {
     startTransition(async () => {
       const res = await enrollMfa();
       if (!res.ok) {
-        setError(res.message ?? "Não foi possível iniciar a configuração.");
+        setError(res.message ?? t("Não foi possível iniciar a configuração."));
         setStep("intro");
         return;
       }
@@ -61,9 +63,9 @@ export function MfaEnrollModal() {
       const res = await confirmMfaEnroll(finalCode, enrollState.factor_id);
       if (!res.ok) {
         if (res.error === "verify_failed" || res.error === "invalid_code") {
-          setError("Código inválido. Tente novamente.");
+          setError(t("Código inválido. Tente novamente."));
         } else {
-          setError(res.message ?? "Falha ao confirmar. Tente novamente.");
+          setError(res.message ?? t("Falha ao confirmar. Tente novamente."));
         }
         setCode("");
         return;
@@ -85,12 +87,12 @@ export function MfaEnrollModal() {
           <div className="space-y-4">
             <div>
               <h2 id="mfa-title" className="text-xl font-semibold">
-                Configure a verificação em duas etapas
+                {t("Configure a verificação em duas etapas")}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Sua conta exige 2FA. Use um aplicativo autenticador (Google
-                Authenticator, 1Password, Authy, Bitwarden) para gerar códigos
-                de 6 dígitos.
+                {t(
+                  "Sua conta exige 2FA. Use um aplicativo autenticador (Google Authenticator, 1Password, Authy, Bitwarden) para gerar códigos de 6 dígitos.",
+                )}
               </p>
             </div>
             {error && (
@@ -107,7 +109,7 @@ export function MfaEnrollModal() {
               }}
               disabled={isPending}
             >
-              Iniciar configuração
+              {t("Iniciar configuração")}
             </Button>
           </div>
         )}
@@ -116,17 +118,18 @@ export function MfaEnrollModal() {
           <div className="space-y-5">
             <div>
               <h2 id="mfa-title" className="text-xl font-semibold">
-                Escaneie o QR code
+                {t("Escaneie o QR code")}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Abra seu app autenticador, adicione uma nova conta e digite o
-                código de 6 dígitos abaixo.
+                {t(
+                  "Abra seu app autenticador, adicione uma nova conta e digite o código de 6 dígitos abaixo.",
+                )}
               </p>
             </div>
 
             {!enrollState ? (
               <div className="flex h-60 items-center justify-center text-sm text-muted-foreground">
-                Gerando QR code...
+                {t("Gerando QR code...")}
               </div>
             ) : (
               <>
@@ -134,7 +137,7 @@ export function MfaEnrollModal() {
                   {/* eslint-disable-next-line @next/next/no-img-element -- inline data URL, no benefit from next/image optimization */}
                   <img
                     src={enrollState.qr_data_url}
-                    alt="QR code para configurar autenticador"
+                    alt={t("QR code para configurar autenticador")}
                     width={240}
                     height={240}
                     className="rounded border border-border bg-white p-2"
@@ -142,7 +145,7 @@ export function MfaEnrollModal() {
                 </div>
                 <details className="text-xs text-muted-foreground">
                   <summary className="cursor-pointer">
-                    Não consegue escanear? Digite o código manual
+                    {t("Não consegue escanear? Digite o código manual")}
                   </summary>
                   <code className="mt-2 block break-all rounded bg-muted p-2 font-mono">
                     {enrollState.secret}
@@ -151,7 +154,7 @@ export function MfaEnrollModal() {
 
                 <div className="space-y-3">
                   <p className="text-center text-sm font-medium">
-                    Digite o código de 6 dígitos
+                    {t("Digite o código de 6 dígitos")}
                   </p>
                   <TOTPInput
                     value={code}
@@ -172,7 +175,7 @@ export function MfaEnrollModal() {
                     disabled={isPending || code.length !== 6}
                     onClick={() => submitCode()}
                   >
-                    {isPending ? "Verificando..." : "Confirmar"}
+                    {isPending ? t("Verificando...") : t("Confirmar")}
                   </Button>
                 </div>
               </>
@@ -184,7 +187,7 @@ export function MfaEnrollModal() {
           <div className="space-y-4">
             <div>
               <h2 id="mfa-title" className="text-xl font-semibold">
-                Códigos de recuperação
+                {t("Códigos de recuperação")}
               </h2>
             </div>
             <RecoveryCodesPanel

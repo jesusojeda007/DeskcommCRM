@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 import { MfaForm } from "@/components/auth/MfaForm";
+import { T } from "@/components/shell/T";
 
 export const metadata = { title: "Verificação em duas etapas" };
 
@@ -24,9 +25,9 @@ export default async function MfaChallengePage({
   return (
     <div className="space-y-6">
       <div className="space-y-1.5 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Verificação em duas etapas</h1>
+        <h1 className="text-2xl font-semibold tracking-tight"><T>Verificação em duas etapas</T></h1>
         <p className="text-sm text-muted-foreground">
-          Digite o código de 6 dígitos do seu autenticador.
+          <T>Digite o código de 6 dígitos do seu autenticador.</T>
         </p>
       </div>
       <MfaForm next={next} />
