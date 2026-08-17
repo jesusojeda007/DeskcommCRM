@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
+import { useT } from "@/hooks/i18n/useT";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -76,24 +77,26 @@ const SLA_LABELS: Record<SlaBucket, string> = {
 
 // ── Date helpers ──────────────────────────────────────────────────────────────
 
-function fmtRelative(iso: string): string {
+type Translate = (texto: string, vars?: Record<string, string | number>) => string;
+
+function fmtRelative(iso: string, t: Translate): string {
   try {
     const now = Date.now();
     const then = new Date(iso).getTime();
     const diffMs = now - then;
     const diffMin = Math.floor(diffMs / 60_000);
-    if (diffMin < 1) return "agora";
-    if (diffMin < 60) return `${diffMin}min atrás`;
+    if (diffMin < 1) return t("agora");
+    if (diffMin < 60) return t("{n}min atrás", { n: diffMin });
     const diffH = Math.floor(diffMin / 60);
-    if (diffH < 24) return `${diffH}h atrás`;
+    if (diffH < 24) return t("{n}h atrás", { n: diffH });
     const diffD = Math.floor(diffH / 24);
-    return `${diffD}d atrás`;
+    return t("{n}d atrás", { n: diffD });
   } catch {
     return iso;
   }
 }
 
-function fmtDistance(iso: string | null): { label: string; urgent: boolean } {
+function fmtDistance(iso: string | null, t: Translate): { label: string; urgent: boolean } {
   if (!iso) return { label: "—", urgent: false };
   try {
     const now = Date.now();
@@ -103,14 +106,17 @@ function fmtDistance(iso: string | null): { label: string; urgent: boolean } {
     if (diffMs < 0) {
       const overMs = Math.abs(diffMs);
       const overD = Math.floor(overMs / 86_400_000);
-      return { label: overD > 0 ? `${overD}d atrasado` : "atrasado hoje", urgent: true };
+      return {
+        label: overD > 0 ? t("{n}d atrasado", { n: overD }) : t("atrasado hoje"),
+        urgent: true,
+      };
     }
     const diffD = Math.floor(diffMs / 86_400_000);
     if (diffD < 1) {
       const diffH = Math.floor(diffMs / 3_600_000);
-      return { label: `em ${diffH}h`, urgent };
+      return { label: t("em {n}h", { n: diffH }), urgent };
     }
-    return { label: `em ${diffD}d`, urgent };
+    return { label: t("em {n}d", { n: diffD }), urgent };
   } catch {
     return { label: iso, urgent: false };
   }
@@ -123,6 +129,7 @@ const ALL = "__ALL__";
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function RequestsTable() {
+  const t = useT();
   const [status, setStatus] = useState<LgpdRequestStatus | undefined>();
   const [type, setType] = useState<LgpdRequestType | undefined>();
   const [slaBucket, setSlaBucket] = useState<SlaBucket | undefined>();
@@ -147,15 +154,15 @@ export function RequestsTable() {
           }}
         >
           <SelectTrigger className="h-9 w-[170px]">
-            <SelectValue placeholder="Status: todos" />
+            <SelectValue placeholder={t("Status: todos")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL}>Status: todos</SelectItem>
-            <SelectItem value="received">Recebido</SelectItem>
-            <SelectItem value="processing">Processando</SelectItem>
-            <SelectItem value="completed">Concluído</SelectItem>
-            <SelectItem value="failed">Falhou</SelectItem>
-            <SelectItem value="pending_review">Revisão pendente</SelectItem>
+            <SelectItem value={ALL}>{t("Status: todos")}</SelectItem>
+            <SelectItem value="received">{t("Recebido")}</SelectItem>
+            <SelectItem value="processing">{t("Processando")}</SelectItem>
+            <SelectItem value="completed">{t("Concluído")}</SelectItem>
+            <SelectItem value="failed">{t("Falhou")}</SelectItem>
+            <SelectItem value="pending_review">{t("Revisão pendente")}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -167,13 +174,13 @@ export function RequestsTable() {
           }}
         >
           <SelectTrigger className="h-9 w-[200px]">
-            <SelectValue placeholder="Tipo: todos" />
+            <SelectValue placeholder={t("Tipo: todos")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL}>Tipo: todos</SelectItem>
-            <SelectItem value="redact">Anonimização cliente</SelectItem>
-            <SelectItem value="data_request">Solicitação dados</SelectItem>
-            <SelectItem value="store_redact">Anonimização tenant</SelectItem>
+            <SelectItem value={ALL}>{t("Tipo: todos")}</SelectItem>
+            <SelectItem value="redact">{t("Anonimização cliente")}</SelectItem>
+            <SelectItem value="data_request">{t("Solicitação dados")}</SelectItem>
+            <SelectItem value="store_redact">{t("Anonimização tenant")}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -185,13 +192,13 @@ export function RequestsTable() {
           }}
         >
           <SelectTrigger className="h-9 w-[160px]">
-            <SelectValue placeholder="SLA: todos" />
+            <SelectValue placeholder={t("SLA: todos")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL}>SLA: todos</SelectItem>
-            <SelectItem value="overdue">Vencido</SelectItem>
-            <SelectItem value="critical">Crítico</SelectItem>
-            <SelectItem value="warning">Alerta</SelectItem>
+            <SelectItem value={ALL}>{t("SLA: todos")}</SelectItem>
+            <SelectItem value="overdue">{t("Vencido")}</SelectItem>
+            <SelectItem value="critical">{t("Crítico")}</SelectItem>
+            <SelectItem value="warning">{t("Alerta")}</SelectItem>
             <SelectItem value="ok">OK</SelectItem>
           </SelectContent>
         </Select>
@@ -207,13 +214,13 @@ export function RequestsTable() {
               setPage(1);
             }}
           >
-            Limpar filtros
+            {t("Limpar filtros")}
           </Button>
         )}
 
         {meta && (
           <span className="ml-auto text-xs text-muted-foreground">
-            {meta.total} {meta.total === 1 ? "solicitação" : "solicitações"}
+            {meta.total} {t(meta.total === 1 ? "solicitação" : "solicitações")}
           </span>
         )}
       </div>
@@ -224,12 +231,12 @@ export function RequestsTable() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[90px]">ID</TableHead>
-              <TableHead>Tipo</TableHead>
-              <TableHead>Sujeito</TableHead>
-              <TableHead>Recebido</TableHead>
-              <TableHead>Vence</TableHead>
+              <TableHead>{t("Tipo")}</TableHead>
+              <TableHead>{t("Sujeito")}</TableHead>
+              <TableHead>{t("Recebido")}</TableHead>
+              <TableHead>{t("Vence")}</TableHead>
               <TableHead>SLA</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{t("Status")}</TableHead>
               <TableHead className="w-[60px]" />
             </TableRow>
           </TableHeader>
@@ -249,9 +256,9 @@ export function RequestsTable() {
                 <TableCell colSpan={8} className="text-center">
                   <div className="flex flex-col items-center gap-2 py-8 text-sm text-muted-foreground">
                     <Warning size={24} weight="fill" className="text-red-500" aria-hidden />
-                    <p>Erro ao carregar solicitações.</p>
+                    <p>{t("Erro ao carregar solicitações.")}</p>
                     <Button size="sm" variant="outline" onClick={() => q.refetch()}>
-                      Tentar novamente
+                      {t("Tentar novamente")}
                     </Button>
                   </div>
                 </TableCell>
@@ -261,16 +268,16 @@ export function RequestsTable() {
                 <TableCell colSpan={8} className="text-center">
                   <div className="flex flex-col items-center gap-2 py-12 text-sm text-muted-foreground">
                     <Warning size={32} weight="thin" aria-hidden />
-                    <p className="font-medium">Nenhuma solicitação LGPD</p>
+                    <p className="font-medium">{t("Nenhuma solicitação LGPD")}</p>
                     <p className="text-xs">
-                      Solicitações de dados e anonimizações aparecerão aqui.
+                      {t("Solicitações de dados e anonimizações aparecerão aqui.")}
                     </p>
                   </div>
                 </TableCell>
               </TableRow>
             ) : (
               rows.map((r) => {
-                const due = fmtDistance(r.due_at);
+                const due = fmtDistance(r.due_at, t);
                 const subject = r.external_customer_id
                   ? r.external_customer_id.slice(0, 16)
                   : r.contact_id
@@ -284,14 +291,14 @@ export function RequestsTable() {
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary" className="whitespace-nowrap text-xs">
-                        {TYPE_LABELS[r.request_type] ?? r.request_type}
+                        {t(TYPE_LABELS[r.request_type] ?? r.request_type)}
                       </Badge>
                     </TableCell>
                     <TableCell className="max-w-[140px] truncate font-mono text-xs">
                       {subject}
                     </TableCell>
                     <TableCell className="whitespace-nowrap text-xs text-muted-foreground">
-                      {fmtRelative(r.received_at)}
+                      {fmtRelative(r.received_at, t)}
                     </TableCell>
                     <TableCell
                       className={`whitespace-nowrap text-xs font-medium ${due.urgent ? "text-red-600 dark:text-red-400" : "text-muted-foreground"}`}
@@ -300,7 +307,7 @@ export function RequestsTable() {
                     </TableCell>
                     <TableCell>
                       <Badge variant={SLA_VARIANT[r.sla_bucket]} className="text-xs">
-                        {SLA_LABELS[r.sla_bucket]}
+                        {t(SLA_LABELS[r.sla_bucket])}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -308,12 +315,12 @@ export function RequestsTable() {
                         variant={STATUS_VARIANT[r.status]}
                         className="whitespace-nowrap text-xs"
                       >
-                        {STATUS_LABELS[r.status] ?? r.status}
+                        {t(STATUS_LABELS[r.status] ?? r.status)}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <Button asChild size="sm" variant="ghost" className="h-7 px-2 text-xs">
-                        <Link href={`/app/lgpd/requests/${r.id}`}>Ver</Link>
+                        <Link href={`/app/lgpd/requests/${r.id}`}>{t("Ver")}</Link>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -333,10 +340,10 @@ export function RequestsTable() {
             disabled={page <= 1 || q.isFetching}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
           >
-            Anterior
+            {t("Anterior")}
           </Button>
           <span className="text-xs text-muted-foreground">
-            Página {meta.page}
+            {t("Página {n}", { n: meta.page })}
           </span>
           <Button
             variant="outline"
@@ -344,7 +351,7 @@ export function RequestsTable() {
             disabled={!meta.has_more || q.isFetching}
             onClick={() => setPage((p) => p + 1)}
           >
-            Próxima
+            {t("Próxima")}
           </Button>
         </div>
       )}

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { RequestsTable } from "./RequestsTable";
 
 export const dynamic = "force-dynamic";
@@ -19,12 +20,10 @@ export default async function LgpdRequestsPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Solicitações LGPD</h1>
-        <p className="text-sm text-muted-foreground">
-          Anonimizações e solicitações de dados de titulares. Apenas admins.
-        </p>
-      </header>
+      <PageHeader
+        title="Solicitações LGPD"
+        subtitle="Anonimizações e solicitações de dados de titulares. Apenas admins."
+      />
       <RequestsTable />
     </div>
   );

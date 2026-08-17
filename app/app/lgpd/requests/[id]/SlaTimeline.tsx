@@ -2,6 +2,7 @@
 
 import { differenceInDays, format, isBefore } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useT } from "@/hooks/i18n/useT";
 
 interface SlaTimelineProps {
   received_at: string;
@@ -15,22 +16,24 @@ interface Milestone {
   date: Date;
 }
 
+type Translate = (texto: string, vars?: Record<string, string | number>) => string;
+
 function getMilestones(
-  receivedAt: Date,
   requestType: string,
+  t: Translate,
 ): { label: string; day: number }[] {
   if (requestType === "data_request") {
     return [
-      { label: "Recebido", day: 0 },
-      { label: "Revisão intermediária", day: 5 },
-      { label: "Entrega ao titular", day: 7 },
+      { label: t("Recebido"), day: 0 },
+      { label: t("Revisão intermediária"), day: 5 },
+      { label: t("Entrega ao titular"), day: 7 },
     ];
   }
   // redact / store_redact
   return [
-    { label: "Recebido", day: 0 },
-    { label: "Processamento", day: 10 },
-    { label: "Anonimização concluída", day: 15 },
+    { label: t("Recebido"), day: 0 },
+    { label: t("Processamento"), day: 10 },
+    { label: t("Anonimização concluída"), day: 15 },
   ];
 }
 
@@ -47,11 +50,12 @@ function milestoneStatus(
 }
 
 export function SlaTimeline({ received_at, due_at, request_type }: SlaTimelineProps) {
+  const t = useT();
   const receivedAt = new Date(received_at);
   const dueAt = new Date(due_at);
   const now = new Date();
 
-  const milestoneConfigs = getMilestones(receivedAt, request_type);
+  const milestoneConfigs = getMilestones(request_type, t);
   const milestones: (Milestone & { status: "completed" | "current" | "future" })[] =
     milestoneConfigs.map((m, idx) => {
       const date = new Date(
@@ -87,13 +91,13 @@ export function SlaTimeline({ received_at, due_at, request_type }: SlaTimelinePr
       {/* Progress bar */}
       <div className="space-y-1">
         <div className="flex justify-between text-xs text-muted-foreground">
-          <span>D+{daysElapsed} (hoje)</span>
+          <span>{t("D+{n} (hoje)", { n: daysElapsed })}</span>
           <span>
             {daysRemaining > 0
-              ? `${daysRemaining}d restantes`
+              ? t("{n}d restantes", { n: daysRemaining })
               : daysRemaining === 0
-                ? "vence hoje"
-                : `${Math.abs(daysRemaining)}d em atraso`}
+                ? t("vence hoje")
+                : t("{n}d em atraso", { n: Math.abs(daysRemaining) })}
           </span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
@@ -140,7 +144,7 @@ export function SlaTimeline({ received_at, due_at, request_type }: SlaTimelinePr
               </div>
               <div className={`pb-1 text-sm ${isLast ? "" : "pb-3"}`}>
                 <p className={`leading-tight ${labelColor}`}>
-                  D+{m.targetDay} — {m.label}
+                  {t("D+{n} — {label}", { n: m.targetDay, label: m.label })}
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {format(m.date, "dd 'de' MMM yyyy", { locale: ptBR })}
