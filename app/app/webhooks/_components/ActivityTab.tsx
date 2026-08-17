@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Check, X, SkipForward, ArrowsClockwise, PaperPlaneTilt } from "@/lib/ui/icons";
 import { cn } from "@/lib/utils";
+import { useT } from "@/hooks/i18n/useT";
 import {
   useAutomationRuns,
   useResendAutomationRun,
@@ -32,13 +33,14 @@ function statusBadgeVariant(status: AutomationRuleRunRow["status"]): "success" |
   return "warning";
 }
 
-function statusBadgeLabel(status: AutomationRuleRunRow["status"]): string {
-  if (status === "success") return "Sucesso";
-  if (status === "failed") return "Falhou";
-  return "Parcial";
+function statusBadgeLabel(status: AutomationRuleRunRow["status"], t: ReturnType<typeof useT>): string {
+  if (status === "success") return t("Sucesso");
+  if (status === "failed") return t("Falhou");
+  return t("Parcial");
 }
 
 function ActionLine({ action, run }: { action: AutomationRuleRunActionResult; run: AutomationRuleRunRow }) {
+  const t = useT();
   const resend = useResendAutomationRun();
 
   const icon =
@@ -54,12 +56,12 @@ function ActionLine({ action, run }: { action: AutomationRuleRunActionResult; ru
     <div className="space-y-1">
       <div className="flex items-center gap-2 text-sm">
         {icon}
-        <span>{actionLabel(action.type)}</span>
+        <span>{t(actionLabel(action.type))}</span>
       </div>
       {action.status === "failed" ? (
         <div className="ml-6 flex items-center justify-between gap-2 rounded-sm bg-muted px-2 py-1.5">
           <p className="text-xs text-muted-foreground">
-            {action.error ?? "Essa ação não funcionou."}
+            {action.error ?? t("Essa ação não funcionou.")}
           </p>
           {action.type === "call_webhook" ? (
             <Button
@@ -69,11 +71,11 @@ function ActionLine({ action, run }: { action: AutomationRuleRunActionResult; ru
               disabled={resend.isPending}
               onClick={() =>
                 resend.mutate(run.id, {
-                  onSuccess: () => toast.success("Reenviado."),
+                  onSuccess: () => toast.success(t("Reenviado.")),
                 })
               }
             >
-              <PaperPlaneTilt /> Reenviar
+              <PaperPlaneTilt /> {t("Reenviar")}
             </Button>
           ) : null}
         </div>
@@ -83,6 +85,7 @@ function ActionLine({ action, run }: { action: AutomationRuleRunActionResult; ru
 }
 
 export function ActivityTab() {
+  const t = useT();
   const { data, isLoading, refetch, isRefetching } = useAutomationRuns();
   const runs = data?.data ?? [];
 
@@ -95,7 +98,7 @@ export function ActivityTab() {
           onClick={() => refetch()}
           disabled={isRefetching}
         >
-          <ArrowsClockwise className={cn(isRefetching && "animate-spin")} /> Atualizar
+          <ArrowsClockwise className={cn(isRefetching && "animate-spin")} /> {t("Atualizar")}
         </Button>
       </div>
 
@@ -108,8 +111,9 @@ export function ActivityTab() {
         <div className="flex justify-center pt-10">
           <Card className="max-w-md">
             <CardContent className="pt-6 text-center text-sm text-muted-foreground">
-              Nenhuma automação rodou ainda. Assim que uma regra ligada disparar, o histórico
-              aparece aqui.
+              {t(
+                "Nenhuma automação rodou ainda. Assim que uma regra ligada disparar, o histórico aparece aqui.",
+              )}
             </CardContent>
           </Card>
         </div>
@@ -120,9 +124,9 @@ export function ActivityTab() {
               <CardHeader className="space-y-1">
                 <div className="flex items-center justify-between gap-2">
                   <CardTitle className="truncate text-sm">
-                    {run.automation_rules?.name ?? "Automação removida"}
+                    {run.automation_rules?.name ?? t("Automação removida")}
                   </CardTitle>
-                  <Badge variant={statusBadgeVariant(run.status)}>{statusBadgeLabel(run.status)}</Badge>
+                  <Badge variant={statusBadgeVariant(run.status)}>{statusBadgeLabel(run.status, t)}</Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">{relativeCreatedAt(run.created_at)}</p>
               </CardHeader>

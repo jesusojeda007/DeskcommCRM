@@ -15,6 +15,7 @@ import {
 import { usePipelines, usePipelineStages } from "@/hooks/webhooks/useWebhookSources";
 import { channelLabel, useChannelSessions } from "@/hooks/channels/useChannelSessions";
 import { useAssignableMembers } from "@/hooks/inbox/useAssignableMembers";
+import { useT } from "@/hooks/i18n/useT";
 
 export type ActionItem =
   | { type: "create_or_move_lead"; config: { pipeline_id: string; stage_id: string } }
@@ -47,6 +48,7 @@ function CreateOrMoveLeadForm({
   config,
   onChange,
 }: FormProps<{ pipeline_id: string; stage_id: string }>) {
+  const t = useT();
   const { data: pipelinesRes, isLoading: pipelinesLoading } = usePipelines();
   const { data: boardRes, isLoading: stagesLoading } = usePipelineStages(
     config.pipeline_id || null,
@@ -57,14 +59,14 @@ function CreateOrMoveLeadForm({
   return (
     <div className="grid gap-2 sm:grid-cols-2">
       <div className="space-y-1">
-        <Label>Funil</Label>
+        <Label>{t("Funil")}</Label>
         <Select
           value={config.pipeline_id}
           onValueChange={(v) => onChange({ pipeline_id: v, stage_id: "" })}
           disabled={pipelinesLoading}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Escolha o funil" />
+            <SelectValue placeholder={t("Escolha o funil")} />
           </SelectTrigger>
           <SelectContent>
             {pipelines.map((p) => (
@@ -76,7 +78,7 @@ function CreateOrMoveLeadForm({
         </Select>
       </div>
       <div className="space-y-1">
-        <Label>Etapa</Label>
+        <Label>{t("Etapa")}</Label>
         <Select
           value={config.stage_id}
           onValueChange={(v) => onChange({ ...config, stage_id: v })}
@@ -84,7 +86,7 @@ function CreateOrMoveLeadForm({
         >
           <SelectTrigger>
             <SelectValue
-              placeholder={config.pipeline_id ? "Escolha a etapa" : "Escolha o funil primeiro"}
+              placeholder={config.pipeline_id ? t("Escolha a etapa") : t("Escolha o funil primeiro")}
             />
           </SelectTrigger>
           <SelectContent>
@@ -110,6 +112,7 @@ function SendWhatsappForm({
   config,
   onChange,
 }: FormProps<{ channel_session_id: string; template: string }>) {
+  const t = useT();
   const { data: sessions } = useChannelSessions();
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
@@ -129,30 +132,30 @@ function SendWhatsappForm({
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <Label>Número de WhatsApp</Label>
+        <Label>{t("Número de WhatsApp")}</Label>
         <Select
           value={config.channel_session_id}
           onValueChange={(v) => onChange({ ...config, channel_session_id: v })}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Escolha o número" />
+            <SelectValue placeholder={t("Escolha o número")} />
           </SelectTrigger>
           <SelectContent>
             {(sessions ?? []).map((s) => (
               <SelectItem key={s.id} value={s.id} disabled={s.status !== "WORKING"}>
-                {channelLabel(s) + (s.status !== "WORKING" ? " — desconectado" : "")}
+                {channelLabel(s) + (s.status !== "WORKING" ? t(" — desconectado") : "")}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         {(sessions ?? []).some((s) => s.status !== "WORKING") ? (
           <p className="text-xs text-muted-foreground">
-            Números desconectados aparecem desabilitados — reconecte em Conexões antes de usar.
+            {t("Números desconectados aparecem desabilitados — reconecte em Conexões antes de usar.")}
           </p>
         ) : null}
       </div>
       <div className="space-y-1">
-        <Label>Mensagem</Label>
+        <Label>{t("Mensagem")}</Label>
         <div className="flex flex-wrap gap-1">
           {TEMPLATE_VARS.map((v) => (
             <Button
@@ -162,7 +165,7 @@ function SendWhatsappForm({
               size="sm"
               onClick={() => insertVar(v.token)}
             >
-              {v.label}
+              {t(v.label)}
             </Button>
           ))}
         </div>
@@ -171,11 +174,12 @@ function SendWhatsappForm({
           rows={4}
           value={config.template}
           onChange={(e) => onChange({ ...config, template: e.target.value })}
-          placeholder="Oi {{nome}}, tudo bem?"
+          placeholder={t("Oi {{nome}}, tudo bem?")}
         />
         <p className="text-xs text-muted-foreground">
-          Enviamos só entre 7h e 22h e respeitamos o limite diário do número — fora disso a
-          mensagem espera a próxima janela.
+          {t(
+            "Enviamos só entre 7h e 22h e respeitamos o limite diário do número — fora disso a mensagem espera a próxima janela.",
+          )}
         </p>
       </div>
     </div>
@@ -183,10 +187,11 @@ function SendWhatsappForm({
 }
 
 function AddTagForm({ config, onChange }: FormProps<{ tags: string[] }>) {
+  const t = useT();
   const [text, setText] = React.useState(config.tags.join(", "));
   return (
     <div className="space-y-1">
-      <Label>Tags (separadas por vírgula)</Label>
+      <Label>{t("Tags (separadas por vírgula)")}</Label>
       <Input
         value={text}
         onChange={(e) => {
@@ -197,20 +202,21 @@ function AddTagForm({ config, onChange }: FormProps<{ tags: string[] }>) {
             .filter(Boolean);
           onChange({ tags });
         }}
-        placeholder="boas-vindas, novo-lead"
+        placeholder={t("boas-vindas, novo-lead")}
       />
     </div>
   );
 }
 
 function AssignOwnerForm({ config, onChange }: FormProps<{ user_id: string }>) {
+  const t = useT();
   const { data: members } = useAssignableMembers(true);
   return (
     <div className="space-y-1">
-      <Label>Atendente</Label>
+      <Label>{t("Atendente")}</Label>
       <Select value={config.user_id} onValueChange={(v) => onChange({ user_id: v })}>
         <SelectTrigger>
-          <SelectValue placeholder="Escolha o atendente" />
+          <SelectValue placeholder={t("Escolha o atendente")} />
         </SelectTrigger>
         <SelectContent>
           {(members ?? []).map((m) => (
@@ -228,6 +234,7 @@ function CallWebhookForm({
   config,
   onChange,
 }: FormProps<{ url: string; secret?: string; secret_enc?: string }>) {
+  const t = useT();
   // O segredo é write-only: o servidor guarda cifrado (secret_enc) e nunca
   // devolve o valor. Digitar aqui envia `secret` novo; deixar em branco
   // preserva o secret_enc existente no round-trip do editor.
@@ -235,7 +242,7 @@ function CallWebhookForm({
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <Label>Endereço (URL)</Label>
+        <Label>{t("Endereço (URL)")}</Label>
         <Input
           type="url"
           value={config.url}
@@ -244,7 +251,7 @@ function CallWebhookForm({
         />
       </div>
       <div className="space-y-1">
-        <Label>Segredo (opcional)</Label>
+        <Label>{t("Segredo (opcional)")}</Label>
         <Input
           type="password"
           value={config.secret ?? ""}
@@ -254,12 +261,14 @@ function CallWebhookForm({
             const { secret_enc: _enc, ...rest } = config;
             onChange(next ? { ...rest, secret: next } : { ...rest, secret: undefined });
           }}
-          placeholder={hasStoredSecret ? "•••••••• (definido — digite para trocar)" : "uma senha só sua"}
+          placeholder={
+            hasStoredSecret ? t("•••••••• (definido — digite para trocar)") : t("uma senha só sua")
+          }
         />
         <p className="text-xs text-muted-foreground">
           {hasStoredSecret
-            ? "Já existe um segredo guardado com segurança. Digitar aqui substitui; limpar remove."
-            : "Se preencher, enviaremos uma assinatura para o outro sistema conferir que fomos nós."}
+            ? t("Já existe um segredo guardado com segurança. Digitar aqui substitui; limpar remove.")
+            : t("Se preencher, enviaremos uma assinatura para o outro sistema conferir que fomos nós.")}
         </p>
       </div>
     </div>
