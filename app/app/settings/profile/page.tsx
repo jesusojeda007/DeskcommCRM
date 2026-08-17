@@ -1,4 +1,5 @@
 import { requireAuth } from "@/lib/auth/server";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { ProfileForm } from "./_form";
 
 export const dynamic = "force-dynamic";
@@ -10,12 +11,7 @@ export default async function ProfilePage() {
   // We pass safe defaults that the form re-syncs on submit.
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Perfil</h1>
-        <p className="text-sm text-muted-foreground">
-          Informações pessoais. Email só pode ser trocado em breve.
-        </p>
-      </header>
+      <PageHeader title="Perfil" subtitle="Informações pessoais. Email só pode ser trocado em breve." />
       <ProfileForm
         email={user.email}
         initialFullName={meta.full_name}

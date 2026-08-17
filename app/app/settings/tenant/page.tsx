@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
 import { createClient } from "@/lib/supabase/server";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { TenantForm } from "./_form";
 
 export const dynamic = "force-dynamic";
@@ -44,12 +45,7 @@ export default async function TenantSettingsPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Organização</h1>
-        <p className="text-sm text-muted-foreground">
-          Dados da empresa, retenção de mídia, DPO. Admin only.
-        </p>
-      </header>
+      <PageHeader title="Organização" subtitle="Dados da empresa, retenção de mídia, DPO. Admin only." />
       {row && (
         <TenantForm
           initial={{

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
 import { ConexoesShell } from "@/components/connections/ConexoesShell";
+import { PageHeader } from "@/components/shell/PageHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -21,13 +22,10 @@ export default async function ConnectionsPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Conexões</h1>
-        <p className="text-sm text-muted-foreground">
-          Por onde seu negócio fala com o cliente. Conecte números por QR ou o número oficial
-          da Meta, e acompanhe a saúde de cada um.
-        </p>
-      </header>
+      <PageHeader
+        title="Conexões"
+        subtitle="Por onde seu negócio fala com o cliente. Conecte números por QR ou o número oficial da Meta, e acompanhe a saúde de cada um."
+      />
       <ConexoesShell wahaConfigured={wahaConfigured} />
     </div>
   );

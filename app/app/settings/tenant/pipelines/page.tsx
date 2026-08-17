@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
 import { createClient } from "@/lib/supabase/server";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { PipelinesClient, type PipelineRow } from "./_client";
 
 export const dynamic = "force-dynamic";
@@ -42,13 +43,14 @@ export default async function PipelinesSettingsPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Funis</h1>
-        <p className="text-sm text-muted-foreground">
-          Para onde o agente leva o card em cada passo do atendimento
-          {podeEditarConfig ? ", vocabulário, custom fields e motivos de perda" : ""}.
-        </p>
-      </header>
+      <PageHeader
+        title="Funis"
+        subtitle={
+          podeEditarConfig
+            ? "Para onde o agente leva o card em cada passo do atendimento, vocabulário, custom fields e motivos de perda."
+            : "Para onde o agente leva o card em cada passo do atendimento."
+        }
+      />
       <PipelinesClient pipelines={pipelines} podeEditarConfig={podeEditarConfig} />
     </div>
   );

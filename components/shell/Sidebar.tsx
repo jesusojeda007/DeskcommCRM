@@ -151,7 +151,7 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
             )}
           >
             <Gear size={18} aria-hidden />
-            {!collapsed && <span className="truncate">{rodape.label}</span>}
+            {!collapsed && <span className="truncate">{t(rodape.label)}</span>}
           </Link>
         )}
         <VersionFooter collapsed={collapsed} />
