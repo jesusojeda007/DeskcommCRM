@@ -10,15 +10,18 @@ import {
   markNuvemshopConfigured,
 } from "@/app/actions/onboarding/skipWhatsapp";
 import { branding } from "@/lib/branding";
+import { useT } from "@/hooks/i18n/useT";
 
 export function ConnectNuvemshopClient() {
+  const t = useT();
   const [pending, startTransition] = useTransition();
 
   return (
     <div className="space-y-4 rounded-lg border bg-background p-6">
       <p className="text-sm">
-        Ao clicar em <strong>Conectar</strong>, você será redirecionado para autorizar o
-        {branding().name} na sua conta Nuvemshop.
+        {t("Ao clicar em")} <strong>{t("Conectar")}</strong>
+        {t(", você será redirecionado para autorizar o")} {branding().name}{" "}
+        {t("na sua conta Nuvemshop.")}
       </p>
 
       <div className="flex flex-wrap gap-2">
@@ -30,17 +33,17 @@ export function ConnectNuvemshopClient() {
               const res = await connectNuvemshop();
               if (res && !res.ok) {
                 if (res.error === "not_configured") {
-                  toast.message("Nuvemshop ainda não configurado neste ambiente.", {
-                    description: "Pule por enquanto e configure depois em Integrações.",
+                  toast.message(t("Nuvemshop ainda não configurado neste ambiente."), {
+                    description: t("Pule por enquanto e configure depois em Integrações."),
                   });
                 } else {
-                  toast.error(`Erro: ${res.error}`);
+                  toast.error(`${t("Erro:")} ${res.error}`);
                 }
               }
             })
           }
         >
-          Conectar
+          {t("Conectar")}
         </Button>
         <Button
           type="button"
@@ -48,7 +51,7 @@ export function ConnectNuvemshopClient() {
           disabled={pending}
           onClick={() => startTransition(() => void markNuvemshopConfigured())}
         >
-          Já conectei
+          {t("Já conectei")}
         </Button>
         <Button
           type="button"
@@ -56,7 +59,7 @@ export function ConnectNuvemshopClient() {
           disabled={pending}
           onClick={() => startTransition(() => void skipNuvemshop())}
         >
-          Pular por enquanto
+          {t("Pular por enquanto")}
         </Button>
       </div>
     </div>

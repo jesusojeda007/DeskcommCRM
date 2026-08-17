@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useT } from "@/hooks/i18n/useT";
 
 const TIMEZONES = [
   "America/Sao_Paulo",
@@ -33,6 +34,7 @@ const TIMEZONES = [
 ];
 
 export function WelcomeForm({ defaultOrgName }: { defaultOrgName: string }) {
+  const t = useT();
   const [displayName, setDisplayName] = useState(defaultOrgName);
   const [timezone, setTimezone] = useState("America/Sao_Paulo");
   const [accepted, setAccepted] = useState(false);
@@ -43,19 +45,19 @@ export function WelcomeForm({ defaultOrgName }: { defaultOrgName: string }) {
       className="space-y-5 rounded-lg border bg-background p-6"
       action={(formData) => {
         if (!accepted) {
-          toast.error("Aceite os termos para continuar.");
+          toast.error(t("Aceite os termos para continuar."));
           return;
         }
         startTransition(async () => {
           const res = await acceptWelcome(formData);
           if (res && !res.ok) {
-            toast.error(`Falha: ${res.error}`);
+            toast.error(`${t("Falha:")} ${res.error}`);
           }
         });
       }}
     >
       <div className="space-y-2">
-        <Label htmlFor="display_name">Nome da operação</Label>
+        <Label htmlFor="display_name">{t("Nome da operação")}</Label>
         <Input
           id="display_name"
           name="display_name"
@@ -66,12 +68,12 @@ export function WelcomeForm({ defaultOrgName }: { defaultOrgName: string }) {
           required
         />
         <p className="text-xs text-muted-foreground">
-          Como sua loja aparece para o time e nos painéis.
+          {t("Como sua loja aparece para o time e nos painéis.")}
         </p>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="timezone">Fuso horário</Label>
+        <Label htmlFor="timezone">{t("Fuso horário")}</Label>
         <Select value={timezone} onValueChange={setTimezone}>
           <SelectTrigger id="timezone">
             <SelectValue />
@@ -96,13 +98,13 @@ export function WelcomeForm({ defaultOrgName }: { defaultOrgName: string }) {
           required
         />
         <span>
-          Li e aceito os{" "}
+          {t("Li e aceito os")}{" "}
           <a className="underline" href="/legal/terms" target="_blank" rel="noreferrer">
-            Termos de Uso
+            {t("Termos de Uso")}
           </a>{" "}
-          e a{" "}
+          {t("e a")}{" "}
           <a className="underline" href="/legal/privacy" target="_blank" rel="noreferrer">
-            Política de Privacidade
+            {t("Política de Privacidade")}
           </a>
           .
         </span>
@@ -110,7 +112,7 @@ export function WelcomeForm({ defaultOrgName }: { defaultOrgName: string }) {
 
       <div className="flex justify-end">
         <Button type="submit" disabled={pending || !accepted}>
-          {pending ? "Salvando..." : "Continuar"}
+          {pending ? t("Salvando...") : t("Continuar")}
         </Button>
       </div>
     </form>

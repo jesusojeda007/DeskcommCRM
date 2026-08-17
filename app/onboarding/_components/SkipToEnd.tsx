@@ -3,8 +3,10 @@
 import { startTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { finishOnboarding } from "@/app/actions/onboarding/finishOnboarding";
+import { useT } from "@/hooks/i18n/useT";
 
 export function SkipToEnd() {
+  const t = useT();
   return (
     <Button
       type="button"
@@ -17,7 +19,7 @@ export function SkipToEnd() {
         });
       }}
     >
-      Pular tudo (DEV)
+      {t("Pular tudo (DEV)")}
     </Button>
   );
 }

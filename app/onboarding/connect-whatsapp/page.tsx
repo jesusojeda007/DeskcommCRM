@@ -2,6 +2,7 @@ import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { redirect } from "next/navigation";
 import { getWahaClient } from "@/lib/waha/client";
 import { ConnectWhatsappClient } from "./_client";
+import { T } from "@/components/shell/T";
 
 export const dynamic = "force-dynamic";
 
@@ -17,9 +18,11 @@ export default async function ConnectWhatsappPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h2 className="text-2xl font-semibold tracking-tight">Conectar WhatsApp</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">
+          <T>Conectar WhatsApp</T>
+        </h2>
         <p className="text-sm text-muted-foreground">
-          Escaneie o QR Code com o WhatsApp Business para conectar seu número à plataforma.
+          <T>Escaneie o QR Code com o WhatsApp Business para conectar seu número à plataforma.</T>
         </p>
       </header>
       <ConnectWhatsappClient

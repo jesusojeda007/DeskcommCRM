@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { finishOnboarding } from "@/app/actions/onboarding/finishOnboarding";
+import { useT } from "@/hooks/i18n/useT";
 
 interface Recap {
   welcome: boolean;
@@ -23,12 +24,13 @@ const ITEMS: { key: keyof Recap; label: string }[] = [
 ];
 
 export function DoneClient({ recap }: { recap: Recap }) {
+  const t = useT();
   const [pending, startTransition] = useTransition();
   return (
     <div className="space-y-6 rounded-lg border bg-background p-6 text-center">
-      <h2 className="text-2xl font-semibold tracking-tight">Tudo pronto!</h2>
+      <h2 className="text-2xl font-semibold tracking-tight">{t("Tudo pronto!")}</h2>
       <p className="text-sm text-muted-foreground">
-        Sua operação está configurada. Você pode ajustar tudo nas Configurações.
+        {t("Sua operação está configurada. Você pode ajustar tudo nas Configurações.")}
       </p>
       <ul className="mx-auto max-w-sm space-y-2 text-left text-sm">
         {ITEMS.map((it) => {
@@ -43,7 +45,7 @@ export function DoneClient({ recap }: { recap: Recap }) {
                 }
               />
               <span className={done ? "" : "text-muted-foreground"}>
-                {it.label} {done ? "" : "(pulado)"}
+                {t(it.label)} {done ? "" : t("(pulado)")}
               </span>
             </li>
           );
@@ -55,11 +57,11 @@ export function DoneClient({ recap }: { recap: Recap }) {
         onClick={() =>
           startTransition(async () => {
             const res = await finishOnboarding();
-            if (res && !res.ok) toast.error(`Falha: ${res.error}`);
+            if (res && !res.ok) toast.error(`${t("Falha:")} ${res.error}`);
           })
         }
       >
-        {pending ? "Finalizando..." : "Ir para o Inbox"}
+        {pending ? t("Finalizando...") : t("Ir para o Inbox")}
       </Button>
     </div>
   );

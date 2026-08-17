@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import { useT } from "@/hooks/i18n/useT";
 
 interface StepDef {
   /** Trecho da rota que identifica o passo (ver app/onboarding/<segmento>). */
@@ -27,6 +28,7 @@ const STEPS: StepDef[] = [
  * o prop e o mapeamento no layout.
  */
 export function Stepper() {
+  const t = useT();
   const pathname = usePathname() ?? "";
   const idx = STEPS.findIndex((s) => pathname.includes(`/${s.segment}`));
   return (
@@ -59,7 +61,7 @@ export function Stepper() {
                 isActive ? "font-medium text-foreground" : "text-muted-foreground",
               )}
             >
-              {s.label}
+              {t(s.label)}
             </span>
           </li>
         );

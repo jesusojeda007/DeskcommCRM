@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { skipWhatsapp, markWhatsappConfigured } from "@/app/actions/onboarding/skipWhatsapp";
+import { useT } from "@/hooks/i18n/useT";
 
 interface Props {
   wahaConfigured: boolean;
@@ -44,6 +45,7 @@ function isRedirectError(err: unknown): boolean {
 }
 
 export function ConnectWhatsappClient({ wahaConfigured, sessionName }: Props) {
+  const t = useT();
   const [pending, startTransition] = useTransition();
   const [info, setInfo] = useState<SessionInfo>({ status: "INIT", session: sessionName });
   const [qrTick, setQrTick] = useState(0);
@@ -99,7 +101,7 @@ export function ConnectWhatsappClient({ wahaConfigured, sessionName }: Props) {
         await markWhatsappConfigured(sessionName, "WORKING");
       } catch (err) {
         if (isRedirectError(err)) throw err;
-        toast.error("Falha ao avançar: " + String(err));
+        toast.error(`${t("Falha ao avançar:")} ${String(err)}`);
       }
     });
   }, [status, sessionName]);
@@ -112,9 +114,9 @@ export function ConnectWhatsappClient({ wahaConfigured, sessionName }: Props) {
       const res = await fetch("/api/v1/onboarding/whatsapp/session?restart=1", { method: "POST" });
       const json = (await res.json()) as { data?: SessionInfo };
       if (json.data) setInfo(json.data);
-      else toast.error("Não consegui gerar outro código. Tente de novo em alguns segundos.");
+      else toast.error(t("Não consegui gerar outro código. Tente de novo em alguns segundos."));
     } catch {
-      toast.error("Não consegui falar com o servidor. Confira sua conexão e tente de novo.");
+      toast.error(t("Não consegui falar com o servidor. Confira sua conexão e tente de novo."));
     } finally {
       setBusy(false);
     }
@@ -126,11 +128,12 @@ export function ConnectWhatsappClient({ wahaConfigured, sessionName }: Props) {
     <div className="space-y-4 rounded-lg border bg-background p-6">
       {!wahaConfigured && (
         <div className="rounded-md border border-amber-300/60 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/40 dark:text-amber-100">
-          <p className="font-medium">WAHA não está configurado.</p>
+          <p className="font-medium">{t("WAHA não está configurado.")}</p>
           <p className="mt-1">
-            Suba o Docker (<code>docker compose up -d waha</code>) e recarregue, ou pule este passo
-            agora — você pode configurar WhatsApp depois em{" "}
-            <strong>Configurações → Canais</strong>.
+            {t("Suba o Docker (")}
+            <code>docker compose up -d waha</code>
+            {t(") e recarregue, ou pule este passo agora — você pode configurar WhatsApp depois em")}{" "}
+            <strong>{t("Configurações → Canais")}</strong>.
           </p>
         </div>
       )}
@@ -138,10 +141,10 @@ export function ConnectWhatsappClient({ wahaConfigured, sessionName }: Props) {
       {wahaConfigured && (
         <div className="rounded-md border bg-muted/40 p-4">
           <p className="text-sm font-medium">
-            Sessão: <code>{sessionName}</code>
+            {t("Sessão:")} <code>{sessionName}</code>
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Status: <code>{busy ? "STARTING…" : status}</code>
+            {t("Status:")} <code>{busy ? "STARTING…" : status}</code>
           </p>
 
           {showQr && (
@@ -150,39 +153,41 @@ export function ConnectWhatsappClient({ wahaConfigured, sessionName }: Props) {
               <img
                 key={qrTick}
                 src={`/api/v1/onboarding/whatsapp/qr?t=${qrTick}`}
-                alt="QR Code para conectar WhatsApp"
+                alt={t("QR Code para conectar WhatsApp")}
                 className="h-64 w-64 rounded-md border bg-white p-2"
               />
               <p className="max-w-xs text-center text-xs text-muted-foreground">
-                Abra o WhatsApp no celular → Configurações → Aparelhos conectados → Conectar um
-                aparelho → escaneie o código acima.
+                {t(
+                  "Abra o WhatsApp no celular → Configurações → Aparelhos conectados → Conectar um aparelho → escaneie o código acima.",
+                )}
               </p>
             </div>
           )}
 
           {status === "STARTING" && (
             <p className="mt-3 text-xs text-muted-foreground">
-              Aguardando WAHA gerar o QR Code…
+              {t("Aguardando WAHA gerar o QR Code…")}
             </p>
           )}
 
           {status === "WORKING" && (
             <p className="mt-3 text-sm font-medium text-emerald-700 dark:text-emerald-400">
-              ✓ Conectado! Avançando…
+              {t("✓ Conectado! Avançando…")}
             </p>
           )}
 
           {status === "FAILED" && (
             <div className="mt-3 space-y-2">
               <p className="text-sm text-destructive">
-                O código expirou antes de alguém escanear. É normal — ele vale só alguns minutos.
+                {t("O código expirou antes de alguém escanear. É normal — ele vale só alguns minutos.")}
               </p>
               <p className="text-xs text-muted-foreground">
-                Deixe o WhatsApp já aberto em <strong>Aparelhos conectados</strong> antes de gerar o
-                próximo, que aí dá tempo de sobra.
+                {t("Deixe o WhatsApp já aberto em ")}
+                <strong>{t("Aparelhos conectados")}</strong>
+                {t(" antes de gerar o próximo, que aí dá tempo de sobra.")}
               </p>
               <Button type="button" size="sm" disabled={busy} onClick={restartSession}>
-                {busy ? "Gerando…" : "Gerar novo QR Code"}
+                {busy ? t("Gerando…") : t("Gerar novo QR Code")}
               </Button>
             </div>
           )}
@@ -190,8 +195,8 @@ export function ConnectWhatsappClient({ wahaConfigured, sessionName }: Props) {
           {(status === "ERROR" || status === "NOT_STARTED") && (
             <p className="mt-3 text-xs text-muted-foreground">
               {info.error
-                ? `Erro: ${info.error}`
-                : "Sessão ainda não iniciada — clique em Já configurei pra recarregar."}
+                ? `${t("Erro:")} ${info.error}`
+                : t("Sessão ainda não iniciada — clique em Já configurei pra recarregar.")}
             </p>
           )}
         </div>
@@ -208,12 +213,12 @@ export function ConnectWhatsappClient({ wahaConfigured, sessionName }: Props) {
                 await skipWhatsapp();
               } catch (err) {
                 if (isRedirectError(err)) throw err;
-                toast.error("Falha ao pular: " + String(err));
+                toast.error(`${t("Falha ao pular:")} ${String(err)}`);
               }
             })
           }
         >
-          Pular por enquanto
+          {t("Pular por enquanto")}
         </Button>
         <Button
           type="button"
@@ -227,12 +232,12 @@ export function ConnectWhatsappClient({ wahaConfigured, sessionName }: Props) {
                 );
               } catch (err) {
                 if (isRedirectError(err)) throw err;
-                toast.error("Falha ao marcar passo: " + String(err));
+                toast.error(`${t("Falha ao marcar passo:")} ${String(err)}`);
               }
             })
           }
         >
-          Já configurei (continuar)
+          {t("Já configurei (continuar)")}
         </Button>
       </div>
     </div>

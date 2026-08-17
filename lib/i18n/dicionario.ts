@@ -1172,6 +1172,165 @@ export const DICIONARIO: Traducoes = {
   "em minutos": { es: "en minutos" },
   "Já tem conta?": { es: "¿Ya tenés cuenta?" },
 
+  // ─── Onboarding: WhatsApp ───
+  "Conectar WhatsApp": { es: "Conectar WhatsApp" },
+  "Escaneie o QR Code com o WhatsApp Business para conectar seu número à plataforma.": {
+    es: "Escaneá el código QR con WhatsApp Business para conectar tu número a la plataforma.",
+  },
+  "WAHA não está configurado.": { es: "WAHA no está configurado." },
+  "Suba o Docker (": { es: "Levantá el Docker (" },
+  ") e recarregue, ou pule este passo agora — você pode configurar WhatsApp depois em": {
+    es: ") y recargá, o saltá este paso por ahora — podés configurar WhatsApp después en",
+  },
+  "Configurações → Canais": { es: "Configuración → Canales" },
+  "Sessão:": { es: "Sesión:" },
+  "Status:": { es: "Estado:" },
+  "Abra o WhatsApp no celular → Configurações → Aparelhos conectados → Conectar um aparelho → escaneie o código acima.": {
+    es: "Abrí WhatsApp en el celular → Configuración → Dispositivos vinculados → Vincular un dispositivo → escaneá el código de arriba.",
+  },
+  "Aguardando WAHA gerar o QR Code…": { es: "Esperando a que WAHA genere el código QR…" },
+  "✓ Conectado! Avançando…": { es: "✓ ¡Conectado! Avanzando…" },
+  "O código expirou antes de alguém escanear. É normal — ele vale só alguns minutos.": {
+    es: "El código venció antes de que alguien lo escaneara. Es normal — vale solo unos minutos.",
+  },
+  "Deixe o WhatsApp já aberto em ": { es: "Dejá WhatsApp ya abierto en " },
+  "Aparelhos conectados": { es: "Dispositivos vinculados" },
+  " antes de gerar o próximo, que aí dá tempo de sobra.": {
+    es: " antes de generar el próximo, así te sobra tiempo.",
+  },
+  "Gerando…": { es: "Generando…" },
+  "Gerar novo QR Code": { es: "Generar nuevo código QR" },
+  "Sessão ainda não iniciada — clique em Já configurei pra recarregar.": {
+    es: "La sesión todavía no se inició — hacé clic en Ya configuré para recargar.",
+  },
+  "Não consegui gerar outro código. Tente de novo em alguns segundos.": {
+    es: "No pude generar otro código. Probá de nuevo en unos segundos.",
+  },
+  "Não consegui falar com o servidor. Confira sua conexão e tente de novo.": {
+    es: "No pude comunicarme con el servidor. Revisá tu conexión y probá de nuevo.",
+  },
+  "Pular por enquanto": { es: "Saltar por ahora" },
+  "Já configurei (continuar)": { es: "Ya configuré (continuar)" },
+  "Falha ao avançar:": { es: "Falla al avanzar:" },
+  "Falha ao pular:": { es: "Falla al saltar:" },
+  "Falha ao marcar passo:": { es: "Falla al marcar el paso:" },
+
+  // ─── Onboarding: concluído ───
+  "Tudo pronto!": { es: "¡Todo listo!" },
+  "Sua operação está configurada. Você pode ajustar tudo nas Configurações.": {
+    es: "Tu operación está configurada. Podés ajustar todo en Configuración.",
+  },
+  "Boas-vindas e termos": { es: "Bienvenida y términos" },
+  "Canal WhatsApp": { es: "Canal de WhatsApp" },
+  "Loja Nuvemshop": { es: "Tienda Nuvemshop" },
+  "Atendente IA": { es: "Agente IA" },
+  "Convites de time": { es: "Invitaciones de equipo" },
+  "(pulado)": { es: "(salteado)" },
+  "Ir para o Inbox": { es: "Ir al Inbox" },
+  "Finalizando...": { es: "Finalizando..." },
+  "Falha:": { es: "Falla:" },
+
+  // ─── Onboarding: convidar time ───
+  "Convidar time": { es: "Invitar equipo" },
+  "Cole até 20 emails (um por linha) e escolha a role compartilhada.": {
+    es: "Pegá hasta 20 emails (uno por línea) y elegí el rol compartido.",
+  },
+  "Resend não configurado.": { es: "Resend no está configurado." },
+  "Convites serão registrados localmente, mas o email não será enviado. Configure": {
+    es: "Los invitados se van a registrar localmente, pero el email no se va a enviar. Configurá",
+  },
+  "para envio real.": { es: "para el envío real." },
+  "Adicione ao menos um email ou clique em Pular.": {
+    es: "Agregá al menos un email o hacé clic en Saltar.",
+  },
+  "Máximo 20 emails por convite.": { es: "Máximo 20 emails por invitación." },
+  "{n} convite(s) não puderam ser enviados por email. Copie os links abaixo e envie você mesmo.": {
+    es: "{n} invitación(es) no se pudieron enviar por email. Copiá los links de abajo y enviálos vos mismo.",
+  },
+  Emails: { es: "Emails" },
+  "O email não está configurado neste servidor — os convites foram criados, mas não foram enviados. Copie os links e mande direto pra cada pessoa:": {
+    es: "El email no está configurado en este servidor — las invitaciones se crearon, pero no se enviaron. Copiá los links y mandalos directo a cada persona:",
+  },
+  "Copiar link": { es: "Copiar link" },
+  "Link copiado.": { es: "Link copiado." },
+  "Não consegui copiar — selecione e copie o link manualmente.": {
+    es: "No pude copiar — seleccioná y copiá el link manualmente.",
+  },
+  "Enviar convites": { es: "Enviar invitaciones" },
+
+  // ─── Onboarding: configurar IA ───
+  "Configurar IA": { es: "Configurar IA" },
+  "Escolha um perfil para o seu primeiro Atendente IA. Você pode ajustar tudo depois.": {
+    es: "Elegí un perfil para tu primer Agente IA. Podés ajustar todo después.",
+  },
+  "Amigável (e-commerce)": { es: "Amigable (e-commerce)" },
+  "Tom caloroso e próximo. Bom para lojas com público B2C.": {
+    es: "Tono cálido y cercano. Bueno para tiendas con público B2C.",
+  },
+  Profissional: { es: "Profesional" },
+  "Tom formal e objetivo. Foco em pedidos e próximos passos.": {
+    es: "Tono formal y directo. Foco en pedidos y próximos pasos.",
+  },
+  "Suporte minimalista": { es: "Soporte minimalista" },
+  "Frases curtas, direto ao ponto, escalonamento rápido.": {
+    es: "Frases cortas, directo al punto, escalamiento rápido.",
+  },
+  "Falha ao criar agente:": { es: "Falla al crear el agente:" },
+  "Agente criado, mas ainda não publicado.": { es: "Agente creado, pero todavía no está publicado." },
+  "Nome do agente": { es: "Nombre del agente" },
+  "Estilo de prompt": { es: "Estilo de prompt" },
+  "Seu agente foi criado, mas ficou como ": { es: "Tu agente fue creado, pero quedó como " },
+  rascunho: { es: "borrador" },
+  ": não consegui ler os números de WhatsApp desta instalação, então não dá pra dizer em qual número ele atenderia — e rascunho não responde mensagem.": {
+    es: ": no pude leer los números de WhatsApp de esta instalación, así que no puedo decir en qué número atendería — y un borrador no responde mensajes.",
+  },
+  "Erro do banco de dados:": { es: "Error de la base de datos:" },
+  "Tente de novo no botão abaixo (clicar de novo não cria um segundo agente) ou siga agora e publique depois em ": {
+    es: "Probá de nuevo con el botón de abajo (hacer clic de nuevo no crea un segundo agente) o seguí ahora y publicá después en ",
+  },
+  "IA › Agentes": { es: "IA › Agentes" },
+  "Continuar sem publicar": { es: "Continuar sin publicar" },
+  Pular: { es: "Saltar" },
+  "Criando...": { es: "Creando..." },
+  "Criar e continuar": { es: "Crear y continuar" },
+
+  // ─── Onboarding: boas-vindas ───
+  "Boas-vindas ao": { es: "Bienvenido a" },
+  "Vamos configurar sua operação em alguns passos rápidos.": {
+    es: "Vamos a configurar tu operación en algunos pasos rápidos.",
+  },
+  "Aceite os termos para continuar.": { es: "Aceptá los términos para continuar." },
+  "Nome da operação": { es: "Nombre de la operación" },
+  "Como sua loja aparece para o time e nos painéis.": {
+    es: "Cómo aparece tu tienda para el equipo y en los paneles.",
+  },
+  "Li e aceito os": { es: "Leí y acepto los" },
+  "Termos de Uso": { es: "Términos de Uso" },
+  "e a": { es: "y la" },
+  "Política de Privacidade": { es: "Política de Privacidad" },
+
+  // ─── Onboarding: Nuvemshop ───
+  "Conectar Nuvemshop": { es: "Conectar Nuvemshop" },
+  "Importe pedidos, clientes e produtos da sua loja Nuvemshop.": {
+    es: "Importá pedidos, clientes y productos de tu tienda Nuvemshop.",
+  },
+  "Ao clicar em": { es: "Al hacer clic en" },
+  ", você será redirecionado para autorizar o": { es: ", vas a ser redirigido para autorizar a" },
+  "na sua conta Nuvemshop.": { es: "en tu cuenta de Nuvemshop." },
+  "Nuvemshop ainda não configurado neste ambiente.": {
+    es: "Nuvemshop todavía no está configurado en este entorno.",
+  },
+  "Pule por enquanto e configure depois em Integrações.": {
+    es: "Saltealo por ahora y configuralo después en Integraciones.",
+  },
+  "Já conectei": { es: "Ya conecté" },
+
+  // ─── Onboarding: dev/stepper ───
+  "Pular tudo (DEV)": { es: "Saltar todo (DEV)" },
+  "Boas-vindas": { es: "Bienvenida" },
+  Loja: { es: "Tienda" },
+  Time: { es: "Equipo" },
+  "Concluído": { es: "Completado" },
 };
 
 /**
