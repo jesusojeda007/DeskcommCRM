@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { formatRelative } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useT } from "@/hooks/i18n/useT";
 import {
   Table,
   TableBody,
@@ -25,16 +26,17 @@ function displayName(c: Contact): string {
 }
 
 export function ContactsTable({ contacts }: Props) {
+  const t = useT();
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Nome</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Telefone</TableHead>
-          <TableHead>Tags</TableHead>
-          <TableHead>Última atividade</TableHead>
-          <TableHead>Status</TableHead>
+          <TableHead>{t("Nome")}</TableHead>
+          <TableHead>{t("Email")}</TableHead>
+          <TableHead>{t("Telefone")}</TableHead>
+          <TableHead>{t("Tags")}</TableHead>
+          <TableHead>{t("Última atividade")}</TableHead>
+          <TableHead>{t("Status")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -55,8 +57,8 @@ export function ContactsTable({ contacts }: Props) {
               <div className="flex flex-wrap gap-1">
                 {c.tags.length === 0
                   ? <span className="text-muted-foreground text-xs">—</span>
-                  : c.tags.map((t) => (
-                      <Badge key={t} variant="neutral">{t}</Badge>
+                  : c.tags.map((tg) => (
+                      <Badge key={tg} variant="neutral">{tg}</Badge>
                     ))}
               </div>
             </TableCell>
@@ -67,10 +69,10 @@ export function ContactsTable({ contacts }: Props) {
             </TableCell>
             <TableCell>
               <div className="flex flex-wrap gap-1">
-                {c.is_anonymized && <Badge variant="destructive">Anonimizado</Badge>}
-                {c.is_blocked && <Badge variant="warning">Bloqueado</Badge>}
+                {c.is_anonymized && <Badge variant="destructive">{t("Anonimizado")}</Badge>}
+                {c.is_blocked && <Badge variant="warning">{t("Bloqueado")}</Badge>}
                 {!c.is_anonymized && !c.is_blocked && (
-                  <Badge variant="success">Ativo</Badge>
+                  <Badge variant="success">{t("Ativo")}</Badge>
                 )}
               </div>
             </TableCell>

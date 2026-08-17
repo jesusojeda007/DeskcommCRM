@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import { useT } from "@/hooks/i18n/useT";
 import { Plus, MagnifyingGlass } from "@/lib/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,7 @@ import { ContactsTable } from "@/components/contacts/ContactsTable";
 import { NewContactDialog } from "@/components/contacts/NewContactDialog";
 import { EmptyContacts } from "@/components/empty";
 
-const SOURCE_OPTIONS = [
+const SOURCE_OPTIONS: { value: string | undefined; label: string }[] = [
   { value: undefined, label: "Todas as origens" },
   { value: "manual", label: "Manual" },
   { value: "whatsapp", label: "WhatsApp" },
@@ -26,6 +27,7 @@ const SOURCE_OPTIONS = [
 ];
 
 export function ContactsListClient() {
+  const t = useT();
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [tag, setTag] = useState<string | undefined>(undefined);
@@ -48,22 +50,24 @@ export function ContactsListClient() {
 
   const tagOptions = useMemo(() => {
     const set = new Set<string>();
-    for (const c of allContacts) for (const t of c.tags) set.add(t);
+    for (const c of allContacts) for (const tg of c.tags) set.add(tg);
     return Array.from(set).sort();
   }, [allContacts]);
+
+  const sourceOptions = SOURCE_OPTIONS.map((s) => ({ ...s, label: t(s.label) }));
 
   return (
     <div className="space-y-4 p-6">
       <header className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Contatos</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{t("Contatos")}</h1>
           <p className="text-sm text-muted-foreground">
-            Customer 360 — busque, filtre e gerencie contatos.
+            {t("Customer 360 — busque, filtre e gerencie contatos.")}
           </p>
         </div>
         <Button onClick={() => setCreateOpen(true)}>
           <Plus size={16} weight="bold" aria-hidden />
-          <span>Novo contato</span>
+          <span>{t("Novo contato")}</span>
         </Button>
       </header>
 
@@ -76,7 +80,7 @@ export function ContactsListClient() {
           />
           <Input
             type="search"
-            placeholder="Buscar por nome, email ou telefone…"
+            placeholder={t("Buscar por nome, email ou telefone…")}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="h-9 w-72 pl-8"
@@ -86,16 +90,16 @@ export function ContactsListClient() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" disabled={tagOptions.length === 0}>
-              {tag ? `Tag: ${tag}` : "Tag: todas"}
+              {tag ? t("Tag: {tag}", { tag }) : t("Tag: todas")}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuLabel>Tag</DropdownMenuLabel>
+            <DropdownMenuLabel>{t("Tag")}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setTag(undefined)}>Todas</DropdownMenuItem>
-            {tagOptions.map((t) => (
-              <DropdownMenuItem key={t} onClick={() => setTag(t)}>
-                {t}
+            <DropdownMenuItem onClick={() => setTag(undefined)}>{t("Todas")}</DropdownMenuItem>
+            {tagOptions.map((tg) => (
+              <DropdownMenuItem key={tg} onClick={() => setTag(tg)}>
+                {tg}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -104,11 +108,11 @@ export function ContactsListClient() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">
-              {SOURCE_OPTIONS.find((s) => s.value === source)?.label ?? "Origem"}
+              {sourceOptions.find((s) => s.value === source)?.label ?? t("Origem")}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            {SOURCE_OPTIONS.map((s) => (
+            {sourceOptions.map((s) => (
               <DropdownMenuItem key={s.label} onClick={() => setSource(s.value)}>
                 {s.label}
               </DropdownMenuItem>
@@ -127,7 +131,7 @@ export function ContactsListClient() {
               setSource(undefined);
             }}
           >
-            Limpar filtros
+            {t("Limpar filtros")}
           </Button>
         )}
       </div>
@@ -140,14 +144,14 @@ export function ContactsListClient() {
         </div>
       ) : q.isError ? (
         <Card className="p-6 text-center">
-          <p className="text-sm text-error-fg">Erro ao carregar contatos.</p>
+          <p className="text-sm text-error-fg">{t("Erro ao carregar contatos.")}</p>
           <Button
             size="sm"
             variant="outline"
             className="mt-2"
             onClick={() => q.refetch()}
           >
-            Tentar novamente
+            {t("Tentar novamente")}
           </Button>
         </Card>
       ) : allContacts.length === 0 ? (
@@ -167,7 +171,7 @@ export function ContactsListClient() {
                 onClick={() => q.fetchNextPage()}
                 disabled={q.isFetchingNextPage}
               >
-                {q.isFetchingNextPage ? "Carregando…" : "Carregar mais"}
+                {q.isFetchingNextPage ? t("Carregando…") : t("Carregar mais")}
               </Button>
             </div>
           )}
