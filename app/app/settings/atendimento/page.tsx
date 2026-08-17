@@ -22,6 +22,7 @@ import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { DEFAULT_VISIBILITY_MODE, ROLE_RANK, type VisibilityMode } from "@/lib/auth/types";
 import { routingConfigSchema } from "@/lib/schemas";
 import { createClient } from "@/lib/supabase/server";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { AtendimentoForm } from "./_form";
 
 export const dynamic = "force-dynamic";
@@ -51,14 +52,10 @@ export default async function AtendimentoSettingsPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 overflow-y-auto p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Distribuição de atendimento</h1>
-        <p className="max-w-2xl text-sm text-muted-foreground">
-          Quem recebe cada cliente novo, e o que cada atendente enxerga. As duas decisões
-          andam juntas: distribuir sem restringir deixa todo mundo vendo a carteira do
-          colega; restringir sem distribuir deixa o funil de cada um vazio.
-        </p>
-      </header>
+      <PageHeader
+        title="Distribuição de atendimento"
+        subtitle="Quem recebe cada cliente novo, e o que cada atendente enxerga. As duas decisões andam juntas: distribuir sem restringir deixa todo mundo vendo a carteira do colega; restringir sem distribuir deixa o funil de cada um vazio."
+      />
 
       <AtendimentoForm
         initial={{ ...routing, visibility_mode: settings.visibility_mode ?? DEFAULT_VISIBILITY_MODE }}

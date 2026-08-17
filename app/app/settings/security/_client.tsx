@@ -7,8 +7,10 @@ import { Card } from "@/components/ui/card";
 import { RecoveryCodesPanel } from "@/components/auth/RecoveryCodesPanel";
 import { regenerateRecoveryCodes } from "@/app/actions/settings/regenerateRecoveryCodes";
 import { signOutEverywhere } from "@/app/actions/settings/signOutEverywhere";
+import { useT } from "@/hooks/i18n/useT";
 
 export function SecurityClient({ mfaEnrolled }: { mfaEnrolled: boolean }) {
+  const t = useT();
   const [codes, setCodes] = useState<string[] | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isSigningOut, startSignOut] = useTransition();
@@ -16,7 +18,7 @@ export function SecurityClient({ mfaEnrolled }: { mfaEnrolled: boolean }) {
   function handleRegenerate() {
     if (
       !confirm(
-        "Gerar novos códigos invalida TODOS os atuais. Tem certeza?",
+        t("Gerar novos códigos invalida TODOS os atuais. Tem certeza?"),
       )
     ) {
       return;
@@ -25,15 +27,15 @@ export function SecurityClient({ mfaEnrolled }: { mfaEnrolled: boolean }) {
       const r = await regenerateRecoveryCodes();
       if (r.ok) {
         setCodes(r.recovery_codes);
-        toast.success("Novos códigos gerados.");
+        toast.success(t("Novos códigos gerados."));
       } else {
-        toast.error(`Erro: ${r.error}`);
+        toast.error(`${t("Erro:")} ${r.error}`);
       }
     });
   }
 
   function handleSignOutAll() {
-    if (!confirm("Sair de TODOS os dispositivos? Você precisará fazer login de novo.")) return;
+    if (!confirm(t("Sair de TODOS os dispositivos? Você precisará fazer login de novo."))) return;
     startSignOut(async () => {
       await signOutEverywhere();
     });
@@ -42,9 +44,9 @@ export function SecurityClient({ mfaEnrolled }: { mfaEnrolled: boolean }) {
   return (
     <div className="flex flex-col gap-4">
       <Card className="space-y-3 p-6">
-        <h2 className="text-sm font-semibold">Códigos de recuperação</h2>
+        <h2 className="text-sm font-semibold">{t("Códigos de recuperação")}</h2>
         <p className="text-xs text-muted-foreground">
-          Use se perder acesso ao autenticador. Cada código é de uso único.
+          {t("Use se perder acesso ao autenticador. Cada código é de uso único.")}
         </p>
         {codes ? (
           <RecoveryCodesPanel codes={codes} onAcknowledge={() => setCodes(null)} />
@@ -54,27 +56,27 @@ export function SecurityClient({ mfaEnrolled }: { mfaEnrolled: boolean }) {
             disabled={!mfaEnrolled || isPending}
             onClick={handleRegenerate}
           >
-            {isPending ? "Gerando…" : "Regenerar códigos de recuperação"}
+            {isPending ? t("Gerando…") : t("Regenerar códigos de recuperação")}
           </Button>
         )}
         {!mfaEnrolled && (
           <p className="text-xs text-muted-foreground">
-            Habilite MFA antes de gerar códigos.
+            {t("Habilite MFA antes de gerar códigos.")}
           </p>
         )}
       </Card>
 
       <Card className="space-y-3 p-6">
-        <h2 className="text-sm font-semibold">Sessões ativas</h2>
+        <h2 className="text-sm font-semibold">{t("Sessões ativas")}</h2>
         <p className="text-xs text-muted-foreground">
-          Listagem de sessões — em breve. Por enquanto, deslogue todos os dispositivos:
+          {t("Listagem de sessões — em breve. Por enquanto, deslogue todos os dispositivos:")}
         </p>
         <Button
           variant="outline"
           disabled={isSigningOut}
           onClick={handleSignOutAll}
         >
-          {isSigningOut ? "Saindo…" : "Sair de todos os dispositivos"}
+          {isSigningOut ? t("Saindo…") : t("Sair de todos os dispositivos")}
         </Button>
       </Card>
     </div>

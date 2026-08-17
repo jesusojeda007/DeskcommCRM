@@ -8,6 +8,7 @@ import {
   useRevokeApiToken,
   type CreatedApiToken,
 } from "@/hooks/team/useApiTokens";
+import { useT } from "@/hooks/i18n/useT";
 import { copyToClipboard } from "@/lib/clipboard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -56,6 +57,7 @@ const SCOPES: { id: string; label: string }[] = [
 ];
 
 export function ApiTokensClient() {
+  const t = useT();
   const { data, isLoading } = useApiTokens();
   const create = useCreateApiToken();
   const revoke = useRevokeApiToken();
@@ -71,7 +73,7 @@ export function ApiTokensClient() {
   const onCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (scopes.length === 0) {
-      toast.error("Selecione ao menos um escopo.");
+      toast.error(t("Selecione ao menos um escopo."));
       return;
     }
     try {
@@ -97,36 +99,36 @@ export function ApiTokensClient() {
   return (
     <>
       <div className="flex justify-end">
-        <Button onClick={() => setCreateOpen(true)}>Criar token</Button>
+        <Button onClick={() => setCreateOpen(true)}>{t("Criar token")}</Button>
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-muted-foreground">Carregando…</p>
+        <p className="text-sm text-muted-foreground">{t("Carregando…")}</p>
       ) : tokens.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Nenhum token criado ainda.</p>
+        <p className="text-sm text-muted-foreground">{t("Nenhum token criado ainda.")}</p>
       ) : (
         <div className="rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Prefixo</TableHead>
-                <TableHead>Escopos</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Expira</TableHead>
+                <TableHead>{t("Nome")}</TableHead>
+                <TableHead>{t("Prefixo")}</TableHead>
+                <TableHead>{t("Escopos")}</TableHead>
+                <TableHead>{t("Status")}</TableHead>
+                <TableHead>{t("Expira")}</TableHead>
                 <TableHead className="w-[120px]" />
               </TableRow>
             </TableHeader>
             <TableBody>
-              {tokens.map((t) => (
-                <TableRow key={t.id}>
-                  <TableCell className="font-medium">{t.name}</TableCell>
+              {tokens.map((token) => (
+                <TableRow key={token.id}>
+                  <TableCell className="font-medium">{token.name}</TableCell>
                   <TableCell>
-                    <code className="text-xs">{t.prefix}…</code>
+                    <code className="text-xs">{token.prefix}…</code>
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {t.scopes.map((s) => (
+                      {token.scopes.map((s) => (
                         <Badge key={s} variant="secondary" className="text-xs">
                           {s}
                         </Badge>
@@ -134,27 +136,27 @@ export function ApiTokensClient() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    {t.revoked_at ? (
-                      <Badge variant="destructive">Revogado</Badge>
+                    {token.revoked_at ? (
+                      <Badge variant="destructive">{t("Revogado")}</Badge>
                     ) : (
-                      <Badge variant="default">Ativo</Badge>
+                      <Badge variant="default">{t("Ativo")}</Badge>
                     )}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {t.expires_at ? new Date(t.expires_at).toLocaleDateString("pt-BR") : "—"}
+                    {token.expires_at ? new Date(token.expires_at).toLocaleDateString("pt-BR") : "—"}
                   </TableCell>
                   <TableCell>
-                    {!t.revoked_at ? (
+                    {!token.revoked_at ? (
                       <Button
                         variant="ghost"
                         size="sm"
                         disabled={revoke.isPending}
                         onClick={async () => {
-                          await revoke.mutateAsync(t.id);
-                          toast.success("Token revogado.");
+                          await revoke.mutateAsync(token.id);
+                          toast.success(t("Token revogado."));
                         }}
                       >
-                        Revogar
+                        {t("Revogar")}
                       </Button>
                     ) : null}
                   </TableCell>
@@ -168,44 +170,44 @@ export function ApiTokensClient() {
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Criar novo token</DialogTitle>
-            <DialogDescription>O plaintext será mostrado apenas uma vez.</DialogDescription>
+            <DialogTitle>{t("Criar novo token")}</DialogTitle>
+            <DialogDescription>{t("O plaintext será mostrado apenas uma vez.")}</DialogDescription>
           </DialogHeader>
           <form onSubmit={onCreate} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="t-name">Nome</Label>
+              <Label htmlFor="t-name">{t("Nome")}</Label>
               <Input
                 id="t-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Worker de import"
+                placeholder={t("Worker de import")}
                 minLength={2}
                 maxLength={100}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label>Escopos</Label>
+              <Label>{t("Escopos")}</Label>
               <div className="flex flex-wrap gap-2">
                 {SCOPES.map((s) => (
                   <button
                     type="button"
                     key={s.id}
                     onClick={() => toggleScope(s.id)}
-                    title={s.label}
-                    aria-label={`${s.id} — ${s.label}`}
+                    title={t(s.label)}
+                    aria-label={`${s.id} — ${t(s.label)}`}
                     className={`rounded-md border px-2 py-1 text-xs ${
                       scopes.includes(s.id) ? "border-primary bg-primary/10" : "border-border"
                     }`}
                   >
                     {s.id}
-                    <span className="ml-1 text-muted-foreground">· {s.label}</span>
+                    <span className="ml-1 text-muted-foreground">· {t(s.label)}</span>
                   </button>
                 ))}
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="t-exp">Expira em (dias) — opcional</Label>
+              <Label htmlFor="t-exp">{t("Expira em (dias) — opcional")}</Label>
               <Input
                 id="t-exp"
                 type="number"
@@ -218,10 +220,10 @@ export function ApiTokensClient() {
             </div>
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={() => setCreateOpen(false)}>
-                Cancelar
+                {t("Cancelar")}
               </Button>
               <Button type="submit" disabled={create.isPending}>
-                Criar
+                {t("Criar")}
               </Button>
             </DialogFooter>
           </form>
@@ -231,9 +233,9 @@ export function ApiTokensClient() {
       <Dialog open={!!created} onOpenChange={(o) => !o && setCreated(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Token criado</DialogTitle>
+            <DialogTitle>{t("Token criado")}</DialogTitle>
             <DialogDescription>
-              Copie e guarde agora — não conseguiremos exibir novamente.
+              {t("Copie e guarde agora — não conseguiremos exibir novamente.")}
             </DialogDescription>
           </DialogHeader>
           {created ? (
@@ -246,18 +248,18 @@ export function ApiTokensClient() {
                 variant="secondary"
                 onClick={() => {
                   void copyToClipboard(created.plaintext).then((ok) => {
-                    if (ok) toast.success("Token copiado.");
-                    else toast.error("Não foi possível copiar — selecione o token acima.");
+                    if (ok) toast.success(t("Token copiado."));
+                    else toast.error(t("Não foi possível copiar — selecione o token acima."));
                   });
                 }}
               >
-                Copiar para clipboard
+                {t("Copiar para clipboard")}
               </Button>
               <p className="text-xs text-muted-foreground">{created._warning}</p>
             </div>
           ) : null}
           <DialogFooter>
-            <Button onClick={() => setCreated(null)}>Fechar</Button>
+            <Button onClick={() => setCreated(null)}>{t("Fechar")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

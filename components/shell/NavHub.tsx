@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import type { Role } from "@/lib/auth/types";
 import { hubSections, type NavGroupId } from "@/lib/navigation/registry";
+import { T } from "@/components/shell/T";
 
 interface NavHubProps {
   group: NavGroupId;
@@ -44,8 +45,14 @@ export function NavHub({ group, isPlatformAdmin, role, title, subtitle }: NavHub
   return (
     <div className="flex h-full flex-col gap-8 p-6">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-        {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
+        <h1 className="text-2xl font-semibold tracking-tight">
+          <T>{title}</T>
+        </h1>
+        {subtitle && (
+          <p className="text-sm text-muted-foreground">
+            <T>{subtitle}</T>
+          </p>
+        )}
       </header>
 
       {secoes.map(({ section, items }) => (
@@ -54,7 +61,7 @@ export function NavHub({ group, isPlatformAdmin, role, title, subtitle }: NavHub
             id={`hub-${group}-${slug(section)}`}
             className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70"
           >
-            {section}
+            <T>{section}</T>
           </h2>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
             {items.map((item) => {
@@ -64,8 +71,12 @@ export function NavHub({ group, isPlatformAdmin, role, title, subtitle }: NavHub
                   <Card className="flex h-full gap-3 p-4 transition-colors hover:border-border-strong">
                     <Icon size={20} weight="regular" aria-hidden className="mt-0.5 shrink-0 text-muted-foreground" />
                     <div>
-                      <h3 className="text-sm font-semibold">{item.label}</h3>
-                      <p className="mt-1 text-xs text-muted-foreground">{item.description}</p>
+                      <h3 className="text-sm font-semibold">
+                        <T>{item.label}</T>
+                      </h3>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        <T>{item.description}</T>
+                      </p>
                     </div>
                   </Card>
                 </Link>

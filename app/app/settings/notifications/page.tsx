@@ -1,6 +1,8 @@
 import { requireAuth } from "@/lib/auth/server";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { PageHeader } from "@/components/shell/PageHeader";
+import { T } from "@/components/shell/T";
 import {
   NOTIFICATION_CATEGORIES,
   NOTIFICATION_CHANNELS,
@@ -25,24 +27,22 @@ export default async function NotificationsPage() {
   await requireAuth();
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Notificações</h1>
-        <p className="text-sm text-muted-foreground">Canais e categorias.</p>
-      </header>
+      <PageHeader title="Notificações" subtitle="Canais e categorias." />
 
       <Card className="border-amber-500/40 bg-amber-50/40 p-4 text-sm dark:bg-amber-900/10">
-        Preferências de notificação em breve. Por enquanto, alertas críticos são enviados por
-        email.
+        <T>Preferências de notificação em breve. Por enquanto, alertas críticos são enviados por email.</T>
       </Card>
 
       <Card className="p-0">
         <table className="w-full text-sm">
           <thead className="border-b">
             <tr>
-              <th className="px-4 py-3 text-left font-medium">Categoria</th>
+              <th className="px-4 py-3 text-left font-medium">
+                <T>Categoria</T>
+              </th>
               {NOTIFICATION_CHANNELS.map((c) => (
                 <th key={c} className="px-4 py-3 text-center font-medium">
-                  {CHANNEL_LABELS[c]}
+                  <T>{CHANNEL_LABELS[c]}</T>
                 </th>
               ))}
             </tr>
@@ -50,7 +50,9 @@ export default async function NotificationsPage() {
           <tbody>
             {NOTIFICATION_CATEGORIES.map((cat) => (
               <tr key={cat} className="border-b last:border-0">
-                <td className="px-4 py-3">{CATEGORY_LABELS[cat]}</td>
+                <td className="px-4 py-3">
+                  <T>{CATEGORY_LABELS[cat]}</T>
+                </td>
                 {NOTIFICATION_CHANNELS.map((ch) => (
                   <td key={ch} className="px-4 py-3 text-center">
                     <Switch checked={false} disabled aria-label={`${cat} via ${ch}`} />

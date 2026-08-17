@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
+import { T } from "@/components/shell/T";
 import { ApiTokensClient } from "./_components/ApiTokensClient";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +19,7 @@ export default async function ApiTokensPage() {
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">API Tokens</h1>
         <p className="text-sm text-muted-foreground">
-          Tokens server-to-server. Plaintext exibido <strong>uma única vez</strong> na criação.
+          <T>Tokens server-to-server. Plaintext exibido</T> <strong><T>uma única vez</T></strong> <T>na criação.</T>
         </p>
       </header>
       <ApiTokensClient />
