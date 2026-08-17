@@ -919,6 +919,139 @@ export const DICIONARIO: Traducoes = {
 
   // ─── Achados na QA visual da Fase 1 (Inbox) ───
   "Número removido": { es: "Número eliminado" },
+  // ─── Shell: sino de avisos, paleta ⌘K, busca, tenant switcher, menu do usuário, rodapé de versão ───
+  "Central de avisos — {count} em aberto": { es: "Central de avisos — {count} en trámite" },
+  "Buscar telas": { es: "Buscar pantallas" },
+  "Buscar telas do sistema…": { es: "Buscar pantallas del sistema…" },
+  "Nada encontrado para “{busca}”.": { es: "No se encontró nada para “{busca}”." },
+  Telas: { es: "Pantallas" },
+  "Selecionar org": { es: "Seleccionar org" },
+  "Menu do usuário": { es: "Menú del usuario" },
+  Sair: { es: "Salir" },
+  "Versão {versao}": { es: "Versión {versao}" },
+  "versão {versao}": { es: "versión {versao}" },
+  "Nova versão {versao} disponível": { es: "Nueva versión {versao} disponible" },
+  "Nova versão": { es: "Nueva versión" },
+
+  // ─── Navegação: grupos e destinos ainda não cobertos pelo Sidebar já traduzido ───
+  Atendimento: { es: "Atención" },
+  Canais: { es: "Canales" },
+  Análise: { es: "Análisis" },
+  Credenciais: { es: "Credenciales" },
+  Provedores: { es: "Proveedores" },
+  Conhecimento: { es: "Conocimiento" },
+  Memória: { es: "Memoria" },
+  Skills: { es: "Habilidades" },
+  Propostas: { es: "Propuestas" },
+  Execuções: { es: "Ejecuciones" },
+  "Uso e orçamento": { es: "Uso y presupuesto" },
+  Segurança: { es: "Seguridad" },
+  Notificações: { es: "Notificaciones" },
+  Equipe: { es: "Equipo" },
+  "Distribuição de atendimento": { es: "Distribución de atención" },
+
+  // ─── Navegação: descrições exibidas no ⌘K ───
+  "As conversas de WhatsApp, com você e a IA atendendo lado a lado.": {
+    es: "Las conversaciones de WhatsApp, con vos y la IA atendiendo lado a lado.",
+  },
+  "Quem esfriou e ainda está aberto — o que corre risco de morrer sem resposta.": {
+    es: "Quién se enfrió y sigue abierto — lo que corre riesgo de quedar sin respuesta.",
+  },
+  "Scripts salvos para responder mais rápido, seus ou da equipe.": {
+    es: "Textos guardados para responder más rápido, tuyos o del equipo.",
+  },
+  "O quadro de cards: onde cada negócio está no funil.": {
+    es: "El tablero de tarjetas: dónde está cada negocio en el embudo.",
+  },
+  "As pessoas do outro lado da conversa e seu histórico.": {
+    es: "Las personas del otro lado de la conversación y su historial.",
+  },
+  "As etapas do seu funil, o vocabulário do negócio e os motivos de perda.": {
+    es: "Las etapas de tu embudo, el vocabulario del negocio y los motivos de pérdida.",
+  },
+  "Quem atende por você: instruções, modelo, ferramentas e publicação.": {
+    es: "Quién atiende por vos: instrucciones, modelo, herramientas y publicación.",
+  },
+  "Como o agente retoma uma conversa que esfriou, para nenhuma morrer no silêncio.": {
+    es: "Cómo el agente retoma una conversación que se enfrió, para que ninguna muera en silencio.",
+  },
+  "Qual agente pega qual conversa, e quando o humano assume.": {
+    es: "Qué agente toma qué conversación, y cuándo el humano asume.",
+  },
+  "A chave do provedor de IA que os agentes usam para pensar.": {
+    es: "La clave del proveedor de IA que los agentes usan para pensar.",
+  },
+  "Qual inteligência atende cada parte do sistema — e o que acontece se ela falhar.": {
+    es: "Qué inteligencia atiende cada parte del sistema — y qué pasa si falla.",
+  },
+  "Os materiais que o agente consulta antes de responder sobre o seu negócio.": {
+    es: "Los materiales que el agente consulta antes de responder sobre tu negocio.",
+  },
+  "O que o agente já aprendeu sobre a sua operação e reaproveita.": {
+    es: "Lo que el agente ya aprendió sobre tu operación y reaprovecha.",
+  },
+  "As ações que o agente pode executar sozinho durante o atendimento.": {
+    es: "Las acciones que el agente puede ejecutar solo durante la atención.",
+  },
+  "Os atendimentos que o agente conduziu, do início ao desfecho.": {
+    es: "Las atenciones que el agente condujo, del inicio al desenlace.",
+  },
+  "O que a IA encontrou e precisa de uma decisão sua.": {
+    es: "Lo que la IA encontró y necesita una decisión tuya.",
+  },
+  "Melhorias que a IA sugere para si mesma, esperando sua decisão.": {
+    es: "Mejoras que la IA sugiere para sí misma, esperando tu decisión.",
+  },
+  "O que a IA fez — e, quando falhou, o que aconteceu e o que fazer.": {
+    es: "Lo que la IA hizo — y, cuando falló, qué pasó y qué hacer.",
+  },
+  "Quanto a IA consumiu e qual é o teto de gasto do mês.": {
+    es: "Cuánto consumió la IA y cuál es el tope de gasto del mes.",
+  },
+  "Seus números de WhatsApp: por QR ou canal oficial da Meta, com saúde, reconexão e templates.": {
+    es: "Tus números de WhatsApp: por QR o canal oficial de Meta, con salud, reconexión y plantillas.",
+  },
+  "Conecte a loja para trazer pedidos e clientes para dentro do CRM.": {
+    es: "Conectá la tienda para traer pedidos y clientes al CRM.",
+  },
+  "Avise outros sistemas quando algo acontecer aqui dentro.": {
+    es: "Avisá a otros sistemas cuando algo pase acá adentro.",
+  },
+  "Funil e performance por atendente nos últimos 30 dias.": {
+    es: "Embudo y desempeño por agente en los últimos 30 días.",
+  },
+  "Se o agente está melhorando, onde ele erra e o que falta ensinar.": {
+    es: "Si el agente está mejorando, dónde se equivoca y qué falta enseñarle.",
+  },
+  "Quem fez o quê, quando — o histórico que não se apaga.": {
+    es: "Quién hizo qué, cuándo — el historial que no se borra.",
+  },
+  "Seu nome, idioma, fuso horário e avatar.": { es: "Tu nombre, idioma, zona horaria y avatar." },
+  "Verificação em duas etapas, códigos de recuperação e sessões.": {
+    es: "Verificación en dos pasos, códigos de recuperación y sesiones.",
+  },
+  "Por onde e sobre o quê você quer ser avisado.": { es: "Por dónde y sobre qué querés que te avisemos." },
+  "Quem trabalha aqui, com qual papel e quanta conversa cada um aguenta.": {
+    es: "Quién trabaja acá, con qué rol y cuánta conversación aguanta cada uno.",
+  },
+  "Quem recebe cada cliente novo, e o que cada atendente enxerga.": {
+    es: "Quién recibe cada cliente nuevo, y qué ve cada agente.",
+  },
+  "Dados da empresa, retenção de dados e encarregado de LGPD.": {
+    es: "Datos de la empresa, retención de datos y encargado de LGPD.",
+  },
+  "Plano e cobrança.": { es: "Plan y facturación." },
+  "Pedidos de exportação e exclusão de dados feitos por clientes.": {
+    es: "Pedidos de exportación y eliminación de datos hechos por clientes.",
+  },
+  "Chaves para outro sistema conversar com o seu CRM.": {
+    es: "Claves para que otro sistema converse con tu CRM.",
+  },
+
+
+  // ─── Achados na QA visual da Fase 1 (Shell) ───
+  "Expandir sidebar": { es: "Expandir barra lateral" },
+  "Recolher sidebar": { es: "Contraer barra lateral" },
 };
 
 /**

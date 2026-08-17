@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ArrowCircleUp } from "@/lib/ui/icons";
 import { useSystemVersion } from "@/hooks/system/useSystemVersion";
+import { useT } from "@/hooks/i18n/useT";
 import { cn } from "@/lib/utils";
 
 /**
@@ -11,6 +12,7 @@ import { cn } from "@/lib/utils";
  * alertado sobre algo que não pode resolver.
  */
 export function VersionFooter({ collapsed }: { collapsed: boolean }) {
+  const t = useT();
   const { data } = useSystemVersion();
   if (!data?.current_version) return null;
 
@@ -25,9 +27,11 @@ export function VersionFooter({ collapsed }: { collapsed: boolean }) {
     return (
       <p
         className={cn("px-3 py-1 text-[11px] text-muted-foreground/70", collapsed && "px-0 text-center")}
-        title={`Versão ${label}`}
+        title={t("Versão {versao}", { versao: label })}
       >
-        {collapsed ? label.split(".").slice(0, 2).join(".") : `versão ${label}`}
+        {collapsed
+          ? label.split(".").slice(0, 2).join(".")
+          : t("versão {versao}", { versao: label })}
       </p>
     );
   }
@@ -36,7 +40,7 @@ export function VersionFooter({ collapsed }: { collapsed: boolean }) {
   return (
     <Link
       href="/app/settings/atualizacao"
-      title={`Nova versão ${novo} disponível`}
+      title={t("Nova versão {versao} disponível", { versao: novo })}
       className={cn(
         "flex items-center gap-2 rounded-md px-3 py-2 text-xs text-foreground hover:bg-accent/50",
         collapsed && "justify-center px-2",
@@ -48,7 +52,8 @@ export function VersionFooter({ collapsed }: { collapsed: boolean }) {
       </span>
       {!collapsed && (
         <span className="truncate">
-          Nova versão{novo ? ` · ${novo}` : ""}
+          {t("Nova versão")}
+          {novo ? ` · ${novo}` : ""}
         </span>
       )}
       {collapsed && <ArrowCircleUp size={16} aria-hidden />}

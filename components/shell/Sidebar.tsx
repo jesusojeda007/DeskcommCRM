@@ -163,10 +163,10 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
             "flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs text-muted-foreground hover:bg-accent/50 hover:text-foreground",
             collapsed && "justify-center px-2",
           )}
-          aria-label={collapsed ? "Expandir sidebar" : "Recolher sidebar"}
+          aria-label={collapsed ? t("Expandir sidebar") : t("Recolher sidebar")}
         >
           {collapsed ? <CaretDoubleRight size={14} aria-hidden /> : <CaretDoubleLeft size={14} aria-hidden />}
-          {!collapsed && <span>Recolher</span>}
+          {!collapsed && <span>{t("Recolher")}</span>}
         </button>
       </div>
     </aside>
