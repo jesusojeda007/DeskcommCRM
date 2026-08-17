@@ -10,6 +10,7 @@ import { ReactivationSlot } from "./ReactivationSlot";
 import { ConversaSlot } from "./ConversaSlot";
 import { ScoreSlot } from "./ScoreSlot";
 import { OwnerBadge } from "./OwnerBadge";
+import { useT } from "@/hooks/i18n/useT";
 
 interface KanbanCardProps {
   /** O que o card mostra — explicitamente NÃO é a linha do banco. */
@@ -65,6 +66,7 @@ export function KanbanCard({
   onSelect,
   onOpen,
 }: KanbanCardProps) {
+  const t = useT();
   const value = formatBRL(card.valueCents, card.currency);
   const state = resolveCardState(card);
   const age = stageAgeLabel(card.hoursInStage);
@@ -93,10 +95,14 @@ export function KanbanCard({
           // teclado do dnd (tabIndex e handlers continuam vindo do spread) sem
           // aninhar dois controles — nada de aria-hidden nem de suprimir regra.
           role="group"
-          aria-label={`Lead: ${card.title}`}
+          aria-label={t("Lead: {titulo}", { titulo: card.title })}
           onClick={handleClick}
           // Tags saem do card (Lei A): ficam a um hover, sem ocupar altura.
-          title={card.tags.length > 0 ? `Tags: ${card.tags.join(", ")}` : undefined}
+          title={
+            card.tags.length > 0
+              ? t("Tags: {tags}", { tags: card.tags.join(", ") })
+              : undefined
+          }
           className={cn(
             "group relative overflow-hidden rounded-md border border-border bg-surface",
             "py-2.5 pl-3 pr-3 shadow-xs transition-colors",
@@ -139,7 +145,7 @@ export function KanbanCard({
                   title={card.canonicalTag}
                   // role="img": um span nu não aceita aria-label (aria-prohibited-attr).
                   role="img"
-                  aria-label={`Tag: ${card.canonicalTag}`}
+                  aria-label={t("Tag: {tag}", { tag: card.canonicalTag })}
                 />
               )}
               {/* O TÍTULO é o elemento ativável, não o card inteiro.
@@ -228,7 +234,9 @@ export function KanbanCard({
               agentVersion={card.owner.agentVersion}
             />
             <span className="shrink-0 whitespace-nowrap text-[11px] tabular-nums text-text-muted">
-              {state.showStageAge && age ? `${age} em ${card.stageName}` : `em ${card.stageName}`}
+              {state.showStageAge && age
+                ? t("{idade} em {etapa}", { idade: age, etapa: card.stageName })
+                : t("em {etapa}", { etapa: card.stageName })}
             </span>
           </div>
         </div>

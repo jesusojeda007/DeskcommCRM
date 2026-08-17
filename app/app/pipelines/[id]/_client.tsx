@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "@/lib/ui/icons";
 import type { LeadFilters } from "@/lib/kanban/filters";
 import { applyFilters, filtersFromParams, filtersToParams } from "@/lib/kanban/filters";
+import { useT } from "@/hooks/i18n/useT";
 
 export function PipelinePageClient({
   pipelineId,
@@ -35,6 +36,7 @@ export function PipelinePageClient({
   pipelineId: string;
   initialName: string;
 }) {
+  const t = useT();
   const { data, isLoading, error, pulses, realtimeStatus, seguranca } = useBoard(pipelineId);
   const router = useRouter();
   const pathname = usePathname();
@@ -79,7 +81,7 @@ export function PipelinePageClient({
           {data?.pipeline.name ?? initialName}
         </h1>
         <Button onClick={() => setNewOpen(true)} disabled={!data}>
-          <Plus size={16} className="mr-2" /> Novo Lead
+          <Plus size={16} className="mr-2" /> {t("Novo Lead")}
         </Button>
       </header>
       {data && (
@@ -93,12 +95,12 @@ export function PipelinePageClient({
       <FilterBar filters={filters} onChange={setFilters} leads={data?.leads ?? []} />
       {error ? (
         <div className="rounded-md border border-destructive/30 bg-destructive/10 p-4 text-sm">
-          Erro ao carregar pipeline:{" "}
+          {t("Erro ao carregar pipeline:")}{" "}
           {formatError(error)}
         </div>
       ) : isLoading || !data ? (
         <div className="flex flex-1 animate-pulse items-center justify-center text-muted-foreground">
-          Carregando…
+          {t("Carregando…")}
         </div>
       ) : (
         <KanbanBoard

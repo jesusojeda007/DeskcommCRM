@@ -38,10 +38,18 @@ export function IdiomaProvider({
   return <Ctx.Provider value={idioma}>{children}</Ctx.Provider>;
 }
 
-/** `t("Assumir")` → "Asumir" para quem escolheu espanhol. */
-export function useT(): (texto: string) => string {
+/**
+ * `t("Assumir")` → "Asumir" para quem escolheu espanhol.
+ *
+ * `t("Arquivar «{nome}»?", { nome: funil.name })` para frases com valor no
+ * meio — ver `traduzir` em `./dicionario` pra a substituição de marcador.
+ */
+export function useT(): (texto: string, vars?: Record<string, string | number>) => string {
   const idioma = useContext(Ctx);
   // Identidade estável: sem isto, todo `useMemo`/`useEffect` que dependa de `t`
   // reexecutaria a cada render.
-  return useMemo(() => (texto: string) => traduzir(texto, idioma), [idioma]);
+  return useMemo(
+    () => (texto: string, vars?: Record<string, string | number>) => traduzir(texto, idioma, vars),
+    [idioma],
+  );
 }

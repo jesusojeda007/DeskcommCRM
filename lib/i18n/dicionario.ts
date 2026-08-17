@@ -147,6 +147,131 @@ export const DICIONARIO: Traducoes = {
   Excluir: { es: "Eliminar" },
   Editar: { es: "Editar" },
   Voltar: { es: "Volver" },
+
+  // ─── Kanban ───
+  "A sugestão vence em {resta}": { es: "La sugerencia vence en {resta}" },
+  Abertos: { es: "Abiertos" },
+  "Abrir esta conversa no Inbox": { es: "Abrir esta conversación en el Inbox" },
+  Adicionar: { es: "Agregar" },
+  Agente: { es: "Agente" },
+  Aprovar: { es: "Aprobar" },
+  "Aprovar: {label}": { es: "Aprobar: {label}" },
+  "Arquivar «{nome}»? Ele sai desta lista e para de receber negócio novo. O histórico continua guardado, e nada é apagado.": {
+    es: "¿Archivar «{nome}»? Sale de esta lista y deja de recibir negocio nuevo. El historial se conserva, y nada se borra.",
+  },
+  "Atribuir a…": { es: "Asignar a…" },
+  "Atualize os campos. Mover de etapa ou marcar ganho/perdido tem opções próprias.": {
+    es: "Actualizá los campos. Mover de etapa o marcar como ganado/perdido tiene opciones propias.",
+  },
+  "Ações do lead": { es: "Acciones del lead" },
+  "Buscar por título…": { es: "Buscar por título…" },
+  "Cancelado pela loja": { es: "Cancelado por la tienda" },
+  "Cancelado pelo cliente": { es: "Cancelado por el cliente" },
+  "Carregando a linha do tempo…": { es: "Cargando la línea de tiempo…" },
+  "Cliente solicitou cancelamento": { es: "Cliente solicitó la cancelación" },
+  Confirmar: { es: "Confirmar" },
+  "Contexto, observações, links…": { es: "Contexto, observaciones, links…" },
+  "Criando…": { es: "Creando…" },
+  "Criar funil": { es: "Crear embudo" },
+  "Criar lead": { es: "Crear lead" },
+  "Criar meu primeiro funil": { es: "Crear mi primer embudo" },
+  "Crie um lead manualmente neste pipeline.": { es: "Creá un lead manualmente en este pipeline." },
+  "Dados do negócio": { es: "Datos del negocio" },
+  "Descer «{nome}» na lista": { es: "Bajar «{nome}» en la lista" },
+  "Detalhe (opcional)": { es: "Detalle (opcional)" },
+  "Editar lead": { es: "Editar lead" },
+  Encerrar: { es: "Finalizar" },
+  "Encerrar: não retomar este negócio": { es: "Finalizar: no retomar este negocio" },
+  "Erro ao carregar pipeline:": { es: "Error al cargar el pipeline:" },
+  "Esta ação remove os leads selecionados. Não pode ser desfeita.": {
+    es: "Esta acción elimina los leads seleccionados. No se puede deshacer.",
+  },
+  "Este negócio parou de responder": { es: "Este negocio dejó de responder" },
+  Etapa: { es: "Etapa" },
+  Eu: { es: "Yo" },
+  "Ex: Cliente desistiu por X motivo": { es: "Ej: Cliente desistió por X motivo" },
+  "Ex: Pedido Maria — combo presente": { es: "Ej: Pedido María — combo regalo" },
+  "Excluir de vez": { es: "Eliminar definitivamente" },
+  "Excluir {n} lead(s)?": { es: "¿Eliminar {n} lead(s)?" },
+  "Falha ao carregar o board.": { es: "Falló la carga del board." },
+  "Falha no pagamento": { es: "Falla en el pago" },
+  Ganhos: { es: "Ganados" },
+  Ignorar: { es: "Ignorar" },
+  "Ignorar: {label}": { es: "Ignorar: {label}" },
+  "Informe o motivo. Essa informação ajuda a melhorar o funil.": {
+    es: "Indicá el motivo. Esta información ayuda a mejorar el embudo.",
+  },
+  "Lead atualizado": { es: "Lead actualizado" },
+  "Lead criado": { es: "Lead creado" },
+  "Lead: {titulo}": { es: "Lead: {titulo}" },
+  "Marcar como ganho": { es: "Marcar como ganado" },
+  "Marcar como perdido": { es: "Marcar como perdido" },
+  Motivo: { es: "Motivo" },
+  "Mover para…": { es: "Mover a…" },
+  "Nada aconteceu com este negócio ainda.": { es: "Todavía no pasó nada con este negocio." },
+  "Nenhum lead nesta pipeline ainda.": { es: "Todavía no hay ningún lead en este pipeline." },
+  "Nome do funil — ex.: Consultas, Obras, Matrículas": {
+    es: "Nombre del embudo — ej.: Consultas, Obras, Matrículas",
+  },
+  "Nome do novo funil": { es: "Nombre del nuevo embudo" },
+  "Novo Lead": { es: "Nuevo lead" },
+  "Novo funil": { es: "Nuevo embudo" },
+  "Novo nome de «{nome}»": { es: "Nuevo nombre de «{nome}»" },
+  "Não consegui carregar a linha do tempo. Tente de novo em instantes.": {
+    es: "No pude cargar la línea de tiempo. Probá de nuevo en un momento.",
+  },
+  "Não consegui completar essa ação. Tente de novo.": { es: "No pude completar esa acción. Probá de nuevo." },
+  "Outro motivo": { es: "Otro motivo" },
+  Padrão: { es: "Predeterminado" },
+  Perdidos: { es: "Perdidos" },
+  Preço: { es: "Precio" },
+  "Probabilidade recalculada automaticamente": { es: "Probabilidad recalculada automáticamente" },
+  "Probabilidade {probabilidade}%, {faixa}. Ver o porquê.": {
+    es: "Probabilidad {probabilidade}%, {faixa}. Ver el porqué.",
+  },
+  "Produto indisponível": { es: "Producto no disponible" },
+  "Propõe: {label}": { es: "Propone: {label}" },
+  "Remover responsável": { es: "Quitar responsable" },
+  Renomear: { es: "Renombrar" },
+  Responsável: { es: "Responsable" },
+  "Responsável: {label}": { es: "Responsable: {label}" },
+  Retomar: { es: "Retomar" },
+  "Retomar contato com este negócio": { es: "Retomar contacto con este negocio" },
+  "Retomar contato?": { es: "¿Retomar contacto?" },
+  "Salvando...": { es: "Guardando..." },
+  "Salvando…": { es: "Guardando…" },
+  "Sem evidências registradas.": { es: "Sin evidencias registradas." },
+  "Sem nome": { es: "Sin nombre" },
+  "Sem resposta do cliente": { es: "Sin respuesta del cliente" },
+  "Selecione a etapa": { es: "Seleccioná la etapa" },
+  Stage: { es: "Etapa" },
+  "Status: {label}": { es: "Estado: {label}" },
+  "Subir «{nome}» na lista": { es: "Subir «{nome}» en la lista" },
+  "Tag: todas": { es: "Etiqueta: todas" },
+  "Tag: {tag}": { es: "Etiqueta: {tag}" },
+  "Tags: {tags}": { es: "Etiquetas: {tags}" },
+  "Tag…": { es: "Etiqueta…" },
+  Todos: { es: "Todos" },
+  "Tornar padrão": { es: "Volver predeterminado" },
+  "Valor (R$)": { es: "Valor (R$)" },
+  "Valor inválido": { es: "Valor inválido" },
+  agora: { es: "ahora" },
+  "conversa sem mensagens": { es: "conversación sin mensajes" },
+  "em {etapa}": { es: "en {etapa}" },
+  "nova tag": { es: "nueva etiqueta" },
+  "registro que sustenta": { es: "registro que lo sustenta" },
+  vencendo: { es: "por vencer" },
+  "ver a mensagem": { es: "ver el mensaje" },
+  "{idade} em {etapa}": { es: "{idade} en {etapa}" },
+  "{n} ações": { es: "{n} acciones" },
+  "{n} lead atribuído.": { es: "{n} lead asignado." },
+  "{n} lead sem responsável.": { es: "{n} lead sin responsable." },
+  "{n} leads atribuídos.": { es: "{n} leads asignados." },
+  "{n} leads sem responsável.": { es: "{n} leads sin responsable." },
+  "{n} sem ler": { es: "{n} sin leer" },
+  "{n} selecionado": { es: "{n} seleccionado" },
+  "{n} selecionados": { es: "{n} seleccionados" },
+
 };
 
 /**
@@ -155,8 +280,20 @@ export const DICIONARIO: Traducoes = {
  * Nunca lança e nunca devolve vazio: um texto sem tradução aparece em
  * português, que é exatamente o comportamento de antes desta feature. Uma
  * tradução parcial não pode deixar a tela PIOR do que estava.
+ *
+ * `vars` substitui marcadores `{chave}` pelo valor — para frases com nome,
+ * contagem etc. no meio (ex.: `t("Arquivar «{nome}»?", { nome: funil.name })`).
+ * A CHAVE do dicionário continua sendo o texto em português, marcador incluso.
  */
-export function traduzir(texto: string, idioma: Idioma): string {
-  if (idioma === "pt-BR") return texto;
-  return DICIONARIO[texto]?.[idioma] ?? texto;
+export function traduzir(
+  texto: string,
+  idioma: Idioma,
+  vars?: Record<string, string | number>,
+): string {
+  const base = idioma === "pt-BR" ? texto : (DICIONARIO[texto]?.[idioma] ?? texto);
+  if (!vars) return base;
+  return Object.entries(vars).reduce(
+    (acc, [chave, valor]) => acc.split(`{${chave}}`).join(String(valor)),
+    base,
+  );
 }

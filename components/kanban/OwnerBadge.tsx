@@ -1,5 +1,7 @@
+"use client";
 import { Badge } from "@/components/ui/badge";
 import type { OwnerKind } from "@/lib/types/leads";
+import { useT } from "@/hooks/i18n/useT";
 
 /** Iniciais a partir do nome (primeira + última palavra). */
 export function ownerInitials(name: string): string {
@@ -29,29 +31,30 @@ export function OwnerBadge({
   /** Versão publicada do agente no momento da exibição (nunca congelada no lead). */
   agentVersion?: number | null;
 }) {
+  const t = useT();
   if (!ownerKind) {
     // Mesma geometria dos outros dois estados (disco de 24px + rótulo), para o
     // rodapé do card não mudar de altura conforme o lead tem dono ou não.
     return (
-      <div className="flex items-center gap-1.5" aria-label="Sem responsável">
+      <div className="flex items-center gap-1.5" aria-label={t("Sem responsável")}>
         <span
           className="h-6 w-6 shrink-0 rounded-full border border-dashed border-border-strong"
           aria-hidden
         />
-        <span className="truncate text-xs text-text-muted">Sem responsável</span>
+        <span className="truncate text-xs text-text-muted">{t("Sem responsável")}</span>
       </div>
     );
   }
 
   const isAgent = ownerKind === "ai";
-  const label = ownerName ?? (isAgent ? "Agente" : "Responsável");
+  const label = ownerName ?? (isAgent ? t("Agente") : t("Responsável"));
   const versionSuffix = isAgent && agentVersion != null ? ` · v${agentVersion}` : "";
   const fullLabel = `${label}${versionSuffix}`;
 
   return (
     <div
       className="flex items-center gap-1.5"
-      aria-label={`Responsável: ${fullLabel}`}
+      aria-label={t("Responsável: {label}", { label: fullLabel })}
       title={fullLabel}
     >
       <span
