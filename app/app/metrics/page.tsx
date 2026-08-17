@@ -1,5 +1,6 @@
 import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
+import { PageHeader } from "@/components/shell/PageHeader";
 
 import { MetricsClient } from "./_components/MetricsClient";
 
@@ -13,14 +14,14 @@ export default async function MetricsPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Desempenho</h1>
-        <p className="text-sm text-muted-foreground">
-          {canCompare
+      <PageHeader
+        title="Desempenho"
+        subtitle={
+          canCompare
             ? "Atrito, funil e performance por atendente nos últimos 30 dias."
-            : "Atrito, seu funil e sua performance nos últimos 30 dias."}
-        </p>
-      </header>
+            : "Atrito, seu funil e sua performance nos últimos 30 dias."
+        }
+      />
 
       <MetricsClient canCompare={canCompare} currentUserId={user.id} />
     </div>
