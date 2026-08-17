@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/hooks/i18n/useT";
 import { connectNuvemshop } from "@/app/actions/integrations/connectNuvemshop";
 import { disconnectNuvemshop } from "@/app/actions/integrations/disconnectNuvemshop";
 
@@ -22,6 +23,7 @@ const DISCONNECT_ERRORS: Record<string, string> = {
 };
 
 export function ConnectButton({ disabled }: { disabled?: boolean }) {
+  const t = useT();
   const [pending, startTransition] = useTransition();
   return (
     <Button
@@ -30,18 +32,20 @@ export function ConnectButton({ disabled }: { disabled?: boolean }) {
           const res = await connectNuvemshop();
           // Server Action redirects on success — we only get a result on failure.
           if (res && !res.ok) {
-            toast.error(CONNECT_ERRORS[res.error] ?? `Erro: ${res.error}`);
+            const message = CONNECT_ERRORS[res.error];
+            toast.error(message ? t(message) : t("Erro: {error}", { error: res.error }));
           }
         })
       }
       disabled={disabled || pending}
     >
-      {pending ? "Redirecionando…" : "Conectar com Nuvemshop"}
+      {pending ? t("Redirecionando…") : t("Conectar com Nuvemshop")}
     </Button>
   );
 }
 
 export function DisconnectButton() {
+  const t = useT();
   const [pending, startTransition] = useTransition();
   return (
     <Button
@@ -50,15 +54,16 @@ export function DisconnectButton() {
         startTransition(async () => {
           const res = await disconnectNuvemshop();
           if (res.ok) {
-            toast.success("Nuvemshop desconectada.");
+            toast.success(t("Nuvemshop desconectada."));
           } else {
-            toast.error(DISCONNECT_ERRORS[res.error] ?? `Erro: ${res.error}`);
+            const message = DISCONNECT_ERRORS[res.error];
+            toast.error(message ? t(message) : t("Erro: {error}", { error: res.error }));
           }
         })
       }
       disabled={pending}
     >
-      {pending ? "Desconectando…" : "Desconectar"}
+      {pending ? t("Desconectando…") : t("Desconectar")}
     </Button>
   );
 }
