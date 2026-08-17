@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { useT } from "@/hooks/i18n/useT";
 import { useInviteMembers } from "@/hooks/team/useInviteMembers";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,6 +22,7 @@ interface ResultState {
 }
 
 export function InviteForm() {
+  const t = useT();
   const [emailsRaw, setEmailsRaw] = useState("");
   const [role, setRole] = useState<Role>("agent");
   const [result, setResult] = useState<ResultState | null>(null);
@@ -34,11 +36,11 @@ export function InviteForm() {
       .filter(Boolean);
     const unique = Array.from(new Set(emails));
     if (unique.length === 0) {
-      toast.error("Adicione ao menos um email.");
+      toast.error(t("Adicione ao menos um email."));
       return;
     }
     if (unique.length > 20) {
-      toast.error("Máximo 20 emails por convite.");
+      toast.error(t("Máximo 20 emails por convite."));
       return;
     }
     try {
@@ -48,7 +50,11 @@ export function InviteForm() {
       setResult(res.data);
       const ok = res.data.sent.length;
       const ko = res.data.failed.length;
-      toast.success(`${ok} convite(s) enviado(s)${ko > 0 ? `, ${ko} falha(s).` : "."}`);
+      toast.success(
+        ko > 0
+          ? t("{ok} convite(s) enviado(s), {ko} falha(s).", { ok, ko })
+          : t("{ok} convite(s) enviado(s).", { ok }),
+      );
       setEmailsRaw("");
     } catch {
       /* showApiError handled */
@@ -59,17 +65,17 @@ export function InviteForm() {
     <div className="grid gap-6 md:grid-cols-[1fr,2fr]">
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="emails">Emails</Label>
+          <Label htmlFor="emails">{t("Emails")}</Label>
           <Textarea
             id="emails"
             value={emailsRaw}
             onChange={(e) => setEmailsRaw(e.target.value)}
             rows={8}
-            placeholder={"alice@empresa.com\nbob@empresa.com"}
+            placeholder={t("alice@empresa.com\nbob@empresa.com")}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="role">Role</Label>
+          <Label htmlFor="role">{t("Role")}</Label>
           <Select value={role} onValueChange={(v) => setRole(v as Role)}>
             <SelectTrigger id="role">
               <SelectValue />
@@ -84,7 +90,7 @@ export function InviteForm() {
           </Select>
         </div>
         <Button type="submit" disabled={invite.isPending}>
-          {invite.isPending ? "Enviando…" : "Enviar convites"}
+          {invite.isPending ? t("Enviando…") : t("Enviar convites")}
         </Button>
       </form>
 
@@ -93,15 +99,17 @@ export function InviteForm() {
           <>
             {result.sent.length > 0 ? (
               <section>
-                <h2 className="text-sm font-semibold">Enviados ({result.sent.length})</h2>
+                <h2 className="text-sm font-semibold">
+                  {t("Enviados ({n})", { n: result.sent.length })}
+                </h2>
                 <ul className="mt-2 space-y-2 text-sm">
                   {result.sent.map((s) => (
                     <li key={s.email} className="rounded-md border p-2">
                       <div className="font-medium">{s.email}</div>
                       <div className="text-xs text-muted-foreground">
                         {s.email_dispatched
-                          ? "Email enviado."
-                          : "Resend não configurado — link copiável abaixo (DEV)."}
+                          ? t("Email enviado.")
+                          : t("Resend não configurado — link copiável abaixo (DEV).")}
                       </div>
                       {!s.email_dispatched ? (
                         <code className="mt-1 block break-all text-xs">{s.accept_url}</code>
@@ -114,7 +122,7 @@ export function InviteForm() {
             {result.failed.length > 0 ? (
               <section>
                 <h2 className="text-sm font-semibold text-destructive">
-                  Falhas ({result.failed.length})
+                  {t("Falhas ({n})", { n: result.failed.length })}
                 </h2>
                 <ul className="mt-2 space-y-1 text-sm">
                   {result.failed.map((f) => (
@@ -128,9 +136,7 @@ export function InviteForm() {
             ) : null}
           </>
         ) : (
-          <p className="text-sm text-muted-foreground">
-            Resultados aparecerão aqui após o envio.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("Resultados aparecerão aqui após o envio.")}</p>
         )}
       </div>
     </div>
