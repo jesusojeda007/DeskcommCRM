@@ -781,6 +781,144 @@ export const DICIONARIO: Traducoes = {
   "Por onde seu negócio fala com o cliente. Conecte números por QR ou o número oficial da Meta, e acompanhe a saúde de cada um.": {
     es: "Por dónde tu negocio habla con el cliente. Conectá números por QR o el número oficial de Meta, y seguí la salud de cada uno.",
   },
+
+  // ─── Inbox: CRMSidePanel ───
+  "O que acontece a seguir?": { es: "¿Qué pasa a continuación?" },
+  "Próximo passo desta demanda": { es: "Próximo paso de este pedido" },
+  "Não consegui ler estes dados.": { es: "No pude leer estos datos." },
+  "Tentar de novo": { es: "Intentar de nuevo" },
+  "Nenhum funil configurado nesta organização.": { es: "No hay ningún embudo configurado en esta organización." },
+  "Selecione uma conversa para ver detalhes do contato.": {
+    es: "Seleccioná una conversación para ver los detalles del contacto.",
+  },
+  Contato: { es: "Contacto" },
+  "Demandas abertas": { es: "Pedidos abiertos" },
+  "há {n}h": { es: "hace {n}h" },
+  "Nenhuma demanda aberta.": { es: "No hay ningún pedido abierto." },
+  "Leads recentes": { es: "Leads recientes" },
+  "Pedidos recentes": { es: "Pedidos recientes" },
+  Atividade: { es: "Actividad" },
+  "Aguardando o cliente": { es: "Esperando al cliente" },
+
+  // ─── Inbox: ChatThread ───
+  "Selecione uma conversa": { es: "Seleccioná una conversación" },
+  "Erro ao carregar mensagens.": { es: "Error al cargar los mensajes." },
+  "Nenhuma mensagem nesta conversa.": { es: "Ningún mensaje en esta conversación." },
+  "Carregar mais antigas": { es: "Cargar más antiguos" },
+
+  // ─── Inbox: tags (contato/conversa) ───
+  "Remover tag {tag}": { es: "Quitar etiqueta {tag}" },
+  "Sem tags no contato.": { es: "Sin etiquetas en el contacto." },
+  "Adicionar tag ao contato": { es: "Agregar etiqueta al contacto" },
+  "Adicionar tag": { es: "Agregar etiqueta" },
+  "Tags da conversa": { es: "Etiquetas de la conversación" },
+  "Adicionar tag à conversa": { es: "Agregar etiqueta a la conversación" },
+
+  // ─── Inbox: ConversationList / ConversationListItem ───
+  "Erro ao carregar conversas.": { es: "Error al cargar conversaciones." },
+  Aguardando: { es: "Esperando" },
+  "Aguardando {tempo}": { es: "Esperando {tempo}" },
+  "Posição {n} na fila": { es: "Posición {n} en la cola" },
+  "Entrou por {canal}": { es: "Entró por {canal}" },
+
+  // ─── Inbox: atalhos de teclado ───
+  "Fechar conversa?": { es: "¿Cerrar conversación?" },
+  "Atalhos de teclado": { es: "Atajos de teclado" },
+  "Próxima conversa": { es: "Próxima conversación" },
+  "Conversa anterior": { es: "Conversación anterior" },
+  "Focar resposta": { es: "Enfocar respuesta" },
+  "Enviar a mensagem": { es: "Enviar el mensaje" },
+  "Quebrar linha sem enviar": { es: "Salto de línea sin enviar" },
+  "Assumir conversa": { es: "Asumir conversación" },
+  "Fechar conversa": { es: "Cerrar conversación" },
+  "Mostrar atalhos": { es: "Mostrar atajos" },
+
+  // ─── Inbox: janela de 24h / bloqueio ───
+  "O cliente ainda não escreveu — a janela de 24h nunca abriu. Só um modelo aprovado sai daqui.": {
+    es: "El cliente todavía no escribió — la ventana de 24h nunca se abrió. Solo una plantilla aprobada puede salir de acá.",
+  },
+  "A janela de 24h fechou há {tempo}. Só um modelo aprovado sai daqui — texto livre é recusado pela plataforma.": {
+    es: "La ventana de 24h se cerró hace {tempo}. Solo una plantilla aprobada puede salir de acá — el texto libre es rechazado por la plataforma.",
+  },
+  "Contato bloqueado — envio de mensagens desabilitado.": {
+    es: "Contacto bloqueado — el envío de mensajes está deshabilitado.",
+  },
+  "Contato anonimizado — não é possível enviar mensagens.": {
+    es: "Contacto anonimizado — no es posible enviar mensajes.",
+  },
+  "Conversa não encontrada ou fora do seu acesso.": { es: "Conversación no encontrada o fuera de tu acceso." },
+
+  // ─── Inbox: JanelaFechadaAviso ───
+  "Modelo enviado — a janela reabre quando o cliente responder.": {
+    es: "Plantilla enviada — la ventana se reabre cuando el cliente responda.",
+  },
+  "Não consegui enviar o modelo.": { es: "No pude enviar la plantilla." },
+  "Nenhum modelo aprovado ainda. Crie um em": { es: "Todavía no hay ninguna plantilla aprobada. Creá una en" },
+  "Conexões → Templates": { es: "Conexiones → Plantillas" },
+  "e envie quando a plataforma aprovar.": { es: "y enviala cuando la plataforma la apruebe." },
+  "Modelo aprovado": { es: "Plantilla aprobada" },
+  "Enviando…": { es: "Enviando…" },
+  "Este modelo pede {n} valor(es) e ainda não dá para preenchê-los aqui — envie por": {
+    es: "Esta plantilla pide {n} valor(es) y todavía no se pueden completar acá — enviala por",
+  },
+  ", ou escolha um modelo sem parâmetros.": { es: ", o elegí una plantilla sin parámetros." },
+
+  // ─── Inbox: JanelaSelo ───
+  "O cliente nunca escreveu": { es: "El cliente nunca escribió" },
+  "Janela fechada há {tempo}": { es: "Ventana cerrada hace {tempo}" },
+  "· só modelo": { es: "· solo plantilla" },
+  "Passaram 24h desde a última mensagem do cliente. Só um modelo aprovado sai daqui — texto livre é recusado pela plataforma.": {
+    es: "Pasaron 24h desde el último mensaje del cliente. Solo una plantilla aprobada puede salir de acá — el texto libre es rechazado por la plataforma.",
+  },
+  "Tempo restante para escrever texto livre. Depois disso, só modelo aprovado.": {
+    es: "Tiempo restante para escribir texto libre. Después de eso, solo plantilla aprobada.",
+  },
+  "Janela {tempo}": { es: "Ventana {tempo}" },
+
+  // ─── Inbox: MessageBubble ───
+  Lida: { es: "Leído" },
+  Entregue: { es: "Entregado" },
+  Enviada: { es: "Enviado" },
+  "Esta mensagem foi apagada": { es: "Este mensaje fue eliminado" },
+  "O autor editou esta mensagem": { es: "El autor editó este mensaje" },
+  editada: { es: "editado" },
+  Falhou: { es: "Falló" },
+  "Erro desconhecido": { es: "Error desconocido" },
+
+  // ─── Inbox: NoteCard ───
+  Alguém: { es: "Alguien" },
+  "Nota interna · só o time vê": { es: "Nota interna · solo la ve el equipo" },
+  "Excluir nota": { es: "Eliminar nota" },
+
+  // ─── Inbox: ReassignDialog ───
+  "Transferir conversa": { es: "Transferir conversación" },
+  "A transferência é imediata: o atendente escolhido vira o responsável agora e a mudança fica registrada no histórico.": {
+    es: "La transferencia es inmediata: el agente elegido se convierte en el responsable ahora, y el cambio queda registrado en el historial.",
+  },
+  "Transferir para": { es: "Transferir a" },
+  "Carregando atendentes…": { es: "Cargando agentes…" },
+  "Escolha o atendente": { es: "Elegí el agente" },
+  "Atendente {id}": { es: "Agente {id}" },
+  Atendente: { es: "Agente" },
+  Gestor: { es: "Gerente" },
+  Admin: { es: "Admin" },
+  "Nenhum outro atendente disponível nesta organização.": {
+    es: "No hay ningún otro agente disponible en esta organización.",
+  },
+  "Motivo (opcional)": { es: "Motivo (opcional)" },
+  "Ex.: cliente pediu falar com o financeiro": { es: "Ej.: el cliente pidió hablar con el área financiera" },
+  "Transferindo…": { es: "Transfiriendo…" },
+
+  // ─── Inbox: SnoozeButton ───
+  "Em 1 hora": { es: "En 1 hora" },
+  "Em 3 horas": { es: "En 3 horas" },
+  "Em 24 horas": { es: "En 24 horas" },
+  "Lembrete ativo": { es: "Recordatorio activo" },
+  "Cancelar lembrete": { es: "Cancelar recordatorio" },
+
+
+  // ─── Achados na QA visual da Fase 1 (Inbox) ───
+  "Número removido": { es: "Número eliminado" },
 };
 
 /**

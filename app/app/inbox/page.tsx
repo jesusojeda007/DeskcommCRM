@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { loadAuthUser, resolveActiveOrg } from "@/lib/auth/server";
 import { InboxLayout } from "@/components/inbox/InboxLayout";
+import { T } from "@/components/shell/T";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ export default async function InboxPage({
   if (!activeOrg) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-        Você não tem nenhuma organização ativa. Aceite um convite ou contate o admin.
+        <T>Você não tem nenhuma organização ativa. Aceite um convite ou contate o admin.</T>
       </div>
     );
   }

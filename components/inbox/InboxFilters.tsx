@@ -119,9 +119,9 @@ export function InboxFilters({ value, onChange }: Props) {
             <SelectValue placeholder={t("Todos os números")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os números</SelectItem>
+            <SelectItem value="all">{t("Todos os números")}</SelectItem>
             {filtroForaDaLista && value.channel_session_id != null && (
-              <SelectItem value={value.channel_session_id}>Número removido</SelectItem>
+              <SelectItem value={value.channel_session_id}>{t("Número removido")}</SelectItem>
             )}
             {channels?.map((c) => (
               <SelectItem key={c.id} value={c.id}>
@@ -141,7 +141,7 @@ export function InboxFilters({ value, onChange }: Props) {
             <SelectValue placeholder={t("Todas as tags")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas as tags</SelectItem>
+            <SelectItem value="all">{t("Todas as tags")}</SelectItem>
             {tagVocabulary?.map((t) => (
               <SelectItem key={t} value={t}>
                 {t}
@@ -164,7 +164,7 @@ export function InboxFilters({ value, onChange }: Props) {
             const count = countFor[tab];
             return (
               <TabsTrigger key={tab} value={tab} className="gap-1 text-[11px]">
-                {meta.label}
+                {t(meta.label)}
                 {typeof count === "number" && count > 0 && (
                   <span className="text-[10px] tabular-nums text-muted-foreground">
                     {count}

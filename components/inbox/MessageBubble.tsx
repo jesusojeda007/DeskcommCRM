@@ -11,6 +11,7 @@ import {
   extractCitations,
   isAiGeneratedMessage,
 } from "@/lib/ai/citations/types";
+import { useT } from "@/hooks/i18n/useT";
 
 interface Props {
   message: Message;
@@ -18,19 +19,21 @@ interface Props {
 }
 
 function AckIndicator({ status }: { status: string }) {
+  const t = useT();
   if (status === "read") {
-    return <Checks size={12} weight="bold" className="text-blue-400" aria-label="Lida" />;
+    return <Checks size={12} weight="bold" className="text-blue-400" aria-label={t("Lida")} />;
   }
   if (status === "delivered") {
-    return <Checks size={12} weight="bold" className="text-current/70" aria-label="Entregue" />;
+    return <Checks size={12} weight="bold" className="text-current/70" aria-label={t("Entregue")} />;
   }
   if (status === "sent") {
-    return <Check size={12} weight="bold" className="text-current/70" aria-label="Enviada" />;
+    return <Check size={12} weight="bold" className="text-current/70" aria-label={t("Enviada")} />;
   }
   return null;
 }
 
 export function MessageBubble({ message, debugCitations }: Props) {
+  const t = useT();
   const isOutbound = message.direction === "outbound";
   const time = format(new Date(message.sent_at), "HH:mm", { locale: ptBR });
   const isFailed = message.status === "failed";
@@ -74,7 +77,7 @@ export function MessageBubble({ message, debugCitations }: Props) {
             {senderLabel === "IA" ? (
               <Robot size={10} weight="duotone" aria-hidden />
             ) : null}
-            {senderLabel}
+            {t(senderLabel)}
           </div>
         )}
 
@@ -83,7 +86,7 @@ export function MessageBubble({ message, debugCitations }: Props) {
           // esmaecido porque não é texto de ninguém — é o CRM narrando o que
           // aconteceu com aquele lugar da conversa.
           <p className="whitespace-pre-wrap break-words italic leading-snug opacity-60">
-            Esta mensagem foi apagada
+            {t("Esta mensagem foi apagada")}
           </p>
         ) : (
           <>
@@ -110,7 +113,7 @@ export function MessageBubble({ message, debugCitations }: Props) {
             // que falta é avisar que ele mudou. Sem isso, um combinado de preço
             // ou endereço é lido como se sempre tivesse dito aquilo — e a
             // divergência só aparece quando alguém cobra o que não foi.
-            <span title="O autor editou esta mensagem">editada</span>
+            <span title={t("O autor editou esta mensagem")}>{t("editada")}</span>
           )}
           <span>{time}</span>
           {showCitationButton && (
@@ -125,11 +128,11 @@ export function MessageBubble({ message, debugCitations }: Props) {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className="inline-flex items-center gap-0.5 font-semibold text-destructive">
-                    <WarningOctagon size={10} weight="fill" aria-hidden /> Falhou
+                    <WarningOctagon size={10} weight="fill" aria-hidden /> {t("Falhou")}
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {message.error_message ?? message.error_code ?? "Erro desconhecido"}
+                  {message.error_message ?? message.error_code ?? t("Erro desconhecido")}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

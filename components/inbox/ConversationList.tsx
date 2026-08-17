@@ -11,6 +11,7 @@ import {
   type ConversationsFilters,
   type ConversationWithContact,
 } from "@/hooks/inbox/useConversationsRealtime";
+import { useT } from "@/hooks/i18n/useT";
 
 interface Props {
   filters: ConversationsFilters;
@@ -31,6 +32,7 @@ export function ConversationList({
   clientFilter,
   onVisibleChange,
 }: Props) {
+  const t = useT();
   // Só mostra POR ONDE a conversa entrou quando há mais de um número. Com um
   // só, o rótulo seria a mesma palavra em toda linha — ruído que ensina o olho
   // a ignorar a área onde vivem os avisos que importam.
@@ -73,14 +75,14 @@ export function ConversationList({
   if (q.isError) {
     return (
       <div className="p-4 text-center text-sm text-muted-foreground">
-        <p>Erro ao carregar conversas.</p>
+        <p>{t("Erro ao carregar conversas.")}</p>
         <Button
           size="sm"
           variant="outline"
           className="mt-2"
           onClick={() => q.refetch()}
         >
-          Tentar novamente
+          {t("Tentar novamente")}
         </Button>
       </div>
     );
@@ -115,7 +117,7 @@ export function ConversationList({
               onClick={() => q.fetchNextPage()}
               disabled={q.isFetchingNextPage}
             >
-              {q.isFetchingNextPage ? "Carregando…" : "Carregar mais"}
+              {q.isFetchingNextPage ? t("Carregando…") : t("Carregar mais")}
             </Button>
           </div>
         )}

@@ -13,6 +13,7 @@ import { useDebugToggle } from "@/hooks/ai/useDebugToggle";
 import { useActiveOrg, useUser } from "@/hooks/auth/AuthProvider";
 import { ROLE_RANK } from "@/lib/auth/types";
 import type { Message, Note } from "@/lib/types/messaging";
+import { useT } from "@/hooks/i18n/useT";
 
 interface Props {
   conversationId: string | null;
@@ -42,6 +43,7 @@ function dayLabel(d: Date): string {
 }
 
 export function ChatThread({ conversationId }: Props) {
+  const t = useT();
   const q = useMessagesRealtime(conversationId);
   const notes = useConversationNotes(conversationId);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -103,7 +105,7 @@ export function ChatThread({ conversationId }: Props) {
   if (!conversationId) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-        Selecione uma conversa
+        {t("Selecione uma conversa")}
       </div>
     );
   }
@@ -121,9 +123,9 @@ export function ChatThread({ conversationId }: Props) {
   if (q.isError) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
-        <p>Erro ao carregar mensagens.</p>
+        <p>{t("Erro ao carregar mensagens.")}</p>
         <Button size="sm" variant="outline" onClick={() => q.refetch()}>
-          Tentar novamente
+          {t("Tentar novamente")}
         </Button>
       </div>
     );
@@ -132,7 +134,7 @@ export function ChatThread({ conversationId }: Props) {
   if (items.length === 0) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-        Nenhuma mensagem nesta conversa.
+        {t("Nenhuma mensagem nesta conversa.")}
       </div>
     );
   }
@@ -158,7 +160,7 @@ export function ChatThread({ conversationId }: Props) {
               onClick={() => q.fetchNextPage()}
               disabled={q.isFetchingNextPage}
             >
-              {q.isFetchingNextPage ? "Carregando…" : "Carregar mais antigas"}
+              {q.isFetchingNextPage ? t("Carregando…") : t("Carregar mais antigas")}
             </Button>
           </div>
         )}
@@ -167,7 +169,7 @@ export function ChatThread({ conversationId }: Props) {
           <div key={g.key} className="space-y-1">
             <div className="sticky top-0 z-10 flex justify-center py-1">
               <span className="rounded-full bg-background/80 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground backdrop-blur">
-                {dayLabel(g.date)}
+                {t(dayLabel(g.date))}
               </span>
             </div>
             {g.items.map((item) =>

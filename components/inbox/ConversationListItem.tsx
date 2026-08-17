@@ -1,12 +1,15 @@
 "use client";
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { ptBR, es } from "date-fns/locale";
 import { Phone, Robot } from "@/lib/ui/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { ConversationWithContact } from "@/hooks/inbox/useConversationsRealtime";
 import { rotuloDoContato } from "@/lib/contacts/rotulo-do-contato";
+import { useT } from "@/hooks/i18n/useT";
+import { useIdioma } from "@/lib/i18n/IdiomaProvider";
+import type { Idioma } from "@/lib/i18n/idiomas";
 
 interface Props {
   conversation: ConversationWithContact;
@@ -55,10 +58,19 @@ function relativeTime(iso: string | null): string {
 }
 
 /** "Aguardando há 5 min" — desde a última mensagem do cliente (fallback: criação). */
-function waitingLabel(conversation: ConversationWithContact): string {
+function waitingLabel(
+  conversation: ConversationWithContact,
+  t: (texto: string, vars?: Record<string, string | number>) => string,
+  idioma: Idioma,
+): string {
   const since = conversation.last_inbound_at ?? conversation.created_at;
-  if (!since) return "Aguardando";
-  return `Aguardando ${formatDistanceToNowStrict(new Date(since), { addSuffix: true, locale: ptBR })}`;
+  if (!since) return t("Aguardando");
+  return t("Aguardando {tempo}", {
+    tempo: formatDistanceToNowStrict(new Date(since), {
+      addSuffix: true,
+      locale: idioma === "es" ? es : ptBR,
+    }),
+  });
 }
 
 export function ConversationListItem({
@@ -68,13 +80,15 @@ export function ConversationListItem({
   queuePosition,
   mostrarCanal,
 }: Props) {
+  const t = useT();
+  const idioma = useIdioma();
   const c = conversation.contacts ?? null;
   const displayName = rotuloDoContato(c);
   const phoneFallback = c?.phone_number ?? "??";
   const tags = c?.tags ?? [];
   const visibleTags = tags.slice(0, 2);
   const overflow = tags.length - visibleTags.length;
-  const preview = conversation.last_message_preview?.trim() || "Sem mensagens";
+  const preview = conversation.last_message_preview?.trim() || t("Sem mensagens");
   const truncated = preview.length > 60 ? `${preview.slice(0, 60)}…` : preview;
   const time = relativeTime(conversation.last_message_at);
   const unread = conversation.unread_count_for_assignee ?? 0;
@@ -128,12 +142,12 @@ export function ConversationListItem({
           <div className="mb-1 flex items-center gap-1.5">
             <span
               className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary/10 px-1 text-[10px] font-medium tabular-nums text-primary"
-              aria-label={`Posição ${queuePosition} na fila`}
+              aria-label={t("Posição {n} na fila", { n: queuePosition })}
             >
               {queuePosition}º
             </span>
             <span className="text-[10px] text-muted-foreground">
-              {waitingLabel(conversation)}
+              {waitingLabel(conversation, t, idioma)}
             </span>
           </div>
         )}
@@ -157,9 +171,9 @@ export function ConversationListItem({
         </p>
 
         <div className="mt-1.5 flex flex-wrap items-center gap-1">
-          {visibleTags.map((t) => (
-            <Badge key={t} variant="secondary" className="h-4 px-1.5 text-[10px]">
-              {t}
+          {visibleTags.map((tag) => (
+            <Badge key={tag} variant="secondary" className="h-4 px-1.5 text-[10px]">
+              {tag}
             </Badge>
           ))}
           {overflow > 0 && (
@@ -169,7 +183,7 @@ export function ConversationListItem({
             <Badge
               variant="outline"
               className="h-4 gap-1 px-1.5 text-[10px] font-normal text-muted-foreground"
-              title={`Entrou por ${rotuloCanal}`}
+              title={t("Entrou por {canal}", { canal: rotuloCanal })}
             >
               <Phone size={9} weight="regular" aria-hidden />
               {rotuloCanal}
@@ -177,12 +191,12 @@ export function ConversationListItem({
           )}
           {c?.is_blocked && (
             <Badge variant="destructive" className="h-4 px-1.5 text-[10px]">
-              Bloqueado
+              {t("Bloqueado")}
             </Badge>
           )}
           {c?.is_anonymized && (
             <Badge variant="outline" className="h-4 px-1.5 text-[10px]">
-              Anonimizado
+              {t("Anonimizado")}
             </Badge>
           )}
           {unread > 0 && (

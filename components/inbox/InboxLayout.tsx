@@ -21,6 +21,7 @@ import { RetentionNotice } from "./RetentionNotice";
 import { CRMSidePanel } from "./CRMSidePanel";
 import { InboxKeyboardShortcuts } from "./InboxKeyboardShortcuts";
 import { ShortcutsHelpDialog } from "./ShortcutsHelpDialog";
+import { useT } from "@/hooks/i18n/useT";
 
 /**
  * O QUE CADA ABA SIGNIFICA. Exportada porque é a definição em si — o defeito
@@ -61,6 +62,7 @@ interface InboxLayoutProps {
 }
 
 export function InboxLayout({ initialSelectedId = null }: InboxLayoutProps = {}) {
+  const t = useT();
   const { activeOrg } = useAuth();
   const orgId = activeOrg?.orgId ?? null;
 
@@ -151,8 +153,8 @@ export function InboxLayout({ initialSelectedId = null }: InboxLayoutProps = {})
   // que já venceu — e o bloqueio só apareceria no próximo recarregamento.
   const [agoraJanela, setAgoraJanela] = useState(() => new Date());
   useEffect(() => {
-    const t = setInterval(() => setAgoraJanela(new Date()), 30_000);
-    return () => clearInterval(t);
+    const id = setInterval(() => setAgoraJanela(new Date()), 30_000);
+    return () => clearInterval(id);
   }, []);
 
   // A janela de 24h fecha o composer, e o motivo DIZ há quanto tempo fechou.
@@ -172,14 +174,17 @@ export function InboxLayout({ initialSelectedId = null }: InboxLayoutProps = {})
   const motivoDaJanela =
     janela.tipo === "fechada"
       ? janela.fechadaHaMs === null
-        ? "O cliente ainda não escreveu — a janela de 24h nunca abriu. Só um modelo aprovado sai daqui."
-        : `A janela de 24h fechou há ${formatarDecorrido(janela.fechadaHaMs)}. Só um modelo aprovado sai daqui — texto livre é recusado pela plataforma.`
+        ? t("O cliente ainda não escreveu — a janela de 24h nunca abriu. Só um modelo aprovado sai daqui.")
+        : t(
+            "A janela de 24h fechou há {tempo}. Só um modelo aprovado sai daqui — texto livre é recusado pela plataforma.",
+            { tempo: formatarDecorrido(janela.fechadaHaMs) },
+          )
       : null;
 
   const blockedReason = selectedConversation?.contacts?.is_blocked
-    ? "Contato bloqueado — envio de mensagens desabilitado."
+    ? t("Contato bloqueado — envio de mensagens desabilitado.")
     : selectedConversation?.contacts?.is_anonymized
-      ? "Contato anonimizado — não é possível enviar mensagens."
+      ? t("Contato anonimizado — não é possível enviar mensagens.")
       : null;
 
   // Altura da grade: a conta desconta TUDO que fica acima e abaixo dela.
@@ -261,11 +266,11 @@ export function InboxLayout({ initialSelectedId = null }: InboxLayoutProps = {})
           </>
         ) : selectionNotFound ? (
           <div className="flex h-full items-center justify-center px-6 text-center text-sm text-muted-foreground">
-            Conversa não encontrada ou fora do seu acesso.
+            {t("Conversa não encontrada ou fora do seu acesso.")}
           </div>
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-            Selecione uma conversa
+            {t("Selecione uma conversa")}
           </div>
         )}
       </div>

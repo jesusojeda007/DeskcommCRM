@@ -53,3 +53,11 @@ export function useT(): (texto: string, vars?: Record<string, string | number>) 
     [idioma],
   );
 }
+
+/**
+ * O idioma cru — para o raro caso que precisa dele além de `t()`, como
+ * escolher o `locale` do `date-fns` em `formatDistanceToNowStrict`.
+ */
+export function useIdioma(): Idioma {
+  return useContext(Ctx);
+}
