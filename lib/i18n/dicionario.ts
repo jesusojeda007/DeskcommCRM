@@ -1874,6 +1874,13 @@ export const DICIONARIO: Traducoes = {
   "Falha de rede ao contatar a Nuvemshop.": { es: "Falla de red al contactar a Nuvemshop." },
   "Falha ao criptografar o token. Verifique NUVEMSHOP_OAUTH_ENCRYPTION_KEY.": { es: "Falla al cifrar el token. Verificá NUVEMSHOP_OAUTH_ENCRYPTION_KEY." },
   "Falha ao gravar a integração no banco.": { es: "Falla al guardar la integración en la base de datos." },
+
+  // ─── Fase 3 QA: bolinha de saúde da sidebar (ConnectionHealthDot) ───
+  "Todas as conexões ativas": { es: "Todas las conexiones activas" },
+  "Conectando…": { es: "Conectando…" },
+  "Uma conexão caiu": { es: "Una conexión se cayó" },
+  "Nenhuma conexão": { es: "Ninguna conexión" },
+  "Não foi possível verificar as conexões": { es: "No fue posible verificar las conexiones" },
 };
 
 /**
