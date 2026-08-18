@@ -2,31 +2,11 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requirePlatformAdmin } from "@/lib/auth/requirePlatformAdmin";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CaretLeft } from "@/lib/ui/icons";
 import { TabNav } from "./_tab-nav";
-
-// ---------------------------------------------------------------------------
-// Status badge helpers (same palette as TenantsTable)
-// ---------------------------------------------------------------------------
-
-const STATUS_VARIANTS: Record<
-  string,
-  "success" | "info" | "warning" | "error" | "neutral"
-> = {
-  active: "success",
-  onboarding: "info",
-  suspended: "warning",
-  redacted: "error",
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  active: "Ativo",
-  onboarding: "Onboarding",
-  suspended: "Suspenso",
-  redacted: "Redigido",
-};
+import { TenantStatusBadge } from "./_status-badge";
+import { T } from "@/components/shell/T";
 
 // ---------------------------------------------------------------------------
 // Sub-nav tabs definition
@@ -82,7 +62,7 @@ export default async function TenantDetailLayout({
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
       >
         <CaretLeft size={14} aria-hidden />
-        Tenants
+        <T>Tenants</T>
       </Link>
 
       {/* Header */}
@@ -96,11 +76,7 @@ export default async function TenantDetailLayout({
               {org.slug}
             </code>
           )}
-          {org?.status && (
-            <Badge variant={STATUS_VARIANTS[org.status] ?? "neutral"}>
-              {STATUS_LABELS[org.status] ?? org.status}
-            </Badge>
-          )}
+          {org?.status && <TenantStatusBadge status={org.status} />}
         </div>
       </div>
 

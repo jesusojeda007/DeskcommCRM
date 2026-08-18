@@ -6,6 +6,7 @@ import type {
   TenantCounts,
   TenantIntegrations,
 } from "@/hooks/useTenantDetail";
+import { useT } from "@/hooks/i18n/useT";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -90,14 +91,15 @@ interface TenantOverviewProps {
 // ---------------------------------------------------------------------------
 
 export function TenantOverview({ organization, counts, integrations }: TenantOverviewProps) {
+  const t = useT();
   const plan = (organization.settings as { plan?: string } | null)?.plan ?? "—";
 
   const nuvemshopStatus = integrations.nuvemshop_status;
   // Valor fora do vocabulário conhecido continua aparecendo cru de propósito:
   // esconder um estado que a tela não sabe nomear é pior que mostrá-lo.
   const nuvemshopLabel = nuvemshopStatus
-    ? (NUVEMSHOP_LABEL[nuvemshopStatus] ?? nuvemshopStatus)
-    : "Não integrado";
+    ? (NUVEMSHOP_LABEL[nuvemshopStatus] ? t(NUVEMSHOP_LABEL[nuvemshopStatus]) : nuvemshopStatus)
+    : t("Não integrado");
   const nuvemshopVariant = nuvemshopStatus
     ? (NUVEMSHOP_VARIANT[nuvemshopStatus] ?? "warning")
     : "neutral";
@@ -107,16 +109,16 @@ export function TenantOverview({ organization, counts, integrations }: TenantOve
       {/* Info card */}
       <div className="rounded-lg border bg-card p-5">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-          Informações
+          {t("Informações")}
         </h2>
         <div>
-          <InfoRow label="Plano" value={<Badge variant="neutral" className="capitalize">{plan}</Badge>} />
-          <InfoRow label="Razão social" value={organization.legal_name} />
+          <InfoRow label={t("Plano")} value={<Badge variant="neutral" className="capitalize">{plan}</Badge>} />
+          <InfoRow label={t("Razão social")} value={organization.legal_name} />
           <InfoRow label="CNPJ" value={organization.cnpj} />
-          <InfoRow label="Onboarding concluído" value={formatDate(organization.onboarded_at)} />
-          <InfoRow label="Criado em" value={formatDate(organization.created_at)} />
+          <InfoRow label={t("Onboarding concluído")} value={formatDate(organization.onboarded_at)} />
+          <InfoRow label={t("Criado em")} value={formatDate(organization.created_at)} />
           {organization.suspended_at && (
-            <InfoRow label="Suspenso em" value={formatDate(organization.suspended_at)} />
+            <InfoRow label={t("Suspenso em")} value={formatDate(organization.suspended_at)} />
           )}
         </div>
       </div>
@@ -124,14 +126,14 @@ export function TenantOverview({ organization, counts, integrations }: TenantOve
       {/* Counts row */}
       <div>
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-          Volumes
+          {t("Volumes")}
         </h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          <StatCard label="Usuários" value={counts.user_count} />
-          <StatCard label="Conversas" value={counts.conversations_count} />
-          <StatCard label="Mensagens" value={counts.messages_count} />
-          <StatCard label="Leads" value={counts.leads_count} />
-          <StatCard label="Pedidos" value={counts.orders_count} />
+          <StatCard label={t("Usuários")} value={counts.user_count} />
+          <StatCard label={t("Conversas")} value={counts.conversations_count} />
+          <StatCard label={t("Mensagens")} value={counts.messages_count} />
+          <StatCard label={t("Leads")} value={counts.leads_count} />
+          <StatCard label={t("Pedidos")} value={counts.orders_count} />
         </div>
       </div>
 
@@ -139,7 +141,7 @@ export function TenantOverview({ organization, counts, integrations }: TenantOve
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-lg border bg-card p-5">
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-            Integrações
+            {t("Integrações")}
           </h2>
           <div>
             <InfoRow
@@ -150,34 +152,34 @@ export function TenantOverview({ organization, counts, integrations }: TenantOve
             />
             {integrations.nuvemshop_connected_at && (
               <InfoRow
-                label="Conectado em"
+                label={t("Conectado em")}
                 value={formatDate(integrations.nuvemshop_connected_at)}
               />
             )}
-            <InfoRow label="WAHA sessions" value={counts.waha_sessions_count} />
+            <InfoRow label={t("WAHA sessions")} value={counts.waha_sessions_count} />
           </div>
         </div>
 
         {/* LGPD + AI */}
         <div className="rounded-lg border bg-card p-5">
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-            Compliance & IA
+            {t("Compliance & IA")}
           </h2>
           <div>
             <InfoRow
-              label="Solicitações LGPD pendentes"
+              label={t("Solicitações LGPD pendentes")}
               value={
                 <span className="flex items-center gap-1.5">
                   <span className={counts.lgpd_requests_pending > 0 ? "text-amber-600 font-semibold" : ""}>
                     {counts.lgpd_requests_pending}
                   </span>
                   {counts.lgpd_requests_pending > 0 && (
-                    <Warning size={14} weight="fill" className="text-amber-500" aria-label="Pendências LGPD" />
+                    <Warning size={14} weight="fill" className="text-amber-500" aria-label={t("Pendências LGPD")} />
                   )}
                 </span>
               }
             />
-            <InfoRow label="Invocações IA (30d)" value={counts.ai_invocations_30d.toLocaleString("pt-BR")} />
+            <InfoRow label={t("Invocações IA (30d)")} value={counts.ai_invocations_30d.toLocaleString("pt-BR")} />
           </div>
         </div>
       </div>

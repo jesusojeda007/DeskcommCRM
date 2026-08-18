@@ -8,6 +8,7 @@ import {
   ClipboardText,
 } from "@/lib/ui/icons";
 import type { TenantHealthResponse } from "@/app/api/v1/admin/tenants/[id]/health/route";
+import { useT } from "@/hooks/i18n/useT";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -51,6 +52,7 @@ interface HealthGridProps {
 // ---------------------------------------------------------------------------
 
 export function HealthGrid({ health }: HealthGridProps) {
+  const t = useT();
   const { waha, nuvemshop, ai, audit } = health;
 
   // WAHA card
@@ -59,8 +61,8 @@ export function HealthGrid({ health }: HealthGridProps) {
   const wahaConnected = waha.sessions.filter((s) => s.status === "WORKING").length;
   const wahaPrimary =
     waha.sessions.length === 0
-      ? "Sem sessões"
-      : `${wahaConnected}/${waha.sessions.length} conectada${waha.sessions.length !== 1 ? "s" : ""}`;
+      ? t("Sem sessões")
+      : `${wahaConnected}/${waha.sessions.length} ${t(waha.sessions.length !== 1 ? "conectadas" : "conectada")}`;
 
   const wahaDetails = waha.sessions.slice(0, 4).map((s) => ({
     label: s.waha_session_name ?? s.id.slice(0, 8),
@@ -68,34 +70,34 @@ export function HealthGrid({ health }: HealthGridProps) {
   }));
 
   // Nuvemshop card
-  const nuPrimary = nuvemshop.connected ? "Conectado" : "Não conectado";
+  const nuPrimary = nuvemshop.connected ? t("Conectado") : t("Não conectado");
   const nuDetails = [
-    { label: "Última sync", value: formatDate(nuvemshop.last_synced_at) },
+    { label: t("Última sync"), value: formatDate(nuvemshop.last_synced_at) },
     ...(nuvemshop.days_until_expiry !== null
-      ? [{ label: "Expira em", value: `${nuvemshop.days_until_expiry}d` }]
+      ? [{ label: t("Expira em"), value: `${nuvemshop.days_until_expiry}d` }]
       : []),
     ...(nuvemshop.expires_at
-      ? [{ label: "Token expira", value: formatDate(nuvemshop.expires_at) }]
+      ? [{ label: t("Token expira"), value: formatDate(nuvemshop.expires_at) }]
       : []),
   ];
 
   // AI budget card
   const aiPrimary =
-    ai.percent_used !== null ? `${ai.percent_used}% usado` : "Sem orçamento";
+    ai.percent_used !== null ? `${ai.percent_used}% ${t("usado")}` : t("Sem orçamento");
   const aiDetails = [
-    { label: "Consumido", value: formatCents(ai.consumed_cents) },
+    { label: t("Consumido"), value: formatCents(ai.consumed_cents) },
     {
-      label: "Orçamento",
-      value: ai.budget_cents ? formatCents(ai.budget_cents) : "Ilimitado",
+      label: t("Orçamento"),
+      value: ai.budget_cents ? formatCents(ai.budget_cents) : t("Ilimitado"),
     },
   ];
 
   // Audit lag card
   const auditPrimary = formatLag(audit.lag_seconds);
   const auditDetails = [
-    { label: "Último evento", value: formatDate(audit.last_at) },
+    { label: t("Último evento"), value: formatDate(audit.last_at) },
     {
-      label: "Lag",
+      label: t("Lag"),
       value: audit.lag_seconds !== null ? formatLag(audit.lag_seconds) : "—",
     },
   ];
@@ -119,7 +121,7 @@ export function HealthGrid({ health }: HealthGridProps) {
       />
 
       <HealthCard
-        title="Orçamento IA"
+        title={t("Orçamento IA")}
         status={ai.status}
         icon={<Brain size={18} aria-hidden />}
         primaryValue={aiPrimary}
@@ -127,7 +129,7 @@ export function HealthGrid({ health }: HealthGridProps) {
       />
 
       <HealthCard
-        title="Audit Lag"
+        title={t("Audit Lag")}
         status={audit.status}
         icon={<ClipboardText size={18} aria-hidden />}
         primaryValue={auditPrimary}
