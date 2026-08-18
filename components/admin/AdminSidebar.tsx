@@ -16,6 +16,7 @@ import {
 import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { branding } from "@/lib/branding";
+import { useT } from "@/hooks/i18n/useT";
 
 interface NavItem {
   href: string;
@@ -41,6 +42,7 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ userEmail }: AdminSidebarProps) {
   const pathname = usePathname();
+  const t = useT();
 
   return (
     <aside className="flex w-60 shrink-0 flex-col border-r bg-card">
@@ -49,10 +51,10 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
           <span className="text-xs uppercase tracking-wider text-muted-foreground">
             {branding().name}
           </span>
-          <span className="text-sm font-semibold tracking-tight">Admin Plataforma</span>
+          <span className="text-sm font-semibold tracking-tight">{t("Admin Plataforma")}</span>
         </div>
       </div>
-      <nav className="flex-1 space-y-1 overflow-y-auto p-2" aria-label="Navegação plataforma">
+      <nav className="flex-1 space-y-1 overflow-y-auto p-2" aria-label={t("Navegação plataforma")}>
         {NAV_ITEMS.map((item) => {
           const isActive =
             pathname === item.href || pathname.startsWith(item.href + "/");
@@ -70,7 +72,7 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
               )}
             >
               <Icon size={18} weight={isActive ? "fill" : "regular"} aria-hidden />
-              <span className="truncate">{item.label}</span>
+              <span className="truncate">{t(item.label)}</span>
             </Link>
           );
         })}
@@ -81,7 +83,7 @@ export function AdminSidebar({ userEmail }: AdminSidebarProps) {
           className="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent/50 hover:text-foreground"
         >
           <ArrowRight size={14} aria-hidden />
-          <span>Voltar pra app</span>
+          <span>{t("Voltar pra app")}</span>
         </Link>
         <p className="truncate px-2 text-xs text-muted-foreground" title={userEmail}>
           {userEmail}

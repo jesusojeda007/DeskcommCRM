@@ -12,6 +12,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useT } from "@/hooks/i18n/useT";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,6 +40,7 @@ export function ImpersonateButton({
   disabledReason,
 }: ImpersonateButtonProps) {
   const router = useRouter();
+  const t = useT();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -53,7 +55,7 @@ export function ImpersonateButton({
       if (!res.ok) {
         const errorMsg =
           (json as { error?: { message?: string } })?.error?.message ??
-          "Não foi possível iniciar impersonate";
+          t("Não foi possível iniciar impersonate");
         toast.error(errorMsg);
         return;
       }
@@ -67,7 +69,7 @@ export function ImpersonateButton({
       // Fallback (in case assign is intercepted in tests).
       router.push(redirectUrl);
     } catch (err) {
-      toast.error("Erro de rede ao iniciar impersonate");
+      toast.error(t("Erro de rede ao iniciar impersonate"));
       console.error("[impersonate] start error", err);
     } finally {
       setBusy(false);
@@ -83,31 +85,31 @@ export function ImpersonateButton({
           disabled={disabled}
           aria-label={
             disabled
-              ? (disabledReason ?? "Impersonate indisponível")
-              : `Impersonar ${displayName}`
+              ? (disabledReason ?? t("Impersonate indisponível"))
+              : t("Impersonar {displayName}", { displayName })
           }
           title={disabled ? disabledReason : undefined}
         >
-          Impersonar tenant
+          {t("Impersonar tenant")}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Iniciar impersonate?</AlertDialogTitle>
+          <AlertDialogTitle>{t("Iniciar impersonate?")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Você está prestes a entrar como o tenant{" "}
+            {t("Você está prestes a entrar como o tenant")}{" "}
             <span className="font-semibold text-foreground">{displayName}</span>.
-            Toda ação será registrada com a flag{" "}
+            {" "}{t("Toda ação será registrada com a flag")}{" "}
             <code className="rounded bg-muted px-1 py-0.5 text-xs">
               acting_as_platform_admin
             </code>
-            . A sessão expira em 1 hora. Confirma?
+            . {t("A sessão expira em 1 hora. Confirma?")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={busy}>Cancelar</AlertDialogCancel>
+          <AlertDialogCancel disabled={busy}>{t("Cancelar")}</AlertDialogCancel>
           <AlertDialogAction onClick={handleConfirm} disabled={busy}>
-            {busy ? "Entrando…" : "Confirmar e entrar"}
+            {busy ? t("Entrando…") : t("Confirmar e entrar")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
