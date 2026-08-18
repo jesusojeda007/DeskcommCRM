@@ -3305,6 +3305,22 @@ export const DICIONARIO: Traducoes = {
   "Sem candidatos a merge": { es: "Sin candidatos a merge" },
   "Contatos duplicados aparecerão aqui pra revisão.": { es: "Los contactos duplicados van a aparecer acá para revisión." },
   "Tente ajustar os filtros ou a busca.": { es: "Probá ajustar los filtros o la búsqueda." },
+
+  // ─── Fase 7: Inbox — composer — español ───
+  "Enviar anexo": { es: "Enviar adjunto" },
+  "Legenda (opcional)": { es: "Leyenda (opcional)" },
+  "Legenda": { es: "Leyenda" },
+  "Anexar": { es: "Adjuntar" },
+  "Fotos e vídeos": { es: "Fotos y videos" },
+  "Documento": { es: "Documento" },
+  "Não consegui acessar o microfone. Verifique a permissão do navegador.": { es: "No pude acceder al micrófono. Verificá el permiso del navegador." },
+  "Gravar áudio": { es: "Grabar audio" },
+  "Cancelar gravação": { es: "Cancelar grabación" },
+  "Enviar áudio": { es: "Enviar audio" },
+  "Sugerir resposta": { es: "Sugerir respuesta" },
+  "Emoji": { es: "Emoji" },
+  "Templates de script": { es: "Plantillas de script" },
+  "Nenhum template. Crie em Configurações.": { es: "Ninguna plantilla. Creála en Configuración." },
 };
 
 /**

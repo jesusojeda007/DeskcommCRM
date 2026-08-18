@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { FileText, ImageSquare, Plus } from "@/lib/ui/icons";
+import { useT } from "@/hooks/i18n/useT";
 
 interface Props {
   disabled?: boolean;
@@ -12,6 +13,7 @@ interface Props {
 
 /** Menu "+" do composer (padrão WhatsApp): Fotos e vídeos / Documento. */
 export function AttachMenu({ disabled, onPick }: Props) {
+  const t = useT();
   const mediaRef = useRef<HTMLInputElement | null>(null);
   const docRef = useRef<HTMLInputElement | null>(null);
 
@@ -30,7 +32,7 @@ export function AttachMenu({ disabled, onPick }: Props) {
             size="icon"
             variant="ghost"
             className="h-9 w-9 shrink-0"
-            aria-label="Anexar"
+            aria-label={t("Anexar")}
             disabled={disabled}
           >
             <Plus size={18} weight="regular" aria-hidden />
@@ -43,7 +45,7 @@ export function AttachMenu({ disabled, onPick }: Props) {
             onClick={() => mediaRef.current?.click()}
           >
             <ImageSquare size={18} weight="duotone" className="text-primary" aria-hidden />
-            Fotos e vídeos
+            {t("Fotos e vídeos")}
           </button>
           <button
             type="button"
@@ -51,7 +53,7 @@ export function AttachMenu({ disabled, onPick }: Props) {
             onClick={() => docRef.current?.click()}
           >
             <FileText size={18} weight="duotone" className="text-primary" aria-hidden />
-            Documento
+            {t("Documento")}
           </button>
         </PopoverContent>
       </Popover>
