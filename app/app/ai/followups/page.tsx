@@ -5,6 +5,8 @@ import { ROLE_RANK } from "@/lib/auth/types";
 import { createClient } from "@/lib/supabase/server";
 import type { FollowupFlowPointerRow } from "@/hooks/followup/useFollowupFlows";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PageHeader } from "@/components/shell/PageHeader";
+import { T } from "@/components/shell/T";
 import { FlowsList } from "./_components/FlowsList";
 import { QueueTab } from "./_components/QueueTab";
 
@@ -31,19 +33,14 @@ export default async function FollowupFlowsPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header className="flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Follow-ups</h1>
-          <p className="text-sm text-text-muted">
-            Fluxos automáticos de reengajamento — silêncio, mudança de etapa ou fim
-            de conversa disparam mensagens sem intervenção manual.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title="Follow-ups"
+        subtitle="Fluxos automáticos de reengajamento — silêncio, mudança de etapa ou fim de conversa disparam mensagens sem intervenção manual."
+      />
       <Tabs defaultValue="fluxos" className="flex flex-1 flex-col">
         <TabsList>
-          <TabsTrigger value="fluxos">Fluxos</TabsTrigger>
-          <TabsTrigger value="fila">Fila</TabsTrigger>
+          <TabsTrigger value="fluxos"><T>Fluxos</T></TabsTrigger>
+          <TabsTrigger value="fila"><T>Fila</T></TabsTrigger>
         </TabsList>
         <TabsContent value="fluxos">
           <FlowsList initialData={flows} canWrite={canWrite} />
