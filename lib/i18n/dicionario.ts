@@ -3353,6 +3353,16 @@ export const DICIONARIO: Traducoes = {
   "A primeira mensagem a um contato novo precisa se apresentar como assistente virtual. O assistente foi orientado a corrigir antes de enviar.": { es: "El primer mensaje a un contacto nuevo tiene que presentarse como asistente virtual. Se le indicó al asistente que corrija antes de enviar." },
   "Uma trava de segurança segurou esta resposta (código {codigo}). Ela não foi enviada ao contato.": { es: "Una traba de seguridad retuvo esta respuesta (código {codigo}). No se le envió al contacto." },
   "Uma trava de segurança segurou esta resposta. Ela não foi enviada ao contato.": { es: "Una traba de seguridad retuvo esta respuesta. No se le envió al contacto." },
+
+  // ─── Fase 7: Contacts (custom fields, merge) + theme-toggle — español ───
+  "Selecione…": { es: "Seleccioná…" },
+  "Formato E.164": { es: "Formato E.164" },
+  "Resolver merge de contatos": { es: "Resolver fusión de contactos" },
+  "Comparação dos candidatos detectados. A resolução automática via API ainda não está disponível neste MVP — entre em contato com o admin para mesclar via SQL.": { es: "Comparación de los candidatos detectados. La resolución automática vía API todavía no está disponible en este MVP — contactá al admin para fusionar vía SQL." },
+  "Nenhum candidato disponível.": { es: "No hay ningún candidato disponible." },
+  "Endpoint de resolução não implementado neste MVP": { es: "Endpoint de resolución no implementado en este MVP" },
+  "Resolver via SQL (em breve)": { es: "Resolver vía SQL (próximamente)" },
+  "Tema: {theme}. Cmd+Shift+L para alternar.": { es: "Tema: {theme}. Cmd+Shift+L para alternar." },
 };
 
 /**
