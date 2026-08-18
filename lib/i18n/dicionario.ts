@@ -3369,6 +3369,11 @@ export const DICIONARIO: Traducoes = {
   "alterado automaticamente pelo sistema": { es: "cambiado automáticamente por el sistema" },
   "Ver no histórico o que foi alterado": { es: "Ver en el historial qué se cambió" },
   "— ver o que mudou": { es: "— ver qué cambió" },
+
+  // ─── Fase 7: fix — rótulos de coluna de etapas (achado no QA) — español ───
+  "Nome da coluna (clique para renomear)": { es: "Nombre de la columna (hacé clic para renombrar)" },
+  "Ordem": { es: "Orden" },
+  "O que acontece nesta coluna": { es: "Qué pasa en esta columna" },
 };
 
 /**
