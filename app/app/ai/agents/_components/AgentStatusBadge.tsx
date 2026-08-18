@@ -1,4 +1,5 @@
 "use client";
+import { useT } from "@/hooks/i18n/useT";
 import { Badge } from "@/components/ui/badge";
 import type { AgentRow } from "@/hooks/ai/useAgent";
 
@@ -45,9 +46,11 @@ const VARIANT: Record<AgentStatus, "default" | "secondary" | "outline" | "destru
 };
 
 export function AgentStatusBadge({ status }: { status: AgentStatus }) {
+  const t = useT();
+  const label = t(LABEL[status]);
   return (
-    <Badge variant={VARIANT[status]} aria-label={`status: ${LABEL[status]}`}>
-      {LABEL[status]}
+    <Badge variant={VARIANT[status]} aria-label={t("status: {label}", { label })}>
+      {label}
     </Badge>
   );
 }

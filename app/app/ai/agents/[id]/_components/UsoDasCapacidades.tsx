@@ -13,6 +13,7 @@
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 
+import { useT } from "@/hooks/i18n/useT";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { apiClient } from "@/lib/api/client";
@@ -70,8 +71,8 @@ const NOME_DA_VERSAO: Record<string, string> = {
   superseded: "antiga",
 };
 
-function formatarData(iso: string | null): string {
-  if (!iso) return "nunca";
+function formatarData(iso: string | null, naoDisponivel: string): string {
+  if (!iso) return naoDisponivel;
   return new Date(iso).toLocaleString("pt-BR", {
     day: "2-digit",
     month: "2-digit",
@@ -81,6 +82,7 @@ function formatarData(iso: string | null): string {
 }
 
 export function UsoDasCapacidades({ agentId, active }: Props) {
+  const t = useT();
   const query = useQuery({
     queryKey: ["ai", "agents", agentId, "tool-usage"],
     queryFn: async () => {
@@ -94,12 +96,12 @@ export function UsoDasCapacidades({ agentId, active }: Props) {
   });
 
   if (query.isLoading) {
-    return <p className="text-sm text-muted-foreground">Carregando o uso das capacidades…</p>;
+    return <p className="text-sm text-muted-foreground">{t("Carregando o uso das capacidades…")}</p>;
   }
   if (query.isError || !query.data) {
     return (
       <p className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
-        Não foi possível carregar o uso das capacidades.
+        {t("Não foi possível carregar o uso das capacidades.")}
       </p>
     );
   }
@@ -112,29 +114,32 @@ export function UsoDasCapacidades({ agentId, active }: Props) {
         <div className="space-y-1">
           <p className="text-sm">
             <strong data-testid="uso-total">{resumo.usos}</strong>{" "}
-            {resumo.usos === 1 ? "uso" : "usos"} nos últimos {janela_em_dias} dias
+            {t(resumo.usos === 1 ? "uso" : "usos")}{" "}
+            {t("nos últimos {dias} dias", { dias: janela_em_dias })}
             {resumo.falhas > 0 ? (
               <>
                 {" · "}
                 <strong className="text-destructive" data-testid="uso-falhas">
                   {resumo.falhas}
                 </strong>{" "}
-                {resumo.falhas === 1 ? "falha" : "falhas"}
+                {t(resumo.falhas === 1 ? "falha" : "falhas")}
               </>
             ) : null}
           </p>
           <p className="text-xs text-muted-foreground">
             {resumo.precisam_de_atencao > 0
-              ? `${resumo.precisam_de_atencao} ${
+              ? t(
                   resumo.precisam_de_atencao === 1
-                    ? "capacidade pede uma decisão sua"
-                    : "capacidades pedem uma decisão sua"
-                }.`
-              : "Nada pedindo decisão no momento."}
+                    ? "{n} capacidade pede uma decisão sua."
+                    : "{n} capacidades pedem uma decisão sua.",
+                  { n: resumo.precisam_de_atencao },
+                )
+              : t("Nada pedindo decisão no momento.")}
             {versao_lida
-              ? ` O que está ligado vem da versão ${
-                  NOME_DA_VERSAO[versao_lida.status] ?? versao_lida.status
-                }.`
+              ? " " +
+                t("O que está ligado vem da versão {versao}.", {
+                  versao: t(NOME_DA_VERSAO[versao_lida.status] ?? versao_lida.status),
+                })
               : null}
           </p>
         </div>
@@ -144,7 +149,7 @@ export function UsoDasCapacidades({ agentId, active }: Props) {
           onClick={() => query.refetch()}
           disabled={query.isFetching}
         >
-          {query.isFetching ? "Atualizando…" : "Atualizar"}
+          {query.isFetching ? t("Atualizando…") : t("Atualizar")}
         </Button>
       </div>
 
@@ -153,8 +158,9 @@ export function UsoDasCapacidades({ agentId, active }: Props) {
           data-testid="uso-vazio"
           className="rounded-md border border-border/60 p-4 text-sm text-muted-foreground"
         >
-          Este agente ainda não tem nenhuma capacidade ligada, e nenhuma foi usada. Ligue
-          o que ele pode fazer na aba Configuração.
+          {t(
+            "Este agente ainda não tem nenhuma capacidade ligada, e nenhuma foi usada. Ligue o que ele pode fazer na aba Configuração.",
+          )}
         </p>
       ) : (
         <ul className="grid gap-2">
@@ -168,11 +174,11 @@ export function UsoDasCapacidades({ agentId, active }: Props) {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-sm font-medium">{c.rotulo}</span>
                 <Badge variant="outline" className={`text-[11px] ${SINAL[c.sinal].classe}`}>
-                  {SINAL[c.sinal].rotulo}
+                  {t(SINAL[c.sinal].rotulo)}
                 </Badge>
                 {!c.ligada ? (
                   <Badge variant="outline" className="text-[11px] text-muted-foreground">
-                    desligada
+                    {t("desligada")}
                   </Badge>
                 ) : null}
                 <span className="text-xs text-muted-foreground">· {c.o_que_toca}</span>
@@ -182,18 +188,18 @@ export function UsoDasCapacidades({ agentId, active }: Props) {
 
               <div className="flex flex-wrap gap-x-4 pt-2 font-mono text-[11px] text-muted-foreground">
                 <span>
-                  usos <strong className="text-foreground">{c.total}</strong>
+                  {t("usos")} <strong className="text-foreground">{c.total}</strong>
                 </span>
                 <span>
-                  falhas{" "}
+                  {t("falhas")}{" "}
                   <strong className={c.falhas > 0 ? "text-destructive" : "text-foreground"}>
                     {c.falhas}
                   </strong>
                 </span>
                 <span>
-                  em teste <strong className="text-foreground">{c.em_teste}</strong>
+                  {t("em teste")} <strong className="text-foreground">{c.em_teste}</strong>
                 </span>
-                <span>última vez {formatarData(c.ultima_vez)}</span>
+                <span>{t("última vez {data}", { data: formatarData(c.ultima_vez, t("nunca")) })}</span>
               </div>
             </li>
           ))}

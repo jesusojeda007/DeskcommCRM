@@ -3,6 +3,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { useT } from "@/hooks/i18n/useT";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export function RenameAgentDialog({ agent, open, onOpenChange }: Props) {
+  const t = useT();
   const router = useRouter();
   const [name, setName] = useState(agent.name);
   const [isPending, startTransition] = useTransition();
@@ -37,11 +39,11 @@ export function RenameAgentDialog({ agent, open, onOpenChange }: Props) {
     startTransition(async () => {
       const res = await renameAgentAction(agent.id, name);
       if (res.ok) {
-        toast.success("Renomeado.");
+        toast.success(t("Renomeado."));
         onOpenChange(false);
         router.refresh();
       } else {
-        toast.error(res.message ?? `Falha: ${res.error}`);
+        toast.error(res.message ?? t("Falha: {erro}", { erro: res.error ?? "unknown" }));
       }
     });
   };
@@ -50,14 +52,14 @@ export function RenameAgentDialog({ agent, open, onOpenChange }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Renomear agent</DialogTitle>
+          <DialogTitle>{t("Renomear agent")}</DialogTitle>
           <DialogDescription>
-            Apenas o nome interno muda. Versões publicadas e histórico são preservados.
+            {t("Apenas o nome interno muda. Versões publicadas e histórico são preservados.")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="agent-name">Nome</Label>
+            <Label htmlFor="agent-name">{t("Nome")}</Label>
             <Input
               id="agent-name"
               value={name}
@@ -74,10 +76,10 @@ export function RenameAgentDialog({ agent, open, onOpenChange }: Props) {
               onClick={() => onOpenChange(false)}
               disabled={isPending}
             >
-              Cancelar
+              {t("Cancelar")}
             </Button>
             <Button type="submit" disabled={isPending || name.trim().length === 0}>
-              Salvar
+              {t("Salvar")}
             </Button>
           </DialogFooter>
         </form>
