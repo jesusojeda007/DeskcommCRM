@@ -21,6 +21,7 @@ import { Plus, PencilSimple, Trash } from "@/lib/ui/icons";
 import { apiClient } from "@/lib/api/client";
 import { showApiError } from "@/components/feedback/ApiErrorToast";
 import { useMessageTemplates, type MessageTemplate } from "@/hooks/inbox/useMessageTemplates";
+import { useT } from "@/hooks/i18n/useT";
 import { TemplateFormDialog } from "./TemplateFormDialog";
 
 const TEMPLATES_KEY = ["message-templates"];
@@ -31,6 +32,7 @@ interface Props {
 }
 
 export function TemplatesClient({ canShare, currentUserId }: Props) {
+  const t = useT();
   const { data: templates, isLoading } = useMessageTemplates();
   const qc = useQueryClient();
   const del = useMutation({
@@ -63,11 +65,11 @@ export function TemplatesClient({ canShare, currentUserId }: Props) {
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button type="button" onClick={openNew}>
-          <Plus /> Novo template
+          <Plus /> {t("Novo template")}
         </Button>
       </div>
       {!templates?.length ? (
-        <p className="text-sm text-muted-foreground">Nenhum template ainda.</p>
+        <p className="text-sm text-muted-foreground">{t("Nenhum template ainda.")}</p>
       ) : (
         <ul className="space-y-2">
           {templates.map((template) => {
@@ -86,7 +88,7 @@ export function TemplatesClient({ canShare, currentUserId }: Props) {
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{template.title}</span>
                     <Badge variant={template.owner_user_id ? "neutral" : "default"}>
-                      {template.owner_user_id ? "Pessoal" : "Compartilhado"}
+                      {template.owner_user_id ? t("Pessoal") : t("Compartilhado")}
                     </Badge>
                   </div>
                   <p className="line-clamp-2 text-sm text-muted-foreground">{template.body}</p>
@@ -97,7 +99,7 @@ export function TemplatesClient({ canShare, currentUserId }: Props) {
                       type="button"
                       variant="ghost"
                       size="icon"
-                      aria-label="Editar template"
+                      aria-label={t("Editar template")}
                       onClick={() => openEdit(template)}
                     >
                       <PencilSimple />
@@ -108,28 +110,28 @@ export function TemplatesClient({ canShare, currentUserId }: Props) {
                           type="button"
                           variant="ghost"
                           size="icon"
-                          aria-label="Excluir template"
+                          aria-label={t("Excluir template")}
                         >
                           <Trash />
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Excluir este template?</AlertDialogTitle>
+                          <AlertDialogTitle>{t("Excluir este template?")}</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Essa ação não pode ser desfeita.
+                            {t("Essa ação não pode ser desfeita.")}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogCancel>{t("Cancelar")}</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() =>
                               del.mutate(template.id, {
-                                onSuccess: () => toast.success("Template excluído."),
+                                onSuccess: () => toast.success(t("Template excluído.")),
                               })
                             }
                           >
-                            Excluir
+                            {t("Excluir")}
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
