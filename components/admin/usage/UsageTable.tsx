@@ -12,20 +12,22 @@ import {
 import { ChartBar } from "@/lib/ui/icons";
 import type { UsageTenantRow } from "@/app/api/v1/admin/usage/route";
 import type { UsageRange } from "@/hooks/useAdminUsage";
+import { useT } from "@/hooks/i18n/useT";
+import { useIdioma } from "@/lib/i18n/IdiomaProvider";
 
 // ---------------------------------------------------------------------------
 // Formatters
 // ---------------------------------------------------------------------------
 
-function fmtBRL(cents: number): string {
-  return (cents / 100).toLocaleString("pt-BR", {
+function fmtBRL(cents: number, locale: string): string {
+  return (cents / 100).toLocaleString(locale, {
     style: "currency",
     currency: "BRL",
   });
 }
 
-function fmtNum(n: number): string {
-  return n.toLocaleString("pt-BR");
+function fmtNum(n: number, locale: string): string {
+  return n.toLocaleString(locale);
 }
 
 // ---------------------------------------------------------------------------
@@ -75,13 +77,16 @@ interface UsageTableProps {
 }
 
 export function UsageTable({ tenants, range }: UsageTableProps) {
+  const t = useT();
+  const idioma = useIdioma();
+
   if (tenants.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 rounded-md border py-16 text-center text-muted-foreground">
         <ChartBar size={36} weight="duotone" className="opacity-40" aria-hidden />
-        <p className="text-sm font-medium">Nenhum tenant encontrado</p>
+        <p className="text-sm font-medium">{t("Nenhum tenant encontrado")}</p>
         <p className="max-w-xs text-xs opacity-70">
-          Não há dados de uso no período selecionado.
+          {t("Não há dados de uso no período selecionado.")}
         </p>
       </div>
     );
@@ -91,7 +96,7 @@ export function UsageTable({ tenants, range }: UsageTableProps) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-medium text-muted-foreground">
-          Uso por tenant
+          {t("Uso por tenant")}
         </h2>
         <Button
           variant="outline"
@@ -99,7 +104,7 @@ export function UsageTable({ tenants, range }: UsageTableProps) {
           onClick={() => exportCSV(tenants, range)}
           className="gap-1.5 text-xs"
         >
-          Exportar CSV
+          {t("Exportar CSV")}
         </Button>
       </div>
 
@@ -107,12 +112,12 @@ export function UsageTable({ tenants, range }: UsageTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Tenant</TableHead>
-              <TableHead className="text-right">Mensagens</TableHead>
-              <TableHead className="text-right">Conversas</TableHead>
-              <TableHead className="text-right">Invoc. AI</TableHead>
-              <TableHead className="text-right">Tokens</TableHead>
-              <TableHead className="text-right">Custo AI</TableHead>
+              <TableHead>{t("Tenant")}</TableHead>
+              <TableHead className="text-right">{t("Mensagens")}</TableHead>
+              <TableHead className="text-right">{t("Conversas")}</TableHead>
+              <TableHead className="text-right">{t("Invoc. AI")}</TableHead>
+              <TableHead className="text-right">{t("Tokens")}</TableHead>
+              <TableHead className="text-right">{t("Custo AI")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -127,19 +132,19 @@ export function UsageTable({ tenants, range }: UsageTableProps) {
                   </div>
                 </TableCell>
                 <TableCell className="text-right tabular-nums text-sm">
-                  {fmtNum(row.messages_count)}
+                  {fmtNum(row.messages_count, idioma)}
                 </TableCell>
                 <TableCell className="text-right tabular-nums text-sm">
-                  {fmtNum(row.conversations_count)}
+                  {fmtNum(row.conversations_count, idioma)}
                 </TableCell>
                 <TableCell className="text-right tabular-nums text-sm">
-                  {fmtNum(row.ai_invocations_count)}
+                  {fmtNum(row.ai_invocations_count, idioma)}
                 </TableCell>
                 <TableCell className="text-right tabular-nums text-sm">
-                  {fmtNum(row.ai_tokens_total)}
+                  {fmtNum(row.ai_tokens_total, idioma)}
                 </TableCell>
                 <TableCell className="text-right tabular-nums text-sm font-medium">
-                  {fmtBRL(row.ai_cost_cents)}
+                  {fmtBRL(row.ai_cost_cents, idioma)}
                 </TableCell>
               </TableRow>
             ))}

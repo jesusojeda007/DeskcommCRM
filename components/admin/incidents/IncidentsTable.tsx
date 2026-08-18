@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { ptBR, es } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/table";
 import { Warning } from "@/lib/ui/icons";
 import type { AdminIncidentRow, IncidentSeverity, IncidentStatus } from "@/hooks/useAdminIncidents";
+import { useT } from "@/hooks/i18n/useT";
+import { useIdioma } from "@/lib/i18n/IdiomaProvider";
 
 // ---------------------------------------------------------------------------
 // Badge helpers
@@ -44,29 +46,41 @@ const STATUS_LABELS: Record<IncidentStatus, string> = {
   resolved: "Resolvido",
 };
 
-function SeverityBadge({ severity }: { severity: IncidentSeverity }) {
+function SeverityBadge({
+  severity,
+  t,
+}: {
+  severity: IncidentSeverity;
+  t: (texto: string) => string;
+}) {
   return (
     <Badge variant={SEVERITY_VARIANTS[severity]}>
-      {SEVERITY_LABELS[severity]}
+      {t(SEVERITY_LABELS[severity])}
     </Badge>
   );
 }
 
-function StatusBadge({ status }: { status: IncidentStatus }) {
+function StatusBadge({
+  status,
+  t,
+}: {
+  status: IncidentStatus;
+  t: (texto: string) => string;
+}) {
   return (
     <Badge variant={STATUS_VARIANTS[status]}>
-      {STATUS_LABELS[status]}
+      {t(STATUS_LABELS[status])}
     </Badge>
   );
 }
 
-function relativeDate(iso: string): string {
+function relativeDate(iso: string, locale: typeof ptBR): string {
   // date-fns lança RangeError em data inválida, e isso derrubava a página
   // inteira no error boundary — o usuário via só um digest no lugar da tabela.
   // Uma célula com "—" é melhor do que perder a tela por um timestamp ausente.
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "—";
-  return formatDistanceToNow(d, { addSuffix: true, locale: ptBR });
+  return formatDistanceToNow(d, { addSuffix: true, locale });
 }
 
 // ---------------------------------------------------------------------------
@@ -74,16 +88,17 @@ function relativeDate(iso: string): string {
 // ---------------------------------------------------------------------------
 
 export function IncidentsTableSkeleton() {
+  const t = useT();
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[140px]">Quando</TableHead>
-            <TableHead>Tipo</TableHead>
-            <TableHead className="w-[160px]">Tenant</TableHead>
-            <TableHead className="w-[110px]">Severidade</TableHead>
-            <TableHead className="w-[120px]">Status</TableHead>
+            <TableHead className="w-[140px]">{t("Quando")}</TableHead>
+            <TableHead>{t("Tipo")}</TableHead>
+            <TableHead className="w-[160px]">{t("Tenant")}</TableHead>
+            <TableHead className="w-[110px]">{t("Severidade")}</TableHead>
+            <TableHead className="w-[120px]">{t("Status")}</TableHead>
             <TableHead className="w-[60px]" />
           </TableRow>
         </TableHeader>
@@ -120,13 +135,17 @@ export function IncidentsTable({
   isFetchingNextPage,
   onLoadMore,
 }: IncidentsTableProps) {
+  const t = useT();
+  const idioma = useIdioma();
+  const dateLocale = idioma === "es" ? es : ptBR;
+
   if (data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 rounded-md border py-16 text-center text-muted-foreground">
         <Warning size={36} weight="duotone" className="opacity-40" aria-hidden />
-        <p className="text-sm font-medium">Nenhum incidente encontrado</p>
+        <p className="text-sm font-medium">{t("Nenhum incidente encontrado")}</p>
         <p className="max-w-xs text-xs opacity-70">
-          Ajuste os filtros para ver outros incidentes.
+          {t("Ajuste os filtros para ver outros incidentes.")}
         </p>
       </div>
     );
@@ -138,11 +157,11 @@ export function IncidentsTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[140px]">Quando</TableHead>
-              <TableHead>Tipo</TableHead>
-              <TableHead className="w-[160px]">Tenant</TableHead>
-              <TableHead className="w-[110px]">Severidade</TableHead>
-              <TableHead className="w-[120px]">Status</TableHead>
+              <TableHead className="w-[140px]">{t("Quando")}</TableHead>
+              <TableHead>{t("Tipo")}</TableHead>
+              <TableHead className="w-[160px]">{t("Tenant")}</TableHead>
+              <TableHead className="w-[110px]">{t("Severidade")}</TableHead>
+              <TableHead className="w-[120px]">{t("Status")}</TableHead>
               <TableHead className="w-[60px]" />
             </TableRow>
           </TableHeader>
@@ -150,7 +169,7 @@ export function IncidentsTable({
             {data.map((row) => (
               <TableRow key={row.id}>
                 <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
-                  {relativeDate(row.created_at)}
+                  {relativeDate(row.created_at, dateLocale)}
                 </TableCell>
                 <TableCell className="font-mono text-xs">{row.type}</TableCell>
                 <TableCell>
@@ -161,17 +180,17 @@ export function IncidentsTable({
                   )}
                 </TableCell>
                 <TableCell>
-                  <SeverityBadge severity={row.severity as IncidentSeverity} />
+                  <SeverityBadge severity={row.severity as IncidentSeverity} t={t} />
                 </TableCell>
                 <TableCell>
-                  <StatusBadge status={row.status as IncidentStatus} />
+                  <StatusBadge status={row.status as IncidentStatus} t={t} />
                 </TableCell>
                 <TableCell>
                   <Link
                     href={`/admin/incidents/${row.id}`}
                     className="text-xs font-medium text-accent hover:underline"
                   >
-                    Ver
+                    {t("Ver")}
                   </Link>
                 </TableCell>
               </TableRow>
@@ -188,7 +207,7 @@ export function IncidentsTable({
             onClick={onLoadMore}
             disabled={isFetchingNextPage}
           >
-            {isFetchingNextPage ? "Carregando..." : "Carregar mais"}
+            {isFetchingNextPage ? t("Carregando...") : t("Carregar mais")}
           </Button>
         </div>
       )}
