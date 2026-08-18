@@ -114,6 +114,12 @@ const KNOWN_DEBT: { reason: string; files: string[] }[] = [
       "components/connections/ConnectionsClient.tsx",
       // (#118) `waha_error` no catálogo de códigos de erro da API pública.
       "lib/api/errors.ts",
+      // Dicionário de i18n: guarda a MESMA cópia visível já listada acima
+      // (KPICards.tsx, AlertItem.tsx, HealthGrid.tsx, connect-whatsapp) na
+      // chave PT + tradução ES — não é um lugar novo nomeando o provider, é o
+      // texto que já era dívida, espelhado porque a chave de tradução tem
+      // que ser o texto-fonte exato.
+      "lib/i18n/dicionario.ts",
     ],
   },
   {

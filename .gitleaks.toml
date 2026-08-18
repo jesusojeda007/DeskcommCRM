@@ -46,3 +46,17 @@ caminho) para continuar valendo em qualquer arquivo que precise dele.
 regexes = [
   '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZS1kZW1v[A-Za-z0-9_\-\.]*''',
 ]
+
+[[allowlists]]
+description = """
+Chaves de registro de handler versionadas do follow-up
+(`"followup-gatilho-caso.v1"`, `"followup-gatilho-etapa.v1"`). São
+constantes comparadas por igualdade no dispatcher do `event_log`, não
+segredo — casam com a heurística de "chave genérica" só pela forma
+(letras + ponto + versão). Achado na primeira execução do gate, que
+nunca tinha rodado contra estes dois arquivos até agora.
+"""
+paths = [
+  '''^lib/followup/gatilho-caso\.handler\.ts$''',
+  '''^lib/followup/gatilho-etapa\.handler\.ts$''',
+]
