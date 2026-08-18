@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAiBudget, useUpdateBudget, type BudgetStatus } from "@/hooks/ai/useAiBudget";
+import { useT } from "@/hooks/i18n/useT";
 
 interface Props {
   initialData?: BudgetStatus;
@@ -43,13 +44,14 @@ function clamp(n: number, min: number, max: number): number {
 }
 
 export function BudgetCard({ initialData, isAdmin }: Props) {
+  const t = useT();
   const q = useAiBudget({ initialData });
   const status = q.data;
 
   if (!status) {
     return (
       <Card className="p-4">
-        <p className="text-sm text-muted-foreground">Carregando orçamento...</p>
+        <p className="text-sm text-muted-foreground">{t("Carregando orçamento...")}</p>
       </Card>
     );
   }
@@ -64,19 +66,19 @@ export function BudgetCard({ initialData, isAdmin }: Props) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-base font-semibold tracking-tight">
-            Orçamento mensal de IA
+            {t("Orçamento mensal de IA")}
           </h2>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Período iniciado em {status.current_period_start}
+            {t("Período iniciado em {data}", { data: status.current_period_start })}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {status.is_disabled && <Badge variant="destructive">Desabilitado</Badge>}
+          {status.is_disabled && <Badge variant="destructive">{t("Desabilitado")}</Badge>}
           {status.is_throttled && !status.is_disabled && (
-            <Badge variant="secondary">Pausado</Badge>
+            <Badge variant="secondary">{t("Pausado")}</Badge>
           )}
           {overLimit && !status.is_throttled && !status.is_disabled && (
-            <Badge variant="destructive">Limite alcançado</Badge>
+            <Badge variant="destructive">{t("Limite alcançado")}</Badge>
           )}
           {isAdmin && <EditBudgetDialog status={status} />}
         </div>
@@ -102,7 +104,11 @@ export function BudgetCard({ initialData, isAdmin }: Props) {
         <div className="flex flex-wrap items-baseline justify-between gap-2 text-sm">
           <span>
             <strong>{fmtCents(consumed)}</strong>
-            {limit > 0 ? <> gastos de {fmtCents(limit)}</> : <> gastos este mês</>}
+            {limit > 0 ? (
+              <> {t("gastos de {valor}", { valor: fmtCents(limit) })}</>
+            ) : (
+              <> {t("gastos este mês")}</>
+            )}
           </span>
           {/*
             Sem limite definido, a linha antiga dizia "R$ 0,00 de —" e ainda
@@ -112,14 +118,16 @@ export function BudgetCard({ initialData, isAdmin }: Props) {
           <span className="text-muted-foreground">
             {limit > 0 ? (
               <>
-                {status.pct.toFixed(0)}% do limite · avisamos em{" "}
-                {status.alarm_threshold_pct}% ·{" "}
+                {t("{pct}% do limite · avisamos em {alarme}% ·", {
+                  pct: status.pct.toFixed(0),
+                  alarme: status.alarm_threshold_pct,
+                })}{" "}
                 {status.action_at_100pct === "disable"
-                  ? "a IA é desligada ao chegar no limite"
-                  : "a IA pausa ao chegar no limite"}
+                  ? t("a IA é desligada ao chegar no limite")
+                  : t("a IA pausa ao chegar no limite")}
               </>
             ) : (
-              "Sem limite definido — a IA não vai parar sozinha por gasto."
+              t("Sem limite definido — a IA não vai parar sozinha por gasto.")
             )}
           </span>
         </div>
@@ -129,6 +137,7 @@ export function BudgetCard({ initialData, isAdmin }: Props) {
 }
 
 function EditBudgetDialog({ status }: { status: BudgetStatus }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const update = useUpdateBudget();
   const [limitBrl, setLimitBrl] = useState<string>(
@@ -166,20 +175,19 @@ function EditBudgetDialog({ status }: { status: BudgetStatus }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm" variant="outline">
-          Editar limite
+          {t("Editar limite")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar orçamento de IA</DialogTitle>
+          <DialogTitle>{t("Editar orçamento de IA")}</DialogTitle>
           <DialogDescription>
-            Define quando o bot deve alertar e como reagir ao atingir 100% do
-            consumo mensal.
+            {t("Define quando o bot deve alertar e como reagir ao atingir 100% do consumo mensal.")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="limit-brl">Limite mensal (R$)</Label>
+            <Label htmlFor="limit-brl">{t("Limite mensal (R$)")}</Label>
             <Input
               id="limit-brl"
               type="number"
@@ -189,12 +197,12 @@ function EditBudgetDialog({ status }: { status: BudgetStatus }) {
               onChange={(e) => setLimitBrl(e.target.value)}
             />
             <p className="text-xs text-muted-foreground">
-              0 desativa o orçamento (sem limite, sem alertas).
+              {t("0 desativa o orçamento (sem limite, sem alertas).")}
             </p>
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="threshold-pct">Alerta em (%)</Label>
+            <Label htmlFor="threshold-pct">{t("Alerta em (%)")}</Label>
             <Input
               id="threshold-pct"
               type="number"
@@ -207,14 +215,16 @@ function EditBudgetDialog({ status }: { status: BudgetStatus }) {
           </div>
 
           <div className="space-y-1.5">
-            <Label>Ação ao atingir 100%</Label>
+            <Label>{t("Ação ao atingir 100%")}</Label>
             <Select value={action} onValueChange={(v) => setAction(v as "throttle" | "disable")}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="throttle">Pausar (reversível mensalmente)</SelectItem>
-                <SelectItem value="disable">Desabilitar (requer reativar manualmente)</SelectItem>
+                <SelectItem value="throttle">{t("Pausar (reversível mensalmente)")}</SelectItem>
+                <SelectItem value="disable">
+                  {t("Desabilitar (requer reativar manualmente)")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -226,10 +236,10 @@ function EditBudgetDialog({ status }: { status: BudgetStatus }) {
               onClick={() => setOpen(false)}
               disabled={update.isPending}
             >
-              Cancelar
+              {t("Cancelar")}
             </Button>
             <Button type="submit" disabled={update.isPending}>
-              {update.isPending ? "Salvando..." : "Salvar"}
+              {update.isPending ? t("Salvando...") : t("Salvar")}
             </Button>
           </DialogFooter>
         </form>

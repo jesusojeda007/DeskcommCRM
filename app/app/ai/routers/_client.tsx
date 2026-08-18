@@ -28,6 +28,7 @@ import { showApiError } from "@/components/feedback/ApiErrorToast";
 import { Signpost, Plus } from "@/lib/ui/icons";
 import { usePermission } from "@/hooks/auth/AuthProvider";
 import { useRouters, useCreateRouter, type RouterListItem } from "@/hooks/ai/useRouters";
+import { useT } from "@/hooks/i18n/useT";
 import type { ChannelSessionLite } from "../agents/[id]/_components/AgentForm";
 
 interface Props {
@@ -35,13 +36,18 @@ interface Props {
   channelSessions: ChannelSessionLite[];
 }
 
-function channelLabel(sessions: ChannelSessionLite[], id: string): string {
+function channelLabel(
+  sessions: ChannelSessionLite[],
+  id: string,
+  t: (texto: string, vars?: Record<string, string | number>) => string,
+): string {
   const s = sessions.find((c) => c.id === id);
-  if (!s) return "Número removido";
+  if (!s) return t("Número removido");
   return s.phone_number ? `${s.display_name} · ${s.phone_number}` : s.display_name;
 }
 
 export function RoutersClient({ initialState, channelSessions }: Props) {
+  const t = useT();
   const { data } = useRouters(initialState);
   const routers = data?.routers ?? [];
   const canManagePerm = usePermission("ai.routers.manage");
@@ -52,7 +58,7 @@ export function RoutersClient({ initialState, channelSessions }: Props) {
       <div className="flex justify-end">
         {canManagePerm && (
           <Button onClick={() => setCreateOpen(true)}>
-            <Plus /> Novo roteador
+            <Plus /> {t("Novo roteador")}
           </Button>
         )}
       </div>
@@ -61,13 +67,13 @@ export function RoutersClient({ initialState, channelSessions }: Props) {
         <Card className="flex flex-col items-center gap-3 p-10 text-center">
           <Signpost size={32} className="text-muted-foreground" aria-hidden />
           <p className="max-w-md text-sm text-muted-foreground">
-            Um roteador entende o que o cliente quer e entrega a conversa para o agente certo —
-            um número de vendas fala com quem quer comprar, um de suporte com quem já é cliente,
-            tudo no mesmo WhatsApp. Crie um para o seu número e escolha quais agentes ele aciona.
+            {t(
+              "Um roteador entende o que o cliente quer e entrega a conversa para o agente certo — um número de vendas fala com quem quer comprar, um de suporte com quem já é cliente, tudo no mesmo WhatsApp. Crie um para o seu número e escolha quais agentes ele aciona.",
+            )}
           </p>
           {canManagePerm && (
             <Button onClick={() => setCreateOpen(true)}>
-              <Plus /> Criar meu primeiro roteador
+              <Plus /> {t("Criar meu primeiro roteador")}
             </Button>
           )}
         </Card>
@@ -82,16 +88,18 @@ export function RoutersClient({ initialState, channelSessions }: Props) {
                       {r.name}
                     </h3>
                     <Badge variant={r.is_active ? "success" : "neutral"} className="shrink-0 text-xs">
-                      {r.is_active ? "ativo" : "inativo"}
+                      {r.is_active ? t("ativo") : t("inativo")}
                     </Badge>
                   </div>
                   <p className="truncate text-xs text-muted-foreground">
-                    {channelLabel(channelSessions, r.channel_session_id)}
+                    {channelLabel(channelSessions, r.channel_session_id, t)}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {r.member_count === 0
-                      ? "Sem intenções configuradas"
-                      : `${r.member_count} ${r.member_count === 1 ? "intenção" : "intenções"}`}
+                      ? t("Sem intenções configuradas")
+                      : r.member_count === 1
+                        ? t("{n} intenção", { n: r.member_count })
+                        : t("{n} intenções", { n: r.member_count })}
                   </p>
                 </Card>
               </Link>
@@ -119,6 +127,7 @@ function CreateRouterDialog({
   onOpenChange: (open: boolean) => void;
   channelSessions: ChannelSessionLite[];
 }) {
+  const t = useT();
   const nextRouter = useNextRouter();
   const create = useCreateRouter();
   const [name, setName] = React.useState("");
@@ -130,7 +139,7 @@ function CreateRouterDialog({
       { name, channel_session_id: channelSessionId },
       {
         onSuccess: (res) => {
-          toast.success("Roteador criado — agora escolha as intenções.");
+          toast.success(t("Roteador criado — agora escolha as intenções."));
           onOpenChange(false);
           nextRouter.push(`/app/ai/routers/${res.id}`);
         },
@@ -145,30 +154,31 @@ function CreateRouterDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Novo roteador</DialogTitle>
+          <DialogTitle>{t("Novo roteador")}</DialogTitle>
           <DialogDescription>
-            Escolha o número de WhatsApp que ele vai atender. Depois de criado, você define as
-            intenções e para qual agente cada uma vai.
+            {t(
+              "Escolha o número de WhatsApp que ele vai atender. Depois de criado, você define as intenções e para qual agente cada uma vai.",
+            )}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1">
-            <Label htmlFor="router-name">Nome</Label>
+            <Label htmlFor="router-name">{t("Nome")}</Label>
             <Input
               id="router-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Ex.: Roteador de vendas"
+              placeholder={t("Ex.: Roteador de vendas")}
               maxLength={120}
               autoFocus
               required
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="router-channel">Número de WhatsApp</Label>
+            <Label htmlFor="router-channel">{t("Número de WhatsApp")}</Label>
             <Select value={channelSessionId || undefined} onValueChange={setChannelSessionId}>
               <SelectTrigger id="router-channel">
-                <SelectValue placeholder="Selecione um número" />
+                <SelectValue placeholder={t("Selecione um número")} />
               </SelectTrigger>
               <SelectContent>
                 {channelSessions.map((s) => (
@@ -179,21 +189,21 @@ function CreateRouterDialog({
                 ))}
                 {channelSessions.length === 0 ? (
                   <SelectItem value="__none__" disabled>
-                    Nenhum número conectado
+                    {t("Nenhum número conectado")}
                   </SelectItem>
                 ) : null}
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Só é possível ter um roteador ativo por número.
+              {t("Só é possível ter um roteador ativo por número.")}
             </p>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
+              {t("Cancelar")}
             </Button>
             <Button type="submit" disabled={!valid || create.isPending}>
-              {create.isPending ? "Criando…" : "Criar roteador"}
+              {create.isPending ? t("Criando…") : t("Criar roteador")}
             </Button>
           </DialogFooter>
         </form>

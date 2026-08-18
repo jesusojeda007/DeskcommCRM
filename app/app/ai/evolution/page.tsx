@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { EvolutionClient } from "./_client";
 
 export const dynamic = "force-dynamic";
@@ -30,13 +31,10 @@ export default async function EvolutionPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Evolução da IA</h1>
-        <p className="text-sm text-text-muted">
-          O que seu agente aprendeu no período, o que ele fez com isso, o que mudou no seu
-          resultado — e o que ainda está travando.
-        </p>
-      </header>
+      <PageHeader
+        title="Evolução da IA"
+        subtitle="O que seu agente aprendeu no período, o que ele fez com isso, o que mudou no seu resultado — e o que ainda está travando."
+      />
       <EvolutionClient defaultRange={ultimosTrintaDiasUtc()} />
     </div>
   );

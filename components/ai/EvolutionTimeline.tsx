@@ -1,5 +1,7 @@
 "use client";
 import { Brain, Lightbulb, PuzzlePiece } from "@/lib/ui/icons";
+import { useT } from "@/hooks/i18n/useT";
+import { useIdioma } from "@/lib/i18n/IdiomaProvider";
 import type { TimelineItem } from "@/lib/ai/evolution/aggregate";
 
 /**
@@ -28,10 +30,10 @@ function titulo(t: string): string {
   return t.length >= CORTE_DO_AGREGADOR ? `${t.trimEnd()}…` : t;
 }
 
-function dia(s: string): string {
+function dia(s: string, idioma: string): string {
   // `s` já vem truncado em YYYY-MM-DD pelo agregador; o `T00:00:00Z` evita que o
   // browser leia a data como local e mostre o dia anterior a oeste de Greenwich.
-  return new Date(`${s}T00:00:00Z`).toLocaleDateString("pt-BR", {
+  return new Date(`${s}T00:00:00Z`).toLocaleDateString(idioma, {
     day: "2-digit",
     month: "2-digit",
     timeZone: "UTC",
@@ -39,16 +41,18 @@ function dia(s: string): string {
 }
 
 export function EvolutionTimeline({ items }: { items: TimelineItem[] }) {
+  const t = useT();
+  const idioma = useIdioma();
   return (
     <ol className="max-h-80 divide-y divide-border overflow-y-auto">
       {items.map((it, i) => {
-        const t = TIPOS[it.kind];
+        const tipo = TIPOS[it.kind];
         return (
           <li key={`${it.day}-${it.kind}-${i}`} className="flex items-start gap-3 py-3">
-            <t.Icone size={18} className={`mt-0.5 shrink-0 ${t.cor}`} aria-hidden />
+            <tipo.Icone size={18} className={`mt-0.5 shrink-0 ${tipo.cor}`} aria-hidden />
             <div className="min-w-0 flex-1">
               <p className="text-xs text-text-muted">
-                {dia(it.day)} · {t.rotulo}
+                {dia(it.day, idioma)} · {t(tipo.rotulo)}
               </p>
               <p className="mt-0.5 break-words text-sm">{titulo(it.title)}</p>
             </div>

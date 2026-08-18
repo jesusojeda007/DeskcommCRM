@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
 import { createClient } from "@/lib/supabase/server";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { BudgetCard } from "@/components/ai/BudgetCard";
 import { getBudgetStatus } from "@/lib/ai/budget/check";
 import { UsageDashboardClient } from "./_client";
@@ -54,14 +55,10 @@ export default async function AiUsagePage({ searchParams }: PageProps) {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Uso de IA</h1>
-        <p className="text-sm text-muted-foreground">
-          Quanto a inteligência artificial custou, quantos atendimentos ela fez, quanto
-          demorou para responder e quantas vezes precisou chamar uma pessoa — nos
-          últimos 30 dias.
-        </p>
-      </header>
+      <PageHeader
+        title="Uso de IA"
+        subtitle="Quanto a inteligência artificial custou, quantos atendimentos ela fez, quanto demorou para responder e quantas vezes precisou chamar uma pessoa — nos últimos 30 dias."
+      />
       <BudgetCard initialData={budget} isAdmin={isAdmin} />
       <UsageDashboardClient agents={agents} initial={initial} />
     </div>

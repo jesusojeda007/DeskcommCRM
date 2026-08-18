@@ -18,6 +18,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EvolutionGaps } from "@/components/ai/EvolutionGaps";
 import { EvolutionTimeline } from "@/components/ai/EvolutionTimeline";
 import { useEvolution } from "@/hooks/ai/useEvolution";
+import { useT } from "@/hooks/i18n/useT";
+import { useIdioma } from "@/lib/i18n/IdiomaProvider";
 import type { EvolutionPayload } from "@/lib/ai/evolution/aggregate";
 
 /**
@@ -32,6 +34,19 @@ import type { EvolutionPayload } from "@/lib/ai/evolution/aggregate";
  */
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
+/**
+ * `taxaDeAjuda`/`descricaoResultado` são chamadas direto pelos testes de
+ * `tests/unit/evolution-gaps-copy.test.ts` SEM passar `t` — o teste asserta o
+ * texto em português exato. Por isso `t` é opcional e o padrão (`semTraducao`)
+ * só substitui `{var}`, igual `traduzir()` faz para `pt-BR`.
+ */
+type Traduzir = (texto: string, vars?: Record<string, string | number>) => string;
+
+function semTraducao(texto: string, vars?: Record<string, string | number>): string {
+  if (!vars) return texto;
+  return Object.entries(vars).reduce((acc, [chave, valor]) => acc.split(`{${chave}}`).join(String(valor)), texto);
+}
 
 /**
  * O bloco se chama "o que MUDOU", mas o payload traz um período só — não há
@@ -84,11 +99,13 @@ const SIGNIFICA_AJUDA =
  * dos outros números do bloco, só que produzido pelo formatador. Exportada por
  * ser o único jeito de alcançar o ramo `< 0,1`: a org de prova não o produz.
  */
-export function taxaDeAjuda(rate: number): string {
+export function taxaDeAjuda(rate: number, t: Traduzir = semTraducao): string {
   if (rate <= 0) return "0";
   const porCem = rate * 100;
-  if (porCem < 0.1) return "menos de 0,1 a cada 100";
-  return `${porCem.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} a cada 100`;
+  if (porCem < 0.1) return t("menos de 0,1 a cada 100");
+  return t("{valor} a cada 100", {
+    valor: porCem.toLocaleString("pt-BR", { maximumFractionDigits: 1 }),
+  });
 }
 
 /**
@@ -112,16 +129,19 @@ const DESCRICAO_RESULTADO_SEM_ATIVIDADE =
  * apagaria justamente a ressalva que existe para impedir a leitura lisonjeira.
  * O fato exato já era calculado na rota; só faltava chegar ao payload.
  */
-export function descricaoResultado(outcome: EvolutionPayload["outcome"]): string {
-  return outcome.messages_received > 0 ? DESCRICAO_RESULTADO : DESCRICAO_RESULTADO_SEM_ATIVIDADE;
+export function descricaoResultado(
+  outcome: EvolutionPayload["outcome"],
+  t: Traduzir = semTraducao,
+): string {
+  return t(outcome.messages_received > 0 ? DESCRICAO_RESULTADO : DESCRICAO_RESULTADO_SEM_ATIVIDADE);
 }
 
 function num(n: number): string {
   return n.toLocaleString("pt-BR");
 }
 
-function diaCurto(s: string): string {
-  return new Date(`${s}T00:00:00Z`).toLocaleDateString("pt-BR", {
+function diaCurto(s: string, idioma: string): string {
+  return new Date(`${s}T00:00:00Z`).toLocaleDateString(idioma, {
     day: "2-digit",
     month: "2-digit",
     timeZone: "UTC",
@@ -215,6 +235,8 @@ function GraficoDiario({
   cor: string;
   vazio: React.ReactNode;
 }) {
+  const t = useT();
+  const idioma = useIdioma();
   const temDado = dados.some((p) => p.value > 0);
   const total = dados.reduce((acc, p) => acc + p.value, 0);
   return (
@@ -227,7 +249,7 @@ function GraficoDiario({
         <>
           <p className="mt-3 text-2xl font-semibold tracking-tight">
             {num(total)}{" "}
-            <span className="text-xs font-normal text-text-muted">no período</span>
+            <span className="text-xs font-normal text-text-muted">{t("no período")}</span>
           </p>
           <div className="mt-2">
             <ResponsiveContainer width="100%" height={160}>
@@ -235,7 +257,7 @@ function GraficoDiario({
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
                 <XAxis
                   dataKey="day"
-                  tickFormatter={diaCurto}
+                  tickFormatter={(s: string) => diaCurto(s, idioma)}
                   tick={{ fontSize: 11 }}
                   tickLine={false}
                   axisLine={false}
@@ -249,8 +271,8 @@ function GraficoDiario({
                   width={36}
                 />
                 <Tooltip
-                  formatter={(v) => [num(Number(v)), "no dia"]}
-                  labelFormatter={(l) => diaCurto(String(l))}
+                  formatter={(v) => [num(Number(v)), t("no dia")]}
+                  labelFormatter={(l) => diaCurto(String(l), idioma)}
                   contentStyle={{
                     borderRadius: "8px",
                     fontSize: "12px",
@@ -333,6 +355,7 @@ function Carregando() {
 }
 
 export function EvolutionClient({ defaultRange }: { defaultRange: { from: string; to: string } }) {
+  const t = useT();
   const [from, setFrom] = React.useState(defaultRange.from);
   const [to, setTo] = React.useState(defaultRange.to);
   const q = useEvolution({ from, to });
@@ -341,16 +364,17 @@ export function EvolutionClient({ defaultRange }: { defaultRange: { from: string
     <div className="flex flex-col gap-8">
       <Card className="flex flex-col gap-3 p-4 sm:flex-row sm:items-end sm:gap-4">
         <div className="flex-1">
-          <p className="text-sm font-medium">Período analisado</p>
+          <p className="text-sm font-medium">{t("Período analisado")}</p>
           <p className="text-xs text-text-muted">
-            Todos os números desta página são só deste intervalo. Mude as datas para comparar
-            um mês com o outro.
+            {t(
+              "Todos os números desta página são só deste intervalo. Mude as datas para comparar um mês com o outro.",
+            )}
           </p>
         </div>
         <div className="flex gap-3">
           <div className="space-y-1">
             <Label htmlFor="evolution-de" className="text-xs text-text-muted">
-              De
+              {t("De")}
             </Label>
             <Input
               id="evolution-de"
@@ -362,7 +386,7 @@ export function EvolutionClient({ defaultRange }: { defaultRange: { from: string
           </div>
           <div className="space-y-1">
             <Label htmlFor="evolution-ate" className="text-xs text-text-muted">
-              Até
+              {t("Até")}
             </Label>
             <Input
               id="evolution-ate"
@@ -377,8 +401,9 @@ export function EvolutionClient({ defaultRange }: { defaultRange: { from: string
 
       {q.error ? (
         <Card className="p-6 text-sm" data-testid="evolution-erro">
-          Não conseguimos carregar os números agora. Recarregue a página em alguns instantes —
-          se continuar assim, avise quem cuida da sua instalação.
+          {t(
+            "Não conseguimos carregar os números agora. Recarregue a página em alguns instantes — se continuar assim, avise quem cuida da sua instalação.",
+          )}
         </Card>
       ) : !q.data ? (
         <Carregando />
@@ -392,6 +417,7 @@ export function EvolutionClient({ defaultRange }: { defaultRange: { from: string
 function Conteudo({ payload }: { payload: NonNullable<ReturnType<typeof useEvolution>["data"]> }) {
   const { learned, activity, outcome, gaps } = payload;
 
+  const t = useT();
   const soma = (s: Array<{ value: number }>) => s.reduce((a, p) => a + p.value, 0);
   // Contagens SEPARADAS, não um booleano só: cada frase de "nada travando" é uma
   // afirmação sobre uma fonte diferente, e um guarda único as autorizaria todas
@@ -403,30 +429,32 @@ function Conteudo({ payload }: { payload: NonNullable<ReturnType<typeof useEvolu
     <>
       <Bloco
         testId="bloco-aprendeu"
-        titulo="O que seu agente aprendeu"
-        descricao="Tudo o que entrou na cabeça dele neste período, e de onde veio."
+        titulo={t("O que seu agente aprendeu")}
+        descricao={t("Tudo o que entrou na cabeça dele neste período, e de onde veio.")}
       >
         <div className="grid gap-3 sm:grid-cols-3">
           <StatCard
-            rotulo="Regras que você ensinou"
+            rotulo={t("Regras que você ensinou")}
             valor={num(learned.memory_entries)}
-            significa="Instruções publicadas na Memória da IA. Valem para toda conversa, de todos os agentes."
+            significa={t("Instruções publicadas na Memória da IA. Valem para toda conversa, de todos os agentes.")}
           />
           <StatCard
-            rotulo="Melhorias que você aprovou"
+            rotulo={t("Melhorias que você aprovou")}
             valor={num(learned.proposals_applied)}
-            significa="Sugestões que o sistema tirou dos próprios atendimentos e que você revisou e aceitou."
+            significa={t("Sugestões que o sistema tirou dos próprios atendimentos e que você revisou e aceitou.")}
           />
           <StatCard
-            rotulo="Habilidades instaladas"
+            rotulo={t("Habilidades instaladas")}
             valor={num(learned.skills_installed)}
-            significa="Skills que o agente passou a carregar quando a conversa pede — por exemplo, fechar um agendamento."
+            significa={t(
+              "Skills que o agente passou a carregar quando a conversa pede — por exemplo, fechar um agendamento.",
+            )}
           />
         </div>
         <Card className="p-4">
-          <h3 className="text-sm font-medium">Linha do tempo do aprendizado</h3>
+          <h3 className="text-sm font-medium">{t("Linha do tempo do aprendizado")}</h3>
           <p className="mt-1 text-xs text-text-muted">
-            Cada linha é uma coisa nova que o agente passou a saber, na ordem em que aconteceu.
+            {t("Cada linha é uma coisa nova que o agente passou a saber, na ordem em que aconteceu.")}
           </p>
           <div className="mt-3">
             {learned.timeline.length === 0 ? (
@@ -435,11 +463,13 @@ function Conteudo({ payload }: { payload: NonNullable<ReturnType<typeof useEvolu
               // equivalente a "os três contadores são zero". O ramo "aprendeu algo
               // mas não tem data" era inalcançável.
               <Vazio
-                texto="Seu agente ainda não aprendeu nada neste período. Ele aprende de três jeitos: você publica uma regra na Memória da IA, aprova uma sugestão de melhoria na aba Propostas do agente, ou instala uma habilidade em Skills da IA."
+                texto={t(
+                  "Seu agente ainda não aprendeu nada neste período. Ele aprende de três jeitos: você publica uma regra na Memória da IA, aprova uma sugestão de melhoria na aba Propostas do agente, ou instala uma habilidade em Skills da IA.",
+                )}
                 acoes={[
-                  { href: "/app/ai/memory", label: "Publicar uma regra" },
-                  { href: "/app/ai/agents", label: "Ver sugestões de melhoria" },
-                  { href: "/app/ai/skills", label: "Instalar uma habilidade" },
+                  { href: "/app/ai/memory", label: t("Publicar uma regra") },
+                  { href: "/app/ai/agents", label: t("Ver sugestões de melhoria") },
+                  { href: "/app/ai/skills", label: t("Instalar uma habilidade") },
                 ]}
               />
             ) : (
@@ -451,67 +481,77 @@ function Conteudo({ payload }: { payload: NonNullable<ReturnType<typeof useEvolu
 
       <Bloco
         testId="bloco-fez"
-        titulo="O que ele fez"
-        descricao="O trabalho do dia a dia: quantas vezes ele usou cada recurso que você deu a ele."
+        titulo={t("O que ele fez")}
+        descricao={t("O trabalho do dia a dia: quantas vezes ele usou cada recurso que você deu a ele.")}
       >
         <div className="grid gap-3 lg:grid-cols-3">
           <GraficoDiario
-            titulo="Habilidades usadas"
-            significa="Quantas vezes o agente puxou uma habilidade especializada para dar conta da conversa."
+            titulo={t("Habilidades usadas")}
+            significa={t("Quantas vezes o agente puxou uma habilidade especializada para dar conta da conversa.")}
             dados={activity.series.skill_activations}
             cor="hsl(262 83% 58%)"
             vazio={
               <Vazio
-                texto="Nenhuma habilidade foi usada. Ou o agente ainda não tem nenhuma instalada, ou as conversas do período não pediram nenhuma."
-                acoes={[{ href: "/app/ai/skills", label: "Ver habilidades disponíveis" }]}
+                texto={t(
+                  "Nenhuma habilidade foi usada. Ou o agente ainda não tem nenhuma instalada, ou as conversas do período não pediram nenhuma.",
+                )}
+                acoes={[{ href: "/app/ai/skills", label: t("Ver habilidades disponíveis") }]}
               />
             }
           />
           <GraficoDiario
-            titulo="Conversas encaminhadas"
-            significa="Quantas vezes o sistema leu o que o cliente queria e escolheu qual atendimento devia responder."
+            titulo={t("Conversas encaminhadas")}
+            significa={t(
+              "Quantas vezes o sistema leu o que o cliente queria e escolheu qual atendimento devia responder.",
+            )}
             dados={activity.series.router_decisions}
             cor="hsl(199 89% 48%)"
             vazio={
               <Vazio
-                texto="Nenhuma conversa foi encaminhada. Isso só acontece em números que têm um roteador configurado — sem ele, tudo cai no atendimento padrão."
-                acoes={[{ href: "/app/ai/routers", label: "Configurar um roteador" }]}
+                texto={t(
+                  "Nenhuma conversa foi encaminhada. Isso só acontece em números que têm um roteador configurado — sem ele, tudo cai no atendimento padrão.",
+                )}
+                acoes={[{ href: "/app/ai/routers", label: t("Configurar um roteador") }]}
               />
             }
           />
           <GraficoDiario
-            titulo="Consultas aos seus materiais"
-            significa="Quantas vezes o agente foi procurar a resposta no que você escreveu, em vez de improvisar."
+            titulo={t("Consultas aos seus materiais")}
+            significa={t("Quantas vezes o agente foi procurar a resposta no que você escreveu, em vez de improvisar.")}
             dados={activity.series.knowledge_searches}
             cor="hsl(142 76% 36%)"
             vazio={
               <Vazio
-                texto="O agente não consultou seus materiais. Ou não há nada publicado na base de conhecimento, ou as conversas não chegaram a precisar."
-                acoes={[{ href: "/app/ai/knowledge/sources", label: "Publicar material" }]}
+                texto={t(
+                  "O agente não consultou seus materiais. Ou não há nada publicado na base de conhecimento, ou as conversas não chegaram a precisar.",
+                )}
+                acoes={[{ href: "/app/ai/knowledge/sources", label: t("Publicar material") }]}
               />
             }
           />
         </div>
         <div className="grid gap-3 md:grid-cols-2">
           <Ranking
-            titulo="Habilidades mais usadas"
-            significa="Onde o agente mais precisou de conhecimento especializado."
+            titulo={t("Habilidades mais usadas")}
+            significa={t("Onde o agente mais precisou de conhecimento especializado.")}
             contagem={activity.by_skill}
             vazio={
               <Vazio
-                texto="Nenhuma habilidade foi usada neste período, então não há o que ranquear."
-                acoes={[{ href: "/app/ai/skills", label: "Ver habilidades disponíveis" }]}
+                texto={t("Nenhuma habilidade foi usada neste período, então não há o que ranquear.")}
+                acoes={[{ href: "/app/ai/skills", label: t("Ver habilidades disponíveis") }]}
               />
             }
           />
           <Ranking
-            titulo="Assuntos mais procurados"
-            significa="O que os clientes mais quiseram, segundo o que o roteador entendeu de cada conversa."
+            titulo={t("Assuntos mais procurados")}
+            significa={t("O que os clientes mais quiseram, segundo o que o roteador entendeu de cada conversa.")}
             contagem={activity.by_intent}
             vazio={
               <Vazio
-                texto="Nenhuma conversa foi classificada por assunto. Os assuntos são os que você cadastra no roteador do seu número."
-                acoes={[{ href: "/app/ai/routers", label: "Cadastrar assuntos" }]}
+                texto={t(
+                  "Nenhuma conversa foi classificada por assunto. Os assuntos são os que você cadastra no roteador do seu número.",
+                )}
+                acoes={[{ href: "/app/ai/routers", label: t("Cadastrar assuntos") }]}
               />
             }
           />
@@ -520,42 +560,44 @@ function Conteudo({ payload }: { payload: NonNullable<ReturnType<typeof useEvolu
 
       <Bloco
         testId="bloco-resultado"
-        titulo="O que mudou no resultado"
-        descricao={descricaoResultado(outcome)}
+        titulo={t("O que mudou no resultado")}
+        descricao={descricaoResultado(outcome, t)}
       >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <StatCard
-            rotulo="Negócios fechados pelo agente"
+            rotulo={t("Negócios fechados pelo agente")}
             valor={num(outcome.won)}
-            significa={SIGNIFICA_GANHOS}
+            significa={t(SIGNIFICA_GANHOS)}
           />
           <StatCard
-            rotulo="Negócios perdidos pelo agente"
+            rotulo={t("Negócios perdidos pelo agente")}
             valor={num(outcome.lost)}
-            significa={SIGNIFICA_PERDIDOS}
+            significa={t(SIGNIFICA_PERDIDOS)}
           />
           <StatCard
-            rotulo="Mudanças de passo no atendimento"
+            rotulo={t("Mudanças de passo no atendimento")}
             valor={num(outcome.stage_transitions)}
-            significa={SIGNIFICA_MUDANCAS}
+            significa={t(SIGNIFICA_MUDANCAS)}
           />
           <StatCard
-            rotulo="Casos que precisaram de uma pessoa"
-            valor={taxaDeAjuda(outcome.handoff_rate)}
-            significa={SIGNIFICA_AJUDA}
+            rotulo={t("Casos que precisaram de uma pessoa")}
+            valor={taxaDeAjuda(outcome.handoff_rate, t)}
+            significa={t(SIGNIFICA_AJUDA)}
           />
           <StatCard
-            rotulo="Custo da IA no período"
+            rotulo={t("Custo da IA no período")}
             valor={brl.format(outcome.cost_cents / 100)}
-            significa="O que você pagou aos provedores de IA para tudo isto acontecer."
+            significa={t("O que você pagou aos provedores de IA para tudo isto acontecer.")}
           />
         </div>
       </Bloco>
 
       <Bloco
         testId="bloco-travando"
-        titulo="O que está travando"
-        descricao="Cada linha aqui é uma coisa que está limitando seu agente, e o que fazer a respeito — às vezes você mesmo, às vezes quem cuida da sua instalação."
+        titulo={t("O que está travando")}
+        descricao={t(
+          "Cada linha aqui é uma coisa que está limitando seu agente, e o que fazer a respeito — às vezes você mesmo, às vezes quem cuida da sua instalação.",
+        )}
       >
         <EvolutionGaps gaps={gaps} buscas={buscas} decisoes={decisoes} />
       </Bloco>

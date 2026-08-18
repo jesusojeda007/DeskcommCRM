@@ -4,6 +4,7 @@ import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { SkillsState } from "@/hooks/ai/useSkills";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { SkillsClient } from "./_client";
 
 export const dynamic = "force-dynamic";
@@ -54,13 +55,10 @@ export default async function SkillsPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Skills da IA</h1>
-        <p className="text-sm text-muted-foreground">
-          Habilidades especializadas que seus agentes carregam só quando a conversa pede —
-          instale prontas do catálogo ou envie a sua.
-        </p>
-      </header>
+      <PageHeader
+        title="Skills da IA"
+        subtitle="Habilidades especializadas que seus agentes carregam só quando a conversa pede — instale prontas do catálogo ou envie a sua."
+      />
       <SkillsClient initialState={initialState} />
     </div>
   );

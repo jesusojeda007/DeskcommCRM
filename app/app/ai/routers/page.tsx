@@ -5,6 +5,7 @@ import { ROLE_RANK } from "@/lib/auth/types";
 import { listSelectableChannels } from "@/lib/channels/selectable";
 import { createClient } from "@/lib/supabase/server";
 import type { RouterListItem } from "@/hooks/ai/useRouters";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { RoutersClient } from "./_client";
 
 export const dynamic = "force-dynamic";
@@ -42,13 +43,10 @@ export default async function RoutersPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Roteadores</h1>
-        <p className="text-sm text-muted-foreground">
-          Um roteador entende o que o cliente quer e entrega a conversa para o agente certo —
-          plugado em um número de WhatsApp.
-        </p>
-      </header>
+      <PageHeader
+        title="Roteadores"
+        subtitle="Um roteador entende o que o cliente quer e entrega a conversa para o agente certo — plugado em um número de WhatsApp."
+      />
       <RoutersClient initialState={{ routers }} channelSessions={channelSessions} />
     </div>
   );
