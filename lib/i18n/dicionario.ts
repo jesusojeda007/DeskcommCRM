@@ -3231,6 +3231,21 @@ export const DICIONARIO: Traducoes = {
   "Excluir este template?": { es: "¿Eliminar esta plantilla?" },
   "Essa ação não pode ser desfeita.": { es: "Esta acción no se puede deshacer." },
   "Template excluído.": { es: "Plantilla eliminada." },
+
+  // ─── Fase 7: infra i18n — idioma fora de React (ApiErrorToast) — español ───
+  "Requisição inválida. Recarregue e tente de novo.": { es: "Solicitud inválida. Recargá e intentá de nuevo." },
+  "Falha ao paginar. Volte ao início.": { es: "Falló la paginación. Volvé al inicio." },
+  "Dados inválidos. Confira os campos destacados.": { es: "Datos inválidos. Revisá los campos destacados." },
+  "Sessão expirada. Faça login novamente.": { es: "Sesión expirada. Iniciá sesión de nuevo." },
+  "Você não tem permissão para esta ação.": { es: "No tenés permiso para esta acción." },
+  "Recurso não encontrado ou já removido.": { es: "Recurso no encontrado o ya eliminado." },
+  "Organização não encontrada.": { es: "Organización no encontrada." },
+  "Operação já processada.": { es: "Operación ya procesada." },
+  "Outro atendente já assumiu.": { es: "Otro agente ya lo asumió." },
+  "Este caso já foi respondido ou fechado.": { es: "Este caso ya fue respondido o cerrado." },
+  "Calma — muitas tentativas. Espere alguns segundos.": { es: "Calma — demasiados intentos. Esperá unos segundos." },
+  "Esta ação não pode ser desfeita: o contato já foi anonimizado.": { es: "Esta acción no se puede deshacer: el contacto ya fue anonimizado." },
+  "Erro interno. Tente de novo em instantes.": { es: "Error interno. Intentá de nuevo en unos instantes." },
 };
 
 /**

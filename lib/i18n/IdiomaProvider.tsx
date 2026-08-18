@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 
 import { traduzir } from "./dicionario";
 import { normalizarIdioma, IDIOMA_PADRAO, type Idioma } from "./idiomas";
@@ -27,6 +27,21 @@ import { normalizarIdioma, IDIOMA_PADRAO, type Idioma } from "./idiomas";
  */
 const Ctx = createContext<Idioma>(IDIOMA_PADRAO);
 
+/**
+ * Espelho do idioma FORA de React, pra código imperativo chamado de qualquer
+ * lugar (ex.: `showApiError`, disparado num `.catch()` sem garantia de estar
+ * dentro de um componente renderizado — não dá pra chamar `useT()` ali). Só
+ * um `IdiomaProvider` fica montado por vez (são raízes de rota alternativas:
+ * `/app`, `/admin`, `/onboarding`, `/(public)`), então não há disputa entre
+ * providers. Ausência (nunca montou nenhum) cai no padrão, mesma garantia do
+ * resto do arquivo — nunca é erro.
+ */
+let idiomaAtual: Idioma = IDIOMA_PADRAO;
+
+export function obterIdiomaAtual(): Idioma {
+  return idiomaAtual;
+}
+
 export function IdiomaProvider({
   locale,
   children,
@@ -35,6 +50,12 @@ export function IdiomaProvider({
   children: React.ReactNode;
 }) {
   const idioma = normalizarIdioma(locale);
+  useEffect(() => {
+    idiomaAtual = idioma;
+    return () => {
+      idiomaAtual = IDIOMA_PADRAO;
+    };
+  }, [idioma]);
   return <Ctx.Provider value={idioma}>{children}</Ctx.Provider>;
 }
 

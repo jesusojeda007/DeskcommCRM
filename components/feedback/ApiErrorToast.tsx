@@ -2,6 +2,8 @@
 
 import { toast } from "sonner";
 import { ApiError } from "@/lib/api/types";
+import { traduzir } from "@/lib/i18n/dicionario";
+import { obterIdiomaAtual } from "@/lib/i18n/IdiomaProvider";
 
 type Variant = "error" | "warning" | "info";
 
@@ -61,6 +63,7 @@ const COPY: Record<string, { variant: Variant; msg: string }> = {
 };
 
 export function showApiError(err: unknown): void {
+  const idioma = obterIdiomaAtual();
   if (err instanceof ApiError) {
     const entry = COPY[err.code];
     const description = err.requestId ? `ID: ${err.requestId}` : undefined;
@@ -71,13 +74,13 @@ export function showApiError(err: unknown): void {
           : entry.variant === "info"
             ? toast.info
             : toast.error;
-      fn(entry.msg, { description });
+      fn(traduzir(entry.msg, idioma), { description });
       return;
     }
     toast.error(err.message || err.code, { description });
     return;
   }
-  toast.error("Erro inesperado. Tente novamente.");
+  toast.error(traduzir("Erro inesperado. Tente novamente.", idioma));
 }
 
 export function useApiErrorHandler(): (err: unknown) => void {
