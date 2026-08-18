@@ -81,9 +81,12 @@ export function especieDe(actor: Actor): EspecieDeAutor {
  * assistente**. Quem precisa do detalhe tem o `api_audit_log`, que guarda os
  * dois casos com nome e hora.
  */
-export function autorNaTela(kind: string | null): string | null {
-  if (kind === "ai") return "alterado pelo assistente";
-  if (kind === "system") return "alterado automaticamente pelo sistema";
+export function autorNaTela(
+  kind: string | null,
+  t: (texto: string, vars?: Record<string, string | number>) => string,
+): string | null {
+  if (kind === "ai") return t("alterado pelo assistente");
+  if (kind === "system") return t("alterado automaticamente pelo sistema");
   // `user` e `null` não falam: ver o aviso acima.
   return null;
 }

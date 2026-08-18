@@ -1,11 +1,13 @@
 "use client";
 import Link from "next/link";
 import { formatDistanceToNowStrict } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { ptBR, es } from "date-fns/locale";
 
 import { Robot, Gear } from "@/lib/ui/icons";
 import { autorNaTela, mudadoPorAgente } from "@/lib/operacao/autoria";
 import { cn } from "@/lib/utils";
+import { useT } from "@/hooks/i18n/useT";
+import { useIdioma } from "@/lib/i18n/IdiomaProvider";
 
 /**
  * Quem mexeu nesta configuração por último — ao lado do estado que ele mudou.
@@ -38,13 +40,15 @@ export function SeloDeAutoria({
   em: string | null;
   className?: string;
 }) {
-  const texto = autorNaTela(kind);
+  const t = useT();
+  const idioma = useIdioma();
+  const texto = autorNaTela(kind, t);
   if (!texto) return null;
 
   const doAgente = mudadoPorAgente(kind);
   const Icone = doAgente ? Robot : Gear;
   const quando = em
-    ? ` ${formatDistanceToNowStrict(new Date(em), { addSuffix: true, locale: ptBR })}`
+    ? ` ${formatDistanceToNowStrict(new Date(em), { addSuffix: true, locale: idioma === "es" ? es : ptBR })}`
     : "";
 
   return (
@@ -56,12 +60,12 @@ export function SeloDeAutoria({
         className,
       )}
       data-autoria={kind ?? "desconhecida"}
-      title="Ver no histórico o que foi alterado"
+      title={t("Ver no histórico o que foi alterado")}
     >
       <Icone className="h-3.5 w-3.5 shrink-0" aria-hidden />
       <span>
         {texto}
-        {quando} — ver o que mudou
+        {quando} {t("— ver o que mudou")}
       </span>
     </Link>
   );

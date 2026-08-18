@@ -3363,6 +3363,12 @@ export const DICIONARIO: Traducoes = {
   "Endpoint de resolução não implementado neste MVP": { es: "Endpoint de resolución no implementado en este MVP" },
   "Resolver via SQL (em breve)": { es: "Resolver vía SQL (próximamente)" },
   "Tema: {theme}. Cmd+Shift+L para alternar.": { es: "Tema: {theme}. Cmd+Shift+L para alternar." },
+
+  // ─── Fase 7: selo de autoria (operacao) — español ───
+  "alterado pelo assistente": { es: "cambiado por el asistente" },
+  "alterado automaticamente pelo sistema": { es: "cambiado automáticamente por el sistema" },
+  "Ver no histórico o que foi alterado": { es: "Ver en el historial qué se cambió" },
+  "— ver o que mudou": { es: "— ver qué cambió" },
 };
 
 /**
