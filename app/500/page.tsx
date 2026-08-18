@@ -1,6 +1,10 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IdiomaProvider } from "@/lib/i18n/IdiomaProvider";
+import { normalizarIdiomaDoAceite } from "@/lib/i18n/idiomas";
+import { T } from "@/components/shell/T";
 
 /**
  * `/500` — irmã de `/403` e `/503`, e faltava.
@@ -13,20 +17,27 @@ import { Card } from "@/components/ui/card";
  * Distinta de `app/error.tsx`, que trata exceção em runtime dentro do React.
  * Esta é a página estática, alcançável por URL.
  */
-export default function InternalErrorPage() {
+export default async function InternalErrorPage() {
+  const aceite = (await headers()).get("accept-language");
   return (
-    <main className="flex min-h-screen items-center justify-center p-8">
-      <Card className="w-full max-w-md p-8 text-center">
-        <h1 className="text-2xl font-semibold">500 — Erro interno</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Algo quebrou do nosso lado. Já registramos o ocorrido; tente de novo em instantes.
-        </p>
-        <div className="mt-6 flex justify-center gap-2">
-          <Button asChild>
-            <Link href="/">Voltar</Link>
-          </Button>
-        </div>
-      </Card>
-    </main>
+    <IdiomaProvider locale={normalizarIdiomaDoAceite(aceite)}>
+      <main className="flex min-h-screen items-center justify-center p-8">
+        <Card className="w-full max-w-md p-8 text-center">
+          <h1 className="text-2xl font-semibold">
+            <T>500 — Erro interno</T>
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            <T>Algo quebrou do nosso lado. Já registramos o ocorrido; tente de novo em instantes.</T>
+          </p>
+          <div className="mt-6 flex justify-center gap-2">
+            <Button asChild>
+              <Link href="/">
+                <T>Voltar</T>
+              </Link>
+            </Button>
+          </div>
+        </Card>
+      </main>
+    </IdiomaProvider>
   );
 }

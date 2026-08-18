@@ -3246,6 +3246,33 @@ export const DICIONARIO: Traducoes = {
   "Calma — muitas tentativas. Espere alguns segundos.": { es: "Calma — demasiados intentos. Esperá unos segundos." },
   "Esta ação não pode ser desfeita: o contato já foi anonimizado.": { es: "Esta acción no se puede deshacer: el contacto ya fue anonimizado." },
   "Erro interno. Tente de novo em instantes.": { es: "Error interno. Intentá de nuevo en unos instantes." },
+
+  // ─── Fase 7: páginas de erro/status e convite de time — español ───
+  "403 — Sem permissão": { es: "403 — Sin permiso" },
+  "Você não tem acesso a essa área.": { es: "No tenés acceso a esta área." },
+  "Voltar pra Inbox": { es: "Volver al Inbox" },
+  "500 — Erro interno": { es: "500 — Error interno" },
+  "Algo quebrou do nosso lado. Já registramos o ocorrido; tente de novo em instantes.": { es: "Algo se rompió de nuestro lado. Ya lo registramos; intentá de nuevo en unos instantes." },
+  "503 — Em manutenção": { es: "503 — En mantenimiento" },
+  "Voltamos em alguns minutos.": { es: "Volvemos en unos minutos." },
+  "Conta suspensa": { es: "Cuenta suspendida" },
+  "Sua conta está suspensa. Entre em contato com": { es: "Tu cuenta está suspendida. Contactá a" },
+  "para mais informações.": { es: "para más información." },
+  "Muitas tentativas": { es: "Demasiados intentos" },
+  "Aguarde alguns minutos e abra o link do convite de novo.": { es: "Esperá unos minutos y abrí el link de la invitación de nuevo." },
+  "Convite inválido ou expirado": { es: "Invitación inválida o vencida" },
+  "Este link não é válido ou já passou da janela de 24h. Peça um novo convite ao admin do tenant.": { es: "Este link no es válido o ya pasó la ventana de 24h. Pedile una nueva invitación al admin del tenant." },
+  "Você foi convidado": { es: "Fuiste invitado" },
+  "Para aceitar o convite como": { es: "Para aceptar la invitación como" },
+  "faça login com o email": { es: "iniciá sesión con el email" },
+  "Fazer login": { es: "Iniciar sesión" },
+  "Email não corresponde": { es: "El email no coincide" },
+  "Você está logado como": { es: "Estás con la sesión iniciada como" },
+  "mas o convite foi enviado para": { es: "pero la invitación fue enviada a" },
+  "Saia e faça login com o email correto.": { es: "Cerrá sesión e iniciá sesión con el email correcto." },
+  "Aceitar convite": { es: "Aceptar invitación" },
+  "Você foi convidado para entrar como": { es: "Fuiste invitado a entrar como" },
+  "Confirme abaixo para ativar seu acesso.": { es: "Confirmá abajo para activar tu acceso." },
 };
 
 /**
