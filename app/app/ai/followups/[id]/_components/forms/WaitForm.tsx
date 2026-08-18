@@ -14,6 +14,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { waitConfigSchema } from "@/lib/followup/graph-schema";
 import { MODOS_DE_ESPERA, opcoes } from "@/lib/followup/vocabulario";
+import { useT } from "@/hooks/i18n/useT";
 
 import { msToMin, minToMs, type ConfigOf } from "./shared";
 
@@ -32,6 +33,7 @@ export function WaitForm({
   const [maxMin, setMaxMin] = useState(config.mode === "smart" ? msToMin(config.max_ms) : 60);
   const [guidance, setGuidance] = useState(config.mode === "smart" ? (config.guidance ?? "") : "");
   const [error, setError] = useState<string | null>(null);
+  const t = useT();
 
   const commit = (next: {
     mode: "fixed" | "smart";
@@ -51,7 +53,7 @@ export function WaitForm({
           };
     const parsed = waitConfigSchema.safeParse(candidate);
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? "Configuração inválida.");
+      setError(parsed.error.issues[0]?.message ?? t("Configuração inválida."));
       return;
     }
     setError(null);
@@ -61,7 +63,7 @@ export function WaitForm({
   return (
     <div className="space-y-3">
       <div className="space-y-2">
-        <Label htmlFor="wait-mode">Como calcular a espera</Label>
+        <Label htmlFor="wait-mode">{t("Como calcular a espera")}</Label>
         <Select
           value={mode}
           onValueChange={(v) => {
@@ -76,7 +78,7 @@ export function WaitForm({
           <SelectContent>
             {opcoes(MODOS_DE_ESPERA).map(({ valor, rotulo }) => (
               <SelectItem key={valor} value={valor}>
-                {rotulo}
+                {t(rotulo)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -85,7 +87,7 @@ export function WaitForm({
 
       {mode === "fixed" ? (
         <div className="space-y-2">
-          <Label htmlFor="wait-duration">Duração (minutos)</Label>
+          <Label htmlFor="wait-duration">{t("Duração (minutos)")}</Label>
           <Input
             id="wait-duration"
             type="number"
@@ -102,7 +104,7 @@ export function WaitForm({
         <>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="wait-min">Mínimo (min)</Label>
+              <Label htmlFor="wait-min">{t("Mínimo (min)")}</Label>
               <Input
                 id="wait-min"
                 type="number"
@@ -116,7 +118,7 @@ export function WaitForm({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="wait-max">Máximo (min)</Label>
+              <Label htmlFor="wait-max">{t("Máximo (min)")}</Label>
               <Input
                 id="wait-max"
                 type="number"
@@ -131,7 +133,7 @@ export function WaitForm({
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="wait-guidance">Orientação (opcional)</Label>
+            <Label htmlFor="wait-guidance">{t("Orientação (opcional)")}</Label>
             <Textarea
               id="wait-guidance"
               maxLength={500}
