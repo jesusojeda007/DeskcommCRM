@@ -12,6 +12,7 @@
 import * as React from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { useT } from "@/hooks/i18n/useT";
 
 interface ToolCallStep {
   step?: number;
@@ -52,13 +53,16 @@ function clip(text: string, max = 4000): string {
 export function RunTrace({
   toolCalls,
   finalText,
-  emptyMessage = "Sem trace disponível.",
+  emptyMessage,
 }: Props) {
+  const t = useT();
   const steps = asArray(toolCalls);
 
   if (steps.length === 0 && !finalText) {
     return (
-      <p className="text-sm text-muted-foreground">{emptyMessage}</p>
+      <p className="text-sm text-muted-foreground">
+        {emptyMessage ?? t("Sem trace disponível.")}
+      </p>
     );
   }
 
@@ -77,10 +81,10 @@ export function RunTrace({
                 <Badge variant="outline" className="font-mono text-xs">
                   #{stepNum}
                 </Badge>
-                <span className="font-mono">{s.tool_name ?? "(sem nome)"}</span>
+                <span className="font-mono">{s.tool_name ?? t("(sem nome)")}</span>
                 {errMsg ? (
                   <Badge variant="destructive" className="text-xs">
-                    erro
+                    {t("erro")}
                   </Badge>
                 ) : null}
               </span>
@@ -122,7 +126,7 @@ export function RunTrace({
       {finalText ? (
         <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-sm">
           <p className="mb-1 text-xs font-medium uppercase tracking-wide text-primary">
-            Mensagem que SERIA enviada
+            {t("Mensagem que SERIA enviada")}
           </p>
           <p className="whitespace-pre-wrap">{finalText}</p>
         </div>

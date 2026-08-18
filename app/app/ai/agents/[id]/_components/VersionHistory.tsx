@@ -35,6 +35,7 @@ import {
 import type { AgentVersionRow } from "@/hooks/ai/useAgentVersions";
 import { revertToVersionAction } from "../_actions";
 import { VersionDiff } from "./VersionDiff";
+import { useT } from "@/hooks/i18n/useT";
 
 interface Props {
   agentId: string;
@@ -69,6 +70,7 @@ function pickCounterpart(
 }
 
 export function VersionHistory({ agentId, versions, readOnly }: Props) {
+  const t = useT();
   const router = useRouter();
   const [diffOpen, setDiffOpen] = React.useState(false);
   const [diffPair, setDiffPair] = React.useState<{
@@ -85,13 +87,13 @@ export function VersionHistory({ agentId, versions, readOnly }: Props) {
   );
 
   if (sorted.length === 0) {
-    return <p className="text-sm text-muted-foreground">Nenhuma versão criada ainda.</p>;
+    return <p className="text-sm text-muted-foreground">{t("Nenhuma versão criada ainda.")}</p>;
   }
 
   function openDiff(target: AgentVersionRow) {
     const counterpart = pickCounterpart(sorted, target);
     if (!counterpart) {
-      toast.info("Não há outra versão para comparar.");
+      toast.info(t("Não há outra versão para comparar."));
       return;
     }
     // a = mais antiga, b = mais nova
@@ -110,11 +112,14 @@ export function VersionHistory({ agentId, versions, readOnly }: Props) {
     try {
       const res = await revertToVersionAction(agentId, revertTarget.id);
       if (!res.ok) {
-        toast.error(res.message ?? `Erro: ${res.error}`);
+        toast.error(res.message ?? t("Erro: {error}", { error: res.error }));
         return;
       }
       toast.success(
-        `Revertido para versão equivalente a v${targetNum} (publicada como v${res.data!.new_version_number}).`,
+        t("Revertido para versão equivalente a v{versaoAntiga} (publicada como v{versaoNova}).", {
+          versaoAntiga: targetNum,
+          versaoNova: res.data!.new_version_number,
+        }),
       );
       setRevertTarget(null);
       router.refresh();
@@ -146,7 +151,7 @@ export function VersionHistory({ agentId, versions, readOnly }: Props) {
               </span>
               {v.published_at ? (
                 <span className="text-xs text-muted-foreground">
-                  publicada em {new Date(v.published_at).toLocaleString()}
+                  {t("publicada em {data}", { data: new Date(v.published_at).toLocaleString() })}
                 </span>
               ) : null}
               <div className="ml-auto flex gap-2">
@@ -159,7 +164,7 @@ export function VersionHistory({ agentId, versions, readOnly }: Props) {
                     size="sm"
                     onClick={() => setRevertTarget(v)}
                   >
-                    Reverter
+                    {t("Reverter")}
                   </Button>
                 ) : null}
               </div>
@@ -173,7 +178,10 @@ export function VersionHistory({ agentId, versions, readOnly }: Props) {
           <DialogHeader>
             <DialogTitle>
               {diffPair
-                ? `Diff v${diffPair.a.version_number} ↔ v${diffPair.b.version_number}`
+                ? t("Diff v{versaoA} ↔ v{versaoB}", {
+                    versaoA: diffPair.a.version_number,
+                    versaoB: diffPair.b.version_number,
+                  })
                 : "Diff"}
             </DialogTitle>
           </DialogHeader>
@@ -188,17 +196,19 @@ export function VersionHistory({ agentId, versions, readOnly }: Props) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Reverter para v{revertTarget?.version_number}?
+              {t("Reverter para v{versao}?", { versao: revertTarget?.version_number ?? "" })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Uma nova versão idêntica a v{revertTarget?.version_number} será criada e
-              publicada imediatamente. A versão atualmente publicada vira superseded.
+              {t(
+                "Uma nova versão idêntica a v{versao} será criada e publicada imediatamente. A versão atualmente publicada vira superseded.",
+                { versao: revertTarget?.version_number ?? "" },
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={reverting}>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel disabled={reverting}>{t("Cancelar")}</AlertDialogCancel>
             <AlertDialogAction onClick={handleRevert} disabled={reverting}>
-              {reverting ? "Revertendo…" : "Confirmar revert"}
+              {reverting ? t("Revertendo…") : t("Confirmar revert")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

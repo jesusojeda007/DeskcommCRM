@@ -12,6 +12,7 @@ import * as React from "react";
 
 import { Badge } from "@/components/ui/badge";
 import type { AgentVersionRow } from "@/hooks/ai/useAgentVersions";
+import { useT } from "@/hooks/i18n/useT";
 
 interface Props {
   versionA: AgentVersionRow; // mais antiga / base
@@ -75,11 +76,15 @@ interface FieldChange {
   b: unknown;
 }
 
-function buildFieldChanges(a: AgentVersionRow, b: AgentVersionRow): FieldChange[] {
+function buildFieldChanges(
+  a: AgentVersionRow,
+  b: AgentVersionRow,
+  t: (texto: string) => string,
+): FieldChange[] {
   const fields: Array<[keyof AgentVersionRow, string]> = [
     ["provider", "Provider"],
     ["model", "Model"],
-    ["channel_session_id", "Canal"],
+    ["channel_session_id", t("Canal")],
     ["max_steps", "max_steps"],
     ["token_budget", "token_budget"],
     ["cost_budget_cents", "cost_budget_cents"],
@@ -96,6 +101,7 @@ function buildFieldChanges(a: AgentVersionRow, b: AgentVersionRow): FieldChange[
 }
 
 export function VersionDiff({ versionA, versionB }: Props) {
+  const t = useT();
   const tools = diffArr(versionA.tool_ids ?? [], versionB.tool_ids ?? []);
   const handoffKw = diffArr(versionA.handoff_keywords ?? [], versionB.handoff_keywords ?? []);
   const followupFlows = diffArr(
@@ -104,7 +110,7 @@ export function VersionDiff({ versionA, versionB }: Props) {
   );
   const followupEnabledChanged =
     (versionA.followup?.enabled ?? false) !== (versionB.followup?.enabled ?? false);
-  const fields = buildFieldChanges(versionA, versionB);
+  const fields = buildFieldChanges(versionA, versionB, t);
   const lines = diffLines(versionA.system_prompt ?? "", versionB.system_prompt ?? "");
 
   return (
@@ -115,14 +121,14 @@ export function VersionDiff({ versionA, versionB }: Props) {
         <Badge variant="outline">v{versionB.version_number}</Badge>
       </div>
 
-      <Section title="Configuração">
+      <Section title={t("Configuração")}>
         {fields.length === 0 ? (
-          <p className="text-xs text-muted-foreground">Sem mudanças.</p>
+          <p className="text-xs text-muted-foreground">{t("Sem mudanças.")}</p>
         ) : (
           <table className="w-full text-xs">
             <thead>
               <tr className="text-left text-muted-foreground">
-                <th className="py-1">Campo</th>
+                <th className="py-1">{t("Campo")}</th>
                 <th className="py-1">v{versionA.version_number}</th>
                 <th className="py-1">v{versionB.version_number}</th>
               </tr>
@@ -141,25 +147,25 @@ export function VersionDiff({ versionA, versionB }: Props) {
       </Section>
 
       <Section title="Tools">
-        <Pills label="Adicionadas" tone="add" items={tools.added} />
-        <Pills label="Removidas" tone="del" items={tools.removed} />
+        <Pills label={t("Adicionadas")} tone="add" items={tools.added} />
+        <Pills label={t("Removidas")} tone="del" items={tools.removed} />
         {tools.added.length === 0 && tools.removed.length === 0 ? (
-          <p className="text-xs text-muted-foreground">Sem mudanças.</p>
+          <p className="text-xs text-muted-foreground">{t("Sem mudanças.")}</p>
         ) : null}
       </Section>
 
-      <Section title="Handoff keywords">
-        <Pills label="Adicionadas" tone="add" items={handoffKw.added} />
-        <Pills label="Removidas" tone="del" items={handoffKw.removed} />
+      <Section title={t("Handoff keywords")}>
+        <Pills label={t("Adicionadas")} tone="add" items={handoffKw.added} />
+        <Pills label={t("Removidas")} tone="del" items={handoffKw.removed} />
         {handoffKw.added.length === 0 && handoffKw.removed.length === 0 ? (
-          <p className="text-xs text-muted-foreground">Sem mudanças.</p>
+          <p className="text-xs text-muted-foreground">{t("Sem mudanças.")}</p>
         ) : null}
       </Section>
 
-      <Section title="Follow-up">
+      <Section title={t("Follow-up")}>
         {followupEnabledChanged ? (
           <p className="text-xs">
-            Habilitado:{" "}
+            {t("Habilitado:")}{" "}
             <span className="font-mono text-destructive">
               {String(versionA.followup?.enabled ?? false)}
             </span>{" "}
@@ -169,16 +175,16 @@ export function VersionDiff({ versionA, versionB }: Props) {
             </span>
           </p>
         ) : null}
-        <Pills label="Fluxos adicionados" tone="add" items={followupFlows.added} />
-        <Pills label="Fluxos removidos" tone="del" items={followupFlows.removed} />
+        <Pills label={t("Fluxos adicionados")} tone="add" items={followupFlows.added} />
+        <Pills label={t("Fluxos removidos")} tone="del" items={followupFlows.removed} />
         {!followupEnabledChanged &&
         followupFlows.added.length === 0 &&
         followupFlows.removed.length === 0 ? (
-          <p className="text-xs text-muted-foreground">Sem mudanças.</p>
+          <p className="text-xs text-muted-foreground">{t("Sem mudanças.")}</p>
         ) : null}
       </Section>
 
-      <Section title="System prompt">
+      <Section title={t("System prompt")}>
         <pre className="max-h-96 overflow-auto rounded-md border border-border/60 bg-muted/30 p-2 font-mono text-xs leading-relaxed">
           {lines.map((l, idx) => {
             const cls =

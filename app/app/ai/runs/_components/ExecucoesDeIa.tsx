@@ -18,6 +18,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useT } from "@/hooks/i18n/useT";
 
 /** O MESMO formato da tela de Uso — as duas leem `llm_calls.cost_cents`. */
 const brl = new Intl.NumberFormat("pt-BR", {
@@ -56,6 +57,7 @@ interface Resumo {
 }
 
 export function ExecucoesDeIa() {
+  const t = useT();
   const [execucoes, setExecucoes] = useState<Execucao[] | null>(null);
   const [resumo, setResumo] = useState<Resumo | null>(null);
   const [erro, setErro] = useState<string | null>(null);
@@ -72,20 +74,25 @@ export function ExecucoesDeIa() {
       try {
         json = JSON.parse(texto);
       } catch {
-        setErro(`resposta inesperada do servidor (${res.status}): ${texto.slice(0, 200)}`);
+        setErro(
+          t("resposta inesperada do servidor ({status}): {corpo}", {
+            status: res.status,
+            corpo: texto.slice(0, 200),
+          }),
+        );
         return;
       }
       if (!res.ok) {
-        setErro(json?.error?.message ?? `não consegui carregar (${res.status})`);
+        setErro(json?.error?.message ?? t("não consegui carregar ({status})", { status: res.status }));
         return;
       }
       setErro(null);
       setExecucoes(json.data!.execucoes);
       setResumo(json.data!.resumo);
     } catch (e) {
-      setErro(e instanceof Error ? e.message : "não consegui falar com o servidor");
+      setErro(e instanceof Error ? e.message : t("não consegui falar com o servidor"));
     }
-  }, [soErros]);
+  }, [soErros, t]);
 
   useEffect(() => {
     void carregar();
@@ -95,10 +102,10 @@ export function ExecucoesDeIa() {
     return (
       <div className="p-6">
         <Card className="border-destructive/40 p-6">
-          <h2 className="font-medium">Não consegui carregar as execuções</h2>
+          <h2 className="font-medium">{t("Não consegui carregar as execuções")}</h2>
           <p className="mt-2 text-sm text-muted-foreground">{erro}</p>
           <Button className="mt-4" variant="outline" onClick={() => void carregar()}>
-            Tentar de novo
+            {t("Tentar de novo")}
           </Button>
         </Card>
       </div>
@@ -106,16 +113,17 @@ export function ExecucoesDeIa() {
   }
 
   if (!execucoes || !resumo) {
-    return <div className="p-6 text-sm text-muted-foreground">Carregando…</div>;
+    return <div className="p-6 text-sm text-muted-foreground">{t("Carregando…")}</div>;
   }
 
   return (
     <div className="mx-auto w-full max-w-5xl p-6" data-testid="execucoes-de-ia">
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Execuções de IA</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("Execuções de IA")}</h1>
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-          Tudo que a inteligência artificial fez por aqui — e, quando algo falhou, o que
-          aconteceu e o que fazer.
+          {t(
+            "Tudo que a inteligência artificial fez por aqui — e, quando algo falhou, o que aconteceu e o que fazer.",
+          )}
         </p>
       </header>
 
@@ -124,14 +132,17 @@ export function ExecucoesDeIa() {
         {resumo.erros === 0 ? (
           <p className="text-sm">
             <span className="font-medium text-emerald-600 dark:text-emerald-500">
-              Nenhuma falha
+              {t("Nenhuma falha")}
             </span>{" "}
-            nas últimas {resumo.total} execuções.
+            {t("nas últimas {total} execuções.", { total: resumo.total })}
           </p>
         ) : (
           <div>
             <p className="text-sm font-medium text-destructive" data-testid="tem-falhas">
-              {resumo.erros} de {resumo.total} execuções falharam.
+              {t("{erros} de {total} execuções falharam.", {
+                erros: resumo.erros,
+                total: resumo.total,
+              })}
             </p>
             <ul className="mt-3 space-y-2">
               {resumo.porCodigo.map((c) => (
@@ -154,15 +165,15 @@ export function ExecucoesDeIa() {
           onClick={() => setSoErros((v) => !v)}
           data-testid="filtro-erros"
         >
-          {soErros ? "Mostrando só as falhas" : "Ver só as falhas"}
+          {soErros ? t("Mostrando só as falhas") : t("Ver só as falhas")}
         </Button>
       </div>
 
       {execucoes.length === 0 ? (
         <Card className="p-6 text-sm text-muted-foreground" data-testid="lista-vazia">
           {soErros
-            ? "Nenhuma falha registrada."
-            : "Nenhuma execução ainda. Assim que o agente atender alguém, aparece aqui."}
+            ? t("Nenhuma falha registrada.")
+            : t("Nenhuma execução ainda. Assim que o agente atender alguém, aparece aqui.")}
         </Card>
       ) : (
         <div className="space-y-2">
@@ -177,7 +188,7 @@ export function ExecucoesDeIa() {
                   <span className="font-medium">{e.pontoRotulo}</span>
                   {e.status === "erro" && (
                     <Badge variant="destructive" className="text-xs">
-                      falhou
+                      {t("falhou")}
                     </Badge>
                   )}
                 </div>
@@ -191,22 +202,22 @@ export function ExecucoesDeIa() {
                   {/* 1º: o que o CLIENTE viu. */}
                   {e.consequencia && (
                     <p data-testid="consequencia">
-                      <span className="font-medium">O que aconteceu:</span> {e.consequencia}
+                      <span className="font-medium">{t("O que aconteceu:")}</span> {e.consequencia}
                     </p>
                   )}
                   {/* 2º: o que fazer. */}
                   {e.oQueFazer && (
                     <p className="text-muted-foreground" data-testid="o-que-fazer">
-                      <span className="font-medium">O que fazer:</span> {e.oQueFazer}
+                      <span className="font-medium">{t("O que fazer:")}</span> {e.oQueFazer}
                     </p>
                   )}
                   {/* 3º: só então, o texto cru — para quem for investigar. */}
                   {e.error_message && (
                     <details className="text-xs text-muted-foreground">
-                      <summary className="cursor-pointer">Mensagem técnica do provedor</summary>
+                      <summary className="cursor-pointer">{t("Mensagem técnica do provedor")}</summary>
                       <pre className="mt-1 overflow-x-auto whitespace-pre-wrap break-words rounded bg-muted p-2">
                         {e.error_message}
-                        {e.http_status ? `\n(código ${e.http_status})` : ""}
+                        {e.http_status ? `\n${t("(código {status})", { status: e.http_status })}` : ""}
                       </pre>
                     </details>
                   )}
