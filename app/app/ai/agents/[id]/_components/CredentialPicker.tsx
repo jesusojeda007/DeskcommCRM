@@ -14,6 +14,7 @@ import {
   type Provider,
   credentialStatus,
 } from "@/hooks/ai/useCredentials";
+import { useT } from "@/hooks/i18n/useT";
 
 interface Props {
   provider: Provider;
@@ -24,22 +25,22 @@ interface Props {
   id?: string;
 }
 
-const STATUS_LABEL: Record<ReturnType<typeof credentialStatus>, string> = {
-  validated: "validada",
-  validating: "validando",
-  invalid: "inválida",
-  inactive: "inativa",
-};
-
 export function CredentialPicker({ provider, credentials, value, onChange, disabled, id }: Props) {
+  const t = useT();
+  const STATUS_LABEL: Record<ReturnType<typeof credentialStatus>, string> = {
+    validated: t("validada"),
+    validating: t("validando"),
+    invalid: t("inválida"),
+    inactive: t("inativa"),
+  };
   const filtered = credentials.filter((c) => c.provider === provider);
 
   return (
     <div className="space-y-1">
-      <Label htmlFor={id}>Chave de acesso</Label>
+      <Label htmlFor={id}>{t("Chave de acesso")}</Label>
       <Select value={value || undefined} onValueChange={onChange} disabled={disabled}>
         <SelectTrigger id={id}>
-          <SelectValue placeholder="Escolha uma chave" />
+          <SelectValue placeholder={t("Escolha uma chave")} />
         </SelectTrigger>
         <SelectContent>
           {filtered.map((c) => {
@@ -52,7 +53,7 @@ export function CredentialPicker({ provider, credentials, value, onChange, disab
           })}
           {filtered.length === 0 ? (
             <SelectItem value="__none__" disabled>
-              Nenhuma credencial {provider} cadastrada
+              {t("Nenhuma credencial {provider} cadastrada", { provider })}
             </SelectItem>
           ) : null}
         </SelectContent>
@@ -63,9 +64,9 @@ export function CredentialPicker({ provider, credentials, value, onChange, disab
             href="/app/ai/credentials"
             className="font-medium text-foreground underline underline-offset-4"
           >
-            Cadastrar credencial {provider}
+            {t("Cadastrar credencial {provider}", { provider })}
           </Link>{" "}
-          na aba Credenciais.
+          {t("na aba Credenciais.")}
         </p>
       ) : null}
     </div>
