@@ -2,18 +2,20 @@
 import { useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { useT } from "@/hooks/i18n/useT";
 import { MediaUnavailable } from "./MediaUnavailable";
 import { mediaSrc } from "./media-utils";
 
 /** Vídeo inline com controles nativos (padrão WhatsApp Web). */
 export function VideoMedia({ messageId }: { messageId: string }) {
+  const t = useT();
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
 
   return (
     <div className="relative w-full max-w-sm aspect-video overflow-hidden rounded-lg bg-black/5">
       {failed ? (
-        <MediaUnavailable kind="Vídeo" className="h-full w-full" />
+        <MediaUnavailable kind={t("Vídeo")} className="h-full w-full" />
       ) : (
         <>
           {!ready && <Skeleton className="absolute inset-0 h-full w-full" />}

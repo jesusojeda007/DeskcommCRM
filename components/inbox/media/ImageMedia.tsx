@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useT } from "@/hooks/i18n/useT";
 
 import { MediaUnavailable } from "./MediaUnavailable";
 import { mediaSrc } from "./media-utils";
@@ -15,6 +16,7 @@ interface Props {
 
 /** Miniatura na bolha + lightbox (Dialog) no clique. Padrão WhatsApp Web. */
 export function ImageMedia({ messageId, alt }: Props) {
+  const t = useT();
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
   const [open, setOpen] = useState(false);
   const src = mediaSrc(messageId);
@@ -22,7 +24,7 @@ export function ImageMedia({ messageId, alt }: Props) {
   if (state === "error")
     return (
       <div className="w-64 max-w-full aspect-[4/3]">
-        <MediaUnavailable kind="Imagem" className="h-full w-full" />
+        <MediaUnavailable kind={t("Imagem")} className="h-full w-full" />
       </div>
     );
 
@@ -30,7 +32,7 @@ export function ImageMedia({ messageId, alt }: Props) {
     <>
       <button
         type="button"
-        aria-label="Ampliar imagem"
+        aria-label={t("Ampliar imagem")}
         onClick={() => setOpen(true)}
         disabled={state !== "ready"}
         aria-disabled={state !== "ready"}

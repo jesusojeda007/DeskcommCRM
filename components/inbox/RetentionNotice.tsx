@@ -1,9 +1,11 @@
 "use client";
 import { formatDistanceToNowStrict } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { ptBR, es } from "date-fns/locale";
 import { ArrowsClockwise, Scales, ShieldCheck } from "@/lib/ui/icons";
 import { retentionCopy, type RetentionKind } from "@/lib/inbox/retention-copy";
 import { useRetention } from "@/hooks/inbox/useRetention";
+import { useIdioma } from "@/lib/i18n/IdiomaProvider";
+import { useT } from "@/hooks/i18n/useT";
 import { cn } from "@/lib/utils";
 
 const KIND_ICON: Record<RetentionKind, typeof ShieldCheck> = {
@@ -24,15 +26,17 @@ const KIND_CLASS: Record<RetentionKind, string> = {
  * traduzido em pt-br leigo acima do composer. Sem veto recente → não renderiza.
  */
 export function RetentionNotice({ conversationId }: { conversationId: string }) {
+  const idioma = useIdioma();
+  const t = useT();
   const { data } = useRetention(conversationId);
   const latest = data?.retentions[0];
   if (!latest || !data) return null;
 
-  const copy = retentionCopy(latest.vetoed_code, data.context);
+  const copy = retentionCopy(latest.vetoed_code, data.context, t);
   const Icon = KIND_ICON[copy.kind];
   const when = formatDistanceToNowStrict(new Date(latest.created_at), {
     addSuffix: true,
-    locale: ptBR,
+    locale: idioma === "es" ? es : ptBR,
   });
 
   return (

@@ -1,8 +1,14 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "@/lib/ui/icons";
+import { useT } from "@/hooks/i18n/useT";
 
-/** Fallback compartilhado quando a mídia não carrega (expirada/removida). */
+/**
+ * Fallback compartilhado quando a mídia não carrega (expirada/removida).
+ * `kind` já chega traduzido do chamador (ele conhece o próprio `t()`).
+ */
 export function MediaUnavailable({ kind, className }: { kind: string; className?: string }) {
+  const t = useT();
   return (
     <div
       className={cn(
@@ -11,7 +17,7 @@ export function MediaUnavailable({ kind, className }: { kind: string; className?
       )}
     >
       <ImageIcon size={20} weight="duotone" aria-hidden />
-      <span className="text-xs">Mídia indisponível</span>
+      <span className="text-xs">{t("Mídia indisponível")}</span>
       <span className="sr-only">{kind}</span>
     </div>
   );
