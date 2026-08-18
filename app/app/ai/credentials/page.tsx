@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
 import { createClient } from "@/lib/supabase/server";
+import { PageHeader } from "@/components/shell/PageHeader";
 import type { CredentialRow } from "@/hooks/ai/useCredentials";
 import { CredentialsList } from "./_components/CredentialsList";
 
@@ -60,14 +61,10 @@ export default async function CredentialsPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Chaves de acesso à IA</h1>
-        <p className="text-sm text-muted-foreground">
-          A conta de inteligência artificial é sua: você contrata direto na Anthropic,
-          OpenAI ou Google e cola a chave aqui. Ela é guardada criptografada e nunca
-          mais aparece na tela depois de salva — nem para você.
-        </p>
-      </header>
+      <PageHeader
+        title="Chaves de acesso à IA"
+        subtitle="A conta de inteligência artificial é sua: você contrata direto na Anthropic, OpenAI ou Google e cola a chave aqui. Ela é guardada criptografada e nunca mais aparece na tela depois de salva — nem para você."
+      />
       <CredentialsList
         initialData={credentials}
         canWrite={canWrite}

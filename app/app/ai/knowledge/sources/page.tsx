@@ -5,6 +5,8 @@ import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/shell/PageHeader";
+import { T } from "@/components/shell/T";
 import type { SourceRow } from "@/hooks/ai/useKnowledgeSources";
 import { KnowledgeSourcesClient } from "./_client";
 
@@ -30,19 +32,19 @@ export default async function KnowledgeSourcesPage() {
   if (!agent) {
     return (
       <div className="flex h-full flex-col gap-6 p-6">
-        <header>
-          <h1 className="text-2xl font-semibold tracking-tight">Fontes de Conhecimento</h1>
-          <p className="text-sm text-muted-foreground">
-            Configure as fontes de RAG do agent default da organização.
-          </p>
-        </header>
+        <PageHeader
+          title="Fontes de Conhecimento"
+          subtitle="Configure as fontes de RAG do agent default da organização."
+        />
         <div className="rounded-lg border border-border bg-surface p-6 text-sm">
           <p className="mb-4">
-            Nenhum agent default encontrado. Crie um agent default em{" "}
-            <span className="font-mono">/app/ai/agents</span> primeiro.
+            <T>Nenhum agent default encontrado. Crie um agent default em</T>{" "}
+            <span className="font-mono">/app/ai/agents</span> <T>primeiro.</T>
           </p>
           <Button asChild variant="primary" size="sm">
-            <Link href="/app/ai/agents">Ir para Agents</Link>
+            <Link href="/app/ai/agents">
+              <T>Ir para Agents</T>
+            </Link>
           </Button>
         </div>
       </div>
@@ -61,9 +63,11 @@ export default async function KnowledgeSourcesPage() {
   return (
     <div className="flex h-full flex-col gap-6 p-6">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Fontes de Conhecimento</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          <T>Fontes de Conhecimento</T>
+        </h1>
         <p className="text-sm text-muted-foreground">
-          Status e ações sobre as fontes RAG do agent <span className="font-medium">{agent.name}</span>.
+          <T>Status e ações sobre as fontes RAG do agent</T> <span className="font-medium">{agent.name}</span>.
         </p>
       </header>
       <KnowledgeSourcesClient agentId={agent.id} initialSources={initialSources} />
