@@ -3162,6 +3162,25 @@ export const DICIONARIO: Traducoes = {
   "Não há dados de uso no período selecionado.": { es: "No hay datos de uso en el período seleccionado." },
   "Invoc. AI": { es: "Invoc. IA" },
   "Custo AI": { es: "Costo IA" },
+
+  // ─── Fase 5: Admin — Inbox de soporte/plataforma (español) ───
+  "Selecione uma conversa para visualizar": { es: "Seleccioná una conversación para visualizar" },
+  "Modo somente-leitura. Use “Impersonate” para responder como atendente do tenant.": { es: "Modo de solo lectura. Usá “Impersonate” para responder como agente del tenant." },
+  "Contato anonimizado": { es: "Contacto anonimizado" },
+  "Sem contato vinculado.": { es: "Sin contacto vinculado." },
+  "Slug:": { es: "Slug:" },
+  "Abrir tenant": { es: "Abrir tenant" },
+  "Sem organização vinculada.": { es: "Sin organización vinculada." },
+  "Falha ao carregar conversa.": { es: "Falló la carga de la conversación." },
+  "Sem mensagens nesta conversa.": { es: "Sin mensajes en esta conversación." },
+  "Modo somente-leitura.": { es: "Modo de solo lectura." },
+  "Use “Impersonate” (em breve, S-11.07) para responder.": { es: "Usá “Impersonate” (próximamente, S-11.07) para responder." },
+  "Buscar mensagem...": { es: "Buscar mensaje..." },
+  "Falha ao carregar conversas.": { es: "Falló la carga de las conversaciones." },
+  "Nenhuma conversa encontrada.": { es: "Ninguna conversación encontrada." },
+  "Aberto": { es: "Abierto" },
+  "Resolvido": { es: "Resuelto" },
+  "Carregando": { es: "Cargando" },
 };
 
 /**
