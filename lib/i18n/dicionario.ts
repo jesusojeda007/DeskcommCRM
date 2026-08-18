@@ -3374,6 +3374,9 @@ export const DICIONARIO: Traducoes = {
   "Nome da coluna (clique para renomear)": { es: "Nombre de la columna (hacé clic para renombrar)" },
   "Ordem": { es: "Orden" },
   "O que acontece nesta coluna": { es: "Qué pasa en esta columna" },
+  "Nada especial": { es: "Nada especial" },
+  "Aqui o cliente fecha": { es: "Acá el cliente cierra" },
+  "Aqui o cliente desiste": { es: "Acá el cliente desiste" },
 };
 
 /**
