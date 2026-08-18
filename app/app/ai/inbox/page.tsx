@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { AgentInboxList } from "./_components/AgentInboxList";
 
 export const dynamic = "force-dynamic";
@@ -14,13 +15,10 @@ export default async function AgentInboxPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Central de avisos</h1>
-        <p className="text-sm text-muted-foreground">
-          O que o assistente precisou escalar para o time: conexões caídas, tarefas que
-          falharam, atendimentos passados a humanos.
-        </p>
-      </header>
+      <PageHeader
+        title="Central de avisos"
+        subtitle="O que o assistente precisou escalar para o time: conexões caídas, tarefas que falharam, atendimentos passados a humanos."
+      />
       <AgentInboxList canResolve={canResolve} />
     </div>
   );

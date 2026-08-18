@@ -4,6 +4,7 @@ import { requireAuth, resolveActiveOrg } from "@/lib/auth/server";
 import { ROLE_RANK } from "@/lib/auth/types";
 import { createClient } from "@/lib/supabase/server";
 import type { OrgMemoryState } from "@/hooks/ai/useOrgMemory";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { OrgMemoryClient } from "./_client";
 
 export const dynamic = "force-dynamic";
@@ -64,13 +65,10 @@ export default async function OrgMemoryPage() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Memória da IA</h1>
-        <p className="text-sm text-muted-foreground">
-          Regras e aprendizados que TODOS os agentes de IA desta organização seguem em qualquer
-          conversa — não é uma configuração de um agente específico.
-        </p>
-      </header>
+      <PageHeader
+        title="Memória da IA"
+        subtitle="Regras e aprendizados que TODOS os agentes de IA desta organização seguem em qualquer conversa — não é uma configuração de um agente específico."
+      />
       <OrgMemoryClient initialState={initialState} />
     </div>
   );
