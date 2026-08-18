@@ -1,12 +1,15 @@
 "use client";
 import Link from "next/link";
 import { formatDistanceToNow, format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { ptBR, es } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CaretLeft } from "@/lib/ui/icons";
 import { useAdminAuditEntry } from "@/hooks/useAdminAuditEntry";
+import { useT } from "@/hooks/i18n/useT";
+import { useIdioma } from "@/lib/i18n/IdiomaProvider";
+import type { Idioma } from "@/lib/i18n/idiomas";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -21,17 +24,22 @@ function maskEmail(email: string | null | undefined): string {
   return `${masked}@${domain}`;
 }
 
-function formatDate(iso: string): string {
+function formatDate(iso: string, idioma: Idioma): string {
   try {
-    return format(new Date(iso), "dd/MM/yyyy HH:mm:ss", { locale: ptBR });
+    return format(new Date(iso), "dd/MM/yyyy HH:mm:ss", {
+      locale: idioma === "es" ? es : ptBR,
+    });
   } catch {
     return iso;
   }
 }
 
-function relativeDate(iso: string): string {
+function relativeDate(iso: string, idioma: Idioma): string {
   try {
-    return formatDistanceToNow(new Date(iso), { addSuffix: true, locale: ptBR });
+    return formatDistanceToNow(new Date(iso), {
+      addSuffix: true,
+      locale: idioma === "es" ? es : ptBR,
+    });
   } catch {
     return iso;
   }
@@ -66,6 +74,8 @@ interface AuditDetailClientProps {
 // ---------------------------------------------------------------------------
 
 export function AuditDetailClient({ entryId }: AuditDetailClientProps) {
+  const t = useT();
+  const idioma = useIdioma();
   const { data, isLoading, isError } = useAdminAuditEntry(entryId);
   const detail = data?.data;
 
@@ -84,7 +94,7 @@ export function AuditDetailClient({ entryId }: AuditDetailClientProps) {
   if (isError || !detail) {
     return (
       <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-6 py-10 text-center text-sm text-destructive">
-        Entrada de audit não encontrada.
+        {t("Entrada de audit não encontrada.")}
       </div>
     );
   }
@@ -98,7 +108,7 @@ export function AuditDetailClient({ entryId }: AuditDetailClientProps) {
       <Button asChild variant="ghost" size="sm" className="gap-1.5 -ml-2">
         <Link href="/admin/audit">
           <CaretLeft size={14} aria-hidden />
-          Audit Log
+          {t("Audit Log")}
         </Link>
       </Button>
 
@@ -113,12 +123,12 @@ export function AuditDetailClient({ entryId }: AuditDetailClientProps) {
           )}
           {entry.acting_as_platform_admin && (
             <Badge variant="warning" className="text-xs">
-              Platform Admin
+              {t("Platform Admin")}
             </Badge>
           )}
         </div>
         <p className="text-sm text-muted-foreground">
-          {formatDate(entry.created_at)}&nbsp;·&nbsp;{relativeDate(entry.created_at)}
+          {formatDate(entry.created_at, idioma)}&nbsp;·&nbsp;{relativeDate(entry.created_at, idioma)}
         </p>
       </div>
 
@@ -126,20 +136,20 @@ export function AuditDetailClient({ entryId }: AuditDetailClientProps) {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Metadata JSON viewer */}
         <div className="space-y-3">
-          <h2 className="text-sm font-medium">Metadata</h2>
+          <h2 className="text-sm font-medium">{t("Metadata")}</h2>
           <pre className="overflow-auto rounded-md border bg-muted/40 p-4 text-xs leading-relaxed">
             {JSON.stringify(entry.metadata, null, 2)}
           </pre>
 
           {/* Extra entry fields */}
           <div className="rounded-md border p-4 space-y-2 text-sm">
-            <Row label="Request ID" value={entry.request_id ?? "—"} mono />
-            <Row label="Resource Type" value={entry.resource_type ?? "—"} />
-            <Row label="Resource ID" value={entry.resource_id ?? "—"} mono />
-            <Row label="Bypassed RLS" value={entry.bypassed_rls ? "Sim" : "Não"} />
-            <Row label="Actor IP" value={entry.actor_ip ?? "—"} mono />
+            <Row label={t("Request ID")} value={entry.request_id ?? "—"} mono />
+            <Row label={t("Resource Type")} value={entry.resource_type ?? "—"} />
+            <Row label={t("Resource ID")} value={entry.resource_id ?? "—"} mono />
+            <Row label={t("Bypassed RLS")} value={entry.bypassed_rls ? t("Sim") : t("Não")} />
+            <Row label={t("Actor IP")} value={entry.actor_ip ?? "—"} mono />
             <Row
-              label="User Agent"
+              label={t("User Agent")}
               value={entry.actor_user_agent ?? "—"}
               truncate
             />
@@ -150,17 +160,17 @@ export function AuditDetailClient({ entryId }: AuditDetailClientProps) {
         <div className="space-y-4">
           {/* Actor card */}
           <div className="rounded-md border p-4 space-y-2">
-            <h2 className="text-sm font-medium">Actor</h2>
+            <h2 className="text-sm font-medium">{t("Actor")}</h2>
             {actor ? (
               <div className="space-y-1 text-sm">
-                <Row label="User ID" value={actor.id} mono />
-                <Row label="Email" value={maskEmail(actor.email)} />
+                <Row label={t("User ID")} value={actor.id} mono />
+                <Row label={t("Email")} value={maskEmail(actor.email)} />
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">
                 {entry.actor_user_id
-                  ? `ID: ${entry.actor_user_id}`
-                  : "Sem actor registrado"}
+                  ? t("ID: {id}", { id: entry.actor_user_id })
+                  : t("Sem actor registrado")}
               </p>
             )}
           </div>
@@ -168,15 +178,15 @@ export function AuditDetailClient({ entryId }: AuditDetailClientProps) {
           {/* Tenant card */}
           {tenant && (
             <div className="rounded-md border p-4 space-y-2">
-              <h2 className="text-sm font-medium">Tenant</h2>
+              <h2 className="text-sm font-medium">{t("Tenant")}</h2>
               <div className="space-y-1 text-sm">
-                <Row label="Nome" value={tenant.display_name} />
-                <Row label="Slug" value={tenant.slug} mono />
-                <Row label="Status" value={tenant.status} />
+                <Row label={t("Nome")} value={tenant.display_name} />
+                <Row label={t("Slug")} value={tenant.slug} mono />
+                <Row label={t("Status")} value={tenant.status} />
               </div>
               <Button asChild variant="outline" size="sm" className="mt-2">
                 <Link href={`/admin/tenants/${tenant.id}`}>
-                  Ver tenant
+                  {t("Ver tenant")}
                 </Link>
               </Button>
             </div>
@@ -185,14 +195,14 @@ export function AuditDetailClient({ entryId }: AuditDetailClientProps) {
           {/* Resource deep link */}
           {deepLink && (
             <div className="rounded-md border p-4">
-              <h2 className="text-sm font-medium mb-2">Recurso</h2>
+              <h2 className="text-sm font-medium mb-2">{t("Recurso")}</h2>
               <p className="text-sm text-muted-foreground mb-3">
                 {entry.resource_type}&nbsp;·&nbsp;
                 <span className="font-mono">{entry.resource_id}</span>
               </p>
               <Button asChild variant="outline" size="sm">
                 <Link href={deepLink}>
-                  Abrir recurso
+                  {t("Abrir recurso")}
                 </Link>
               </Button>
             </div>

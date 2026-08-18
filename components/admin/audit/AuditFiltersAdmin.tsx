@@ -11,6 +11,7 @@ import {
 import { CaretDown, X } from "@/lib/ui/icons";
 import type { AdminAuditFilters } from "@/hooks/useAdminAuditLog";
 import { ACTION_CODES } from "./action-codes";
+import { useT } from "@/hooks/i18n/useT";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -45,6 +46,7 @@ function MultiSelectPopover({
   onToggle: (value: string) => void;
   onClear: () => void;
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -73,7 +75,7 @@ function MultiSelectPopover({
       <PopoverContent className="w-64 p-2" align="start">
         <div className="space-y-1">
           <Input
-            placeholder="Buscar..."
+            placeholder={t("Buscar...")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="h-8 text-sm"
@@ -83,13 +85,13 @@ function MultiSelectPopover({
               onClick={() => { onClear(); setSearch(""); }}
               className="w-full rounded px-2 py-1 text-left text-xs text-muted-foreground hover:bg-accent"
             >
-              Limpar seleção ({selected.length})
+              {t("Limpar seleção ({n})", { n: selected.length })}
             </button>
           )}
           <div className="max-h-52 overflow-y-auto space-y-0.5">
             {filtered.length === 0 && (
               <p className="px-2 py-4 text-center text-xs text-muted-foreground">
-                Nenhum resultado
+                {t("Nenhum resultado")}
               </p>
             )}
             {filtered.map((o) => (
@@ -121,6 +123,7 @@ export function AuditFiltersAdmin({
   onChange,
   tenants,
 }: AuditFiltersAdminProps) {
+  const t = useT();
   const [actorInput, setActorInput] = useState(filters.actor_user_id ?? "");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -194,48 +197,48 @@ export function AuditFiltersAdmin({
   return (
     <div className="flex flex-wrap items-center gap-2">
       <MultiSelectPopover
-        label="Tenants"
+        label={t("Tenants")}
         options={tenantOptions}
         selected={selectedTenants}
         onToggle={toggleTenant}
         onClear={() => onChange({ ...filters, tenant_ids: undefined })}
       />
       <MultiSelectPopover
-        label="Actions"
+        label={t("Actions")}
         options={actionOptions}
         selected={selectedActions}
         onToggle={toggleAction}
         onClear={() => onChange({ ...filters, actions: undefined })}
       />
       <Input
-        placeholder="Actor (user ID)"
+        placeholder={t("Actor (user ID)")}
         value={actorInput}
         onChange={(e) => handleActorChange(e.target.value)}
         className="h-9 w-60 text-sm"
-        aria-label="Filtrar por actor user ID"
+        aria-label={t("Filtrar por actor user ID")}
       />
       <div className="flex items-center gap-1">
         <label className="text-xs text-muted-foreground sr-only" htmlFor="audit-from">
-          De
+          {t("De")}
         </label>
         <Input
           id="audit-from"
           type="datetime-local"
           className="h-9 w-48 text-sm"
           onChange={(e) => handleFromChange(e.target.value)}
-          aria-label="Data de início"
+          aria-label={t("Data de início")}
         />
       </div>
       <div className="flex items-center gap-1">
         <label className="text-xs text-muted-foreground sr-only" htmlFor="audit-to">
-          Até
+          {t("Até")}
         </label>
         <Input
           id="audit-to"
           type="datetime-local"
           className="h-9 w-48 text-sm"
           onChange={(e) => handleToChange(e.target.value)}
-          aria-label="Data de fim"
+          aria-label={t("Data de fim")}
         />
       </div>
       {hasAnyFilter && (
@@ -246,7 +249,7 @@ export function AuditFiltersAdmin({
           onClick={clearAll}
         >
           <X size={14} aria-hidden />
-          Limpar
+          {t("Limpar")}
         </Button>
       )}
     </div>

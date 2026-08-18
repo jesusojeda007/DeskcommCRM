@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { ptBR, es } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,6 +14,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { AdminAuditRow } from "@/hooks/useAdminAuditLog";
+import { useT } from "@/hooks/i18n/useT";
+import { useIdioma } from "@/lib/i18n/IdiomaProvider";
+import type { Idioma } from "@/lib/i18n/idiomas";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -28,9 +31,12 @@ function maskEmail(email: string | null | undefined): string {
   return `${masked}@${domain}`;
 }
 
-function relativeDate(iso: string): string {
+function relativeDate(iso: string, idioma: Idioma): string {
   try {
-    return formatDistanceToNow(new Date(iso), { addSuffix: true, locale: ptBR });
+    return formatDistanceToNow(new Date(iso), {
+      addSuffix: true,
+      locale: idioma === "es" ? es : ptBR,
+    });
   } catch {
     return iso;
   }
@@ -47,13 +53,14 @@ function shortId(id: string | null | undefined): string {
 // ---------------------------------------------------------------------------
 
 export function AuditTableSkeleton() {
+  const t = useT();
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
             {["Quando", "Action", "Tenant", "Actor", "Recurso", ""].map((h) => (
-              <TableHead key={h}>{h}</TableHead>
+              <TableHead key={h}>{t(h)}</TableHead>
             ))}
           </TableRow>
         </TableHeader>
@@ -78,13 +85,14 @@ export function AuditTableSkeleton() {
 // ---------------------------------------------------------------------------
 
 function EmptyState() {
+  const t = useT();
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
       <p className="text-sm font-medium text-muted-foreground">
-        Nenhum evento encontrado
+        {t("Nenhum evento encontrado")}
       </p>
       <p className="mt-1 text-xs text-muted-foreground">
-        Ajuste os filtros para ver entradas do audit log.
+        {t("Ajuste os filtros para ver entradas do audit log.")}
       </p>
     </div>
   );
@@ -107,6 +115,9 @@ export function AuditTable({
   isFetchingNextPage,
   onLoadMore,
 }: AuditTableProps) {
+  const t = useT();
+  const idioma = useIdioma();
+
   if (data.length === 0) {
     return <EmptyState />;
   }
@@ -117,11 +128,11 @@ export function AuditTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[130px]">Quando</TableHead>
-              <TableHead>Action</TableHead>
-              <TableHead className="w-[130px]">Tenant</TableHead>
-              <TableHead className="w-[160px]">Actor</TableHead>
-              <TableHead className="w-[180px]">Recurso</TableHead>
+              <TableHead className="w-[130px]">{t("Quando")}</TableHead>
+              <TableHead>{t("Action")}</TableHead>
+              <TableHead className="w-[130px]">{t("Tenant")}</TableHead>
+              <TableHead className="w-[160px]">{t("Actor")}</TableHead>
+              <TableHead className="w-[180px]">{t("Recurso")}</TableHead>
               <TableHead className="w-[60px]" />
             </TableRow>
           </TableHeader>
@@ -129,7 +140,7 @@ export function AuditTable({
             {data.map((row) => (
               <TableRow key={row.id}>
                 <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
-                  {relativeDate(row.created_at)}
+                  {relativeDate(row.created_at, idioma)}
                 </TableCell>
                 <TableCell className="font-mono text-xs">{row.action}</TableCell>
                 <TableCell>
@@ -156,7 +167,7 @@ export function AuditTable({
                 </TableCell>
                 <TableCell>
                   <Button asChild variant="ghost" size="sm" className="h-7 px-2 text-xs">
-                    <Link href={`/admin/audit/${row.id}`}>Ver</Link>
+                    <Link href={`/admin/audit/${row.id}`}>{t("Ver")}</Link>
                   </Button>
                 </TableCell>
               </TableRow>
@@ -173,7 +184,7 @@ export function AuditTable({
             disabled={isFetchingNextPage}
             onClick={onLoadMore}
           >
-            {isFetchingNextPage ? "Carregando..." : "Carregar mais"}
+            {isFetchingNextPage ? t("Carregando...") : t("Carregar mais")}
           </Button>
         </div>
       )}
