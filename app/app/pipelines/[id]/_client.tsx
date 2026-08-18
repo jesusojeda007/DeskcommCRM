@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useBoard } from "@/hooks/kanban/useBoard";
 
-function formatError(err: unknown): string {
+function formatError(err: unknown, t: (texto: string) => string): string {
   if (err instanceof Error) return err.message;
   if (err && typeof err === "object") {
     const obj = err as { message?: unknown; code?: unknown; details?: unknown; hint?: unknown };
@@ -14,7 +14,7 @@ function formatError(err: unknown): string {
     try {
       return JSON.stringify(err);
     } catch {
-      return "Erro desconhecido";
+      return t("Erro desconhecido");
     }
   }
   return String(err);
@@ -96,7 +96,7 @@ export function PipelinePageClient({
       {error ? (
         <div className="rounded-md border border-destructive/30 bg-destructive/10 p-4 text-sm">
           {t("Erro ao carregar pipeline:")}{" "}
-          {formatError(error)}
+          {formatError(error, t)}
         </div>
       ) : isLoading || !data ? (
         <div className="flex flex-1 animate-pulse items-center justify-center text-muted-foreground">

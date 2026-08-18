@@ -3181,6 +3181,15 @@ export const DICIONARIO: Traducoes = {
   "Aberto": { es: "Abierto" },
   "Resolvido": { es: "Resuelto" },
   "Carregando": { es: "Cargando" },
+
+  // ─── Fase 6: Audit e Pipelines (tenant) — español ───
+  "Ação contém": { es: "Acción contiene" },
+  "Tipo de recurso": { es: "Tipo de recurso" },
+  "Nenhum log no período.": { es: "No hay logs en el período." },
+  "ex: lead.created": { es: "ej: lead.created" },
+  "ex: contact": { es: "ej: contact" },
+  "Ator": { es: "Actor" },
+  "Histórico append-only de mutações na organização. Manager+.": { es: "Historial append-only de mutaciones en la organización. Manager+." },
 };
 
 /**
